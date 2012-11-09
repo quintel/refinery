@@ -1,6 +1,7 @@
 require 'bundler' ; Bundler.setup
 require 'turbine'
 
+require 'refinery/exporter'
 require 'refinery/reactor'
 require 'refinery/stub'
 
