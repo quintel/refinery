@@ -1,6 +1,8 @@
 require 'bundler' ; Bundler.setup
 require 'turbine'
 
+require 'refinery/stub'
+
 module Refinery
   module_function
 
@@ -13,6 +15,6 @@ module Refinery
   #
   # Returns a Turbine::Graph.
   def load(path = nil)
-    Turbine::Graph.new
+    Stub.create
   end
 end
