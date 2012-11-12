@@ -1,6 +1,7 @@
 require 'bundler' ; Bundler.setup
 require 'turbine'
 
+require 'refinery/catalyst/backport_demand'
 require 'refinery/catalyst/calculate_demand'
 require 'refinery/catalyst/fill_shareless_edges'
 require 'refinery/exporter'
