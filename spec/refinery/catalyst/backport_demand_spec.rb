@@ -81,7 +81,7 @@ module Refinery::Catalyst
       end
     end # when the descendant has multiple sources
 
-    context 'when a node has a blank descendant', focus: true do
+    context 'when a node has a blank descendant' do
       let(:graph) do
         Turbine::Graph.new.tap do |graph|
           graph.add(Turbine::Node.new(:child))
