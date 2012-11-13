@@ -34,14 +34,14 @@ module Refinery
       # Returns nothing.
       def calculate!
         # All of the nodes which the edge's "out" node links to.
-        sibling_children = @edge.out.out.uniq
+        sibling_children = @edge.from.out.uniq
 
         # Share can only be calculated if all of of the child's siblings have
         # a demand available.
         if sibling_children.all? { |child| demand_of(child) }
           total_parent_demand = sum_demand(sibling_children)
 
-          @edge.set(:share, demand_of(@edge.in) / total_parent_demand)
+          @edge.set(:share, demand_of(@edge.to) / total_parent_demand)
         end
       end
 

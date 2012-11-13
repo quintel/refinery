@@ -40,7 +40,8 @@ module Refinery
 
           node.in_edges.each do |edge|
             edge_demand = edge.get(:share) *
-              (edge.out.get(:final_demand) || edge.out.get(:expected_demand))
+              ( edge.from.get(:final_demand) ||
+                edge.from.get(:expected_demand) )
 
             node.set(attr, node.get(attr) + edge_demand)
           end

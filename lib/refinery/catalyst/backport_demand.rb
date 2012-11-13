@@ -43,7 +43,7 @@ module Refinery
 
         @node.out_edges.each do |edge|
           demand += proportional_share_of(edge) *
-            (edge.in.get(:final_demand) || edge.in.get(:expected_demand))
+            (edge.to.get(:final_demand) || edge.to.get(:expected_demand))
         end
 
         @node.set(:expected_demand, demand)
@@ -60,7 +60,7 @@ module Refinery
       #
       # Returns a numeric.
       def proportional_share_of(edge)
-        edge.get(:share) / edge.in.in_edges.get(:share).
+        edge.get(:share) / edge.to.in_edges.get(:share).
           inject(0) { |sum, value| sum + value }
       end
 

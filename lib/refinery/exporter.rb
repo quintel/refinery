@@ -42,8 +42,8 @@ module Refinery
     # Returns an array of strings.
     def links_for(node)
       node.out_edges.map do |edge|
-        "#{ edge.out.key }-(#{ edge.label }) -- ? --> " \
-        "(#{ edge.label })-#{ edge.in.key }"
+        "#{ edge.from.key }-(#{ edge.label }) -- ? --> " \
+        "(#{ edge.label })-#{ edge.to.key }"
       end.to_a
     end
 
