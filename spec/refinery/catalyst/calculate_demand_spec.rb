@@ -20,21 +20,40 @@ module Refinery::Catalyst
       end
     end
 
-    before { CalculateDemand.new(graph.node(:grandparent)).calculate! }
-
     # ------------------------------------------------------------------------
 
-    it 'should propagate demand to child nodes with :expected_demand' do
-      expect(parent.get(:expected_demand)).to eql(50.0)
-      expect(parent.get(:preset_demand)).to be_nil
-    end
+    context 'when all edges have a share defined' do
+      before { CalculateDemand.new(graph.node(:grandparent)).calculate! }
 
-    it 'should propagate demand to leaf nodes with :preset_demand' do
-      expect(child_one.get(:preset_demand)).to eql(30.0)
-      expect(child_two.get(:preset_demand)).to eql(20.0)
+      it 'should propagate demand to child nodes with :expected_demand' do
+        expect(parent.get(:expected_demand)).to eql(50.0)
+        expect(parent.get(:preset_demand)).to be_nil
+      end
 
-      expect(child_one.get(:expected_demand)).to be_nil
-      expect(child_two.get(:expected_demand)).to be_nil
-    end
+      it 'should propagate demand to leaf nodes with :preset_demand' do
+        expect(child_one.get(:preset_demand)).to eql(30.0)
+        expect(child_two.get(:preset_demand)).to eql(20.0)
+
+        expect(child_one.get(:expected_demand)).to be_nil
+        expect(child_two.get(:expected_demand)).to be_nil
+      end
+    end # when all edges have a share defined
+
+    context 'when an edge has no share' do
+      before do
+        graph
+        grandparent.out_edges.first.set(:share, nil)
+        CalculateDemand.new(graph.node(:grandparent)).calculate!
+      end
+
+      it 'does not set a demand for the node' do
+        expect(parent.get(:expected_demand)).to be_nil
+      end
+
+      it 'does not set a demand for descendants of the node' do
+        expect(child_one.get(:preset_demand)).to be_nil
+        expect(child_two.get(:preset_demand)).to be_nil
+      end
+    end # when an edge has no share
   end # CalculateDemand
 end # Refinery::Catalyst

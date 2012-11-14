@@ -34,7 +34,7 @@ module Refinery
       #
       # Returns nothing.
       def calculate!
-        @node.descendants.each do |node|
+        @node.descendants.select { |n| can_calculate?(n) }.each do |node|
           node.set(demand_attribute(node), calculate_demand(node))
         end
       end
@@ -49,6 +49,16 @@ module Refinery
       # Returns a symbol.
       def demand_attribute(node)
         leaf?(node) ? :preset_demand : :expected_demand
+      end
+
+      # Internal: Determines if a node has all the data required in order for
+      # demand to be calculated.
+      #
+      # Returns true or false.
+      def can_calculate?(node)
+        node.in_edges.none? do |edge|
+          edge.get(:share).nil? || demand_of(edge.from).nil?
+        end
       end
 
       # Internal: Given a node, calculates its demand based its ancestors and
