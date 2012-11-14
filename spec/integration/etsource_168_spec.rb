@@ -18,6 +18,14 @@ describe 'ETsource #168 stub graph' do
     ).run(graph)
   end
 
+  it 'sets expected demand on the final demand nodes' do
+    expect(node(:fd_hh_gas).get(:expected_demand)).
+      to eql(node(:fd_hh_gas).get(:final_demand))
+
+    expect(node(:fd_hh_gas).get(:expected_demand)).
+      to eql(node(:fd_hh_gas).get(:final_demand))
+  end
+
   it 'calculates the preset demand for household gas descendants' do
     # preset edge share = 0.0
     expect(node(:cooling).get(:preset_demand)).to eql(0.0)

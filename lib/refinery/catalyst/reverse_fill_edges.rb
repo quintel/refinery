@@ -53,9 +53,7 @@ module Refinery
       #
       # Returns a float, or nil if no demand is defined.
       def demand_of(node)
-        node.get(:expected_demand) ||
-          node.get(:preset_demand) ||
-          node.get(:final_demand)
+        node.get(:expected_demand) || node.get(:preset_demand)
       end
 
       # Internal: Given one or more nodes, returns the sum of all their

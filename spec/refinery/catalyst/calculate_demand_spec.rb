@@ -37,6 +37,10 @@ module Refinery::Catalyst
         expect(child_one.get(:expected_demand)).to be_nil
         expect(child_two.get(:expected_demand)).to be_nil
       end
+
+      it 'sets the expected_demand value on the final_demand node' do
+        expect(grandparent.get(:expected_demand)).to eql(50.0)
+      end
     end # when all edges have a share defined
 
     context 'when an edge has no share' do

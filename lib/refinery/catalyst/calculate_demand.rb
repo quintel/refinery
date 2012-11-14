@@ -34,6 +34,8 @@ module Refinery
       #
       # Returns nothing.
       def calculate!
+        @node.set(:expected_demand, @node.get(:final_demand))
+
         @node.descendants.select { |n| can_calculate?(n) }.each do |node|
           node.set(demand_attribute(node), calculate_demand(node))
         end
@@ -82,9 +84,7 @@ module Refinery
       #
       # Returns a float, or nil if no demand is defined.
       def demand_of(node)
-        node.get(:expected_demand) ||
-          node.get(:preset_demand) ||
-          node.get(:final_demand)
+        node.get(:expected_demand) || node.get(:preset_demand)
       end
 
     end # CalculateDemand
