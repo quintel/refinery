@@ -21,6 +21,6 @@ module Refinery
   #
   # Returns a Turbine::Graph.
   def load(path = nil)
-    Stub.create
+    Stub.etsource_168
   end
 end
