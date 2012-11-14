@@ -35,17 +35,46 @@ module Refinery
       # Returns nothing.
       def calculate!
         @node.descendants.each do |node|
-          attr = node.out_edges.any? ? :expected_demand : :preset_demand
-          node.set(attr, 0.0)
-
-          node.in_edges.each do |edge|
-            edge_demand = edge.get(:share) *
-              ( edge.from.get(:final_demand) ||
-                edge.from.get(:expected_demand) )
-
-            node.set(attr, node.get(attr) + edge_demand)
-          end
+          node.set(demand_attribute(node), calculate_demand(node))
         end
+      end
+
+      #######
+      private
+      #######
+
+      # Internal: Returns the attribute to which the demand attribute should
+      # be saved. Leaf nodes set :preset demand while others use :expected.
+      #
+      # Returns a symbol.
+      def demand_attribute(node)
+        leaf?(node) ? :preset_demand : :expected_demand
+      end
+
+      # Internal: Given a node, calculates its demand based its ancestors and
+      # the "share" of each edge which connect them.
+      #
+      # Returns a float.
+      def calculate_demand(node)
+        node.in_edges.inject(0) do |sum, edge|
+          sum + (edge.get(:share) * demand_of(edge.from))
+        end
+      end
+
+      # Internal: Returns if the given node is a leaf (has no descendants).
+      #
+      # Returnst true or false.
+      def leaf?(node)
+        node.out_edges.none?
+      end
+
+      # Internal: Given a node, returns its demand.
+      #
+      # Returns a float, or nil if no demand is defined.
+      def demand_of(node)
+        node.get(:expected_demand) ||
+          node.get(:preset_demand) ||
+          node.get(:final_demand)
       end
 
     end # CalculateDemand
