@@ -53,7 +53,7 @@ module Refinery
 
       gas_heater.connect_to(ud_heating_hh, :heat)
       combi_heater.connect_to(ud_heating_hh, :heat)
-      gas_heat_pump.connect_to(ud_heating_hh, :hear)
+      gas_heat_pump.connect_to(ud_heating_hh, :heat)
       gas_chp.connect_to(ud_heating_hh, :heat)
 
       fd_ind_gas.connect_to(burner, :gas)
