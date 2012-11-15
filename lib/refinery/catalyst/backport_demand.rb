@@ -37,6 +37,8 @@ module Refinery
       #
       # Returns nothing.
       def calculate!
+        return false unless can_calculate?
+
         demand = 0.0
 
         @node.out_edges.each do |edge|
@@ -60,6 +62,16 @@ module Refinery
       def proportional_share_of(edge)
         edge.get(:share) / edge.to.in_edges.get(:share).
           inject(0) { |sum, value| sum + value }
+      end
+
+      # Internal: Determines if there is enough information to calculate the
+      # demand for this node based on the demand of its descendants.
+      #
+      # Returns true or false.
+      def can_calculate?
+        # If the "out" nodes do not have a "share" on all of their "in" edges,
+        # there's no way to determine this node's demand.
+        @node.out.in_edges.get(:share).all?
       end
 
     end # BackportDemand

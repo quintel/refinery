@@ -125,5 +125,42 @@ module Refinery::Catalyst
         expect(graph.node(:child).get(:expected_demand)).to eql(50.0)
       end
     end # when there is a change on blank descendants
+
+    context 'when an out edge has no share defined' do
+      let(:graph) do
+        Turbine::Graph.new.tap do |graph|
+          graph.add(Turbine::Node.new(:parent))
+          graph.add(Turbine::Node.new(:child, expected_demand: 10.0))
+
+          graph.node(:parent).connect_to(graph.node(:child), :gas)
+        end
+      end
+
+      before { Refinery::Catalyst::BackportDemand.call(graph) }
+
+      it 'does not set expected demand on the parent' do
+        expect(graph.node(:parent).get(:expected_demand)).to be_nil
+      end
+    end # when an out edge has no share defined
+
+    context 'when a descendant in edge has no share defined' do
+      let(:graph) do
+        Turbine::Graph.new.tap do |graph|
+          graph.add(Turbine::Node.new(:parent))
+          graph.add(Turbine::Node.new(:sibling))
+          graph.add(Turbine::Node.new(:child, expected_demand: 10.0))
+
+          graph.node(:parent).connect_to(graph.node(:child), :gas, share: 0.5)
+          graph.node(:sibling).connect_to(graph.node(:child), :gas)
+        end
+      end
+
+      before { Refinery::Catalyst::BackportDemand.call(graph) }
+
+      it 'does not set expected demand on the parent' do
+        expect(graph.node(:parent).get(:expected_demand)).to be_nil
+        expect(graph.node(:sibling).get(:expected_demand)).to be_nil
+      end
+    end # when a sibling out edge has no share defined
   end # BackportDemand
 end # Refinery::Cayalyst
