@@ -10,9 +10,7 @@ module Refinery
       # Returns nothing.
       def self.call(graph)
         demand_nodes = graph.tsort.reject do |node|
-          node.get(:final_demand) ||
-            node.get(:expected_demand) ||
-            node.get(:preset_demand)
+          node.get(:expected_demand) || node.get(:preset_demand)
         end
 
         demand_nodes.each { |node| new(node).calculate! }
