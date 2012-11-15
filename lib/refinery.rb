@@ -1,10 +1,12 @@
 require 'bundler' ; Bundler.setup
+require 'graphviz'
 require 'turbine'
 
 require 'refinery/catalyst/backport_demand'
 require 'refinery/catalyst/calculate_demand'
 require 'refinery/catalyst/fill_shareless_edges'
 require 'refinery/catalyst/reverse_fill_edges'
+require 'refinery/diagram'
 require 'refinery/exporter'
 require 'refinery/reactor'
 require 'refinery/stub'

@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rake',          '>= 0.9.0'
 gem 'turbine',                   github: 'quintel/turbine'
+gem 'ruby-graphviz'
 
 group :test do
   gem 'rspec',       '>= 2.11.0'
@@ -18,4 +19,3 @@ group :extras do
   gem 'yard-tomdoc', '>= 0.5',   require: false
   gem 'pry',                     require: false
 end
-
