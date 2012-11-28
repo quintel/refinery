@@ -83,6 +83,7 @@ module Refinery
       # ---------------
 
       fd_elec.set(:final_demand, 100)
+      elec_network.set(:final_demand, 50)
 
       # Edges
       # -----
@@ -95,7 +96,7 @@ module Refinery
 
       graph.node(:space_heating_gas).connect_to(space_heating_chp, :gas)
       space_heating_chp.connect_to(locally_available_elec, :electricity)
-      space_heating_chp.connect_to(graph.node(:ud_heating_hh), :heat)
+      space_heating_chp.connect_to(graph.node(:ud_heating_hh), :heat, share: 0.0)
 
       graph
     end
