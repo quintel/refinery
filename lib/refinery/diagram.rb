@@ -81,7 +81,14 @@ module Refinery
     #
     # Returns a string.
     def edge_label(edge)
-      edge.get(:share) && " #{ edge.get(:share).round(5) }" || ' ?!'
+      if share = edge.get(:share)
+        flow = edge.from.get(:calculator).demand
+        flow = flow ? " <font color='#bbbbbb'>(#{ (flow * share).round(1) })</font>" : ''
+
+        "<<font> #{ edge.get(:share).round(5) }#{ flow }</font>>"
+      else
+        '?!'
+      end
     end
 
     # Internal: The label shown inside the node. Includes the node key and the
