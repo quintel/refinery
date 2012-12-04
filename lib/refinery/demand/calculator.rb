@@ -21,7 +21,7 @@ module Refinery
       #
       # Returns true or false.
       def calculable?
-        raise NotImplementedError, 'Implement calculable? in a subclass.'
+        not strategy.nil?
       end
 
       # Public: Performs the calculation, setting the appropriate attributes
@@ -52,6 +52,21 @@ module Refinery
       # Returns a string.
       def to_s
         "#{ self.class.name.gsub(/.+::/, '') } for #{ @model.inspect }"
+      end
+
+      #######
+      private
+      #######
+
+      # Internal: Which strategy should be used to calculate the value.
+      #
+      # Depending on the state of "nearby" elements (related nodes and edges)
+      # there are different ways to perform the computation.
+      #
+      # Returns the strategy, or nil if there is no way to currently calculate
+      # the value.
+      def strategy
+        self.class::STRATEGIES.detect { |strat| strat.calculable?(@model) }
       end
     end # Calculator
   end # Demand
