@@ -11,10 +11,11 @@ describe 'ETsource #168 stub graph' do
 
   before do
     Refinery::Reactor.new(
-      Refinery::Catalyst::FillSharelessEdges,
-      Refinery::Catalyst::CalculateDemand,
-      Refinery::Catalyst::ReverseFillEdges,
-      Refinery::Catalyst::BackportDemand
+      # Refinery::Catalyst::FillSharelessEdges,
+      # Refinery::Catalyst::CalculateDemand,
+      # Refinery::Catalyst::ReverseFillEdges,
+      # Refinery::Catalyst::BackportDemand
+      Refinery::Catalyst::Calculators
     ).run(graph)
   end
 
