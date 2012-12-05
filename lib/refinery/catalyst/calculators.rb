@@ -26,7 +26,6 @@ module Refinery
       #
       # Returns nothing.
       def run!
-        convert_final_demand!
         assign_calculators!
         run_calculators!
       end
@@ -34,16 +33,6 @@ module Refinery
       #######
       private
       #######
-
-      # Internal: Any nodes with a :final_demand attribute will have their
-      # :expected_demand values set also.
-      #
-      # Returns nothing.
-      def convert_final_demand!
-        @graph.nodes.select { |node| node.get(:final_demand) }.each do |node|
-          node.set(:expected_demand, node.get(:final_demand))
-        end
-      end
 
       # Internal: Given a node, assigns the calculators.
       #
