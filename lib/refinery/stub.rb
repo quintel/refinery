@@ -82,9 +82,7 @@ module Refinery
       # Node Properties
       # ---------------
 
-      elec_network.set(:final_demand, 80)
-      fd_hh_elec.set(:final_demand, 100)
-
+      fd_hh_elec.set(:final_demand, 100.0)
 
       # Edges
       # -----
