@@ -336,6 +336,75 @@ module Refinery::Demand ; describe 'Share calculations' do
           expect(x).to_not be_calculable
         end
       end
+
+      context 'and there is a third parent' do
+        #   (100.0) P      P2 (nil)   P3 (nil)
+        #          / \ x   /          /
+        #  (75.0) S   \   / _________/
+        #              \ / /
+        #               C (125.0)
+        before do
+          pending
+        end
+
+        context 'with demand' do
+          it 'is calculable' do
+            expect(x).to be_calculable
+          end
+
+          it 'sets the share' do
+            x.calculate!
+            expect(edge.get(:share)).to eql(0.25)
+          end
+        end
+
+        context 'without demand' do
+          it 'is not calculable' do
+            expect(x).to_not be_calculable
+          end
+        end
+      end
+
+      context 'and the child has multiple siblings' do
+        #              (100) P       P2
+        #                 / / \ x   /
+        #         _______/ /   \   /
+        #        /        /     \ /
+        #  (10) S2   (75) S      C
+        before do
+          parent.set(:expected_demand, 100.0)
+          child.set(:preset_demand, 125.0)
+          parent_two_edge.set(:share, 0.5)
+          parent_two.set(:expected_demand, 100.0)
+        end
+
+        it 'is calculable' do
+          expect(x).to be_calculable
+        end
+
+        it 'sets share, accounting for energy supplied by the other parent' do
+          x.calculate!
+          expect(edge.get(:share)).to eql(0.75)
+        end
+      end
+
+      context 'and a third parent and second sibling with no demand' do
+        #                (100) P      P2 (nil)  P3 (nil)
+        #                   / / \ x   /          /
+        #           _______/ /   \   / _________/
+        #          /        /     \ / /
+        #   (nil) S2   (75) S      C (100)
+        before do
+          pending
+        end
+
+        # This is not calculable becuase, since we don't know how much demand
+        # is required by S2, nor the share of the P->S2 edge, we cannot know
+        # that P needs to supply C with 25 energy.
+        it 'is not calculable' do
+          expect(x).to_not be_calculable
+        end
+      end
     end # when the child has multiple parents
   end # inferring from the "from" node(s)
 end ; end # Refinery::Demand
