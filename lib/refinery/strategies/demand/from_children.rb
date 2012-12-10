@@ -6,6 +6,7 @@ module Refinery::Strategies
       def self.calculable?(node)
         node.out.any? &&
           node.out.get(:calculator).all?(&:demand) &&
+          node.out.in_edges.all? { |edge| edge.from == node } &&
           node.out.in_edges.get(:share).all?
       end
 

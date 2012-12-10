@@ -363,10 +363,8 @@ module Refinery ; describe 'Demand calculations' do
       end
 
       it 'does not set parent demand' do
-        pending 'This should not be calculated!' do
-          expect(demand(mother)).to be_nil
-          expect(demand(father)).to be_nil
-        end
+        expect(demand(mother)).to be_nil
+        expect(demand(father)).to be_nil
       end
     end # and the child has demand
 
