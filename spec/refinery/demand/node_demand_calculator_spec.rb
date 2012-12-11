@@ -139,7 +139,7 @@ module Refinery::Demand ; describe 'Demand calculations:' do
           x_node.connect_to(a_node, :gas, share: 1.0)
         end
 
-        it 'is not calculable' do
+        it 'is calculable' do
           expect(x).to be_calculable
         end
 
@@ -154,8 +154,13 @@ module Refinery::Demand ; describe 'Demand calculations:' do
           x_node.connect_to(a_node, :gas)
         end
 
-        it 'is not calculable' do
-          expect(x).to_not be_calculable
+        it 'is calculable' do
+          expect(x).to be_calculable
+        end
+
+        it 'sets demand' do
+          x.calculate!
+          expect(x.demand).to eql(45.0)
         end
       end # and the edge has no share
     end # with a single child; demand set
@@ -204,8 +209,13 @@ module Refinery::Demand ; describe 'Demand calculations:' do
           x_node.connect_to(b_node, :gas)
         end
 
-        it 'is not calculable' do
-          expect(x).to_not be_calculable
+        it 'is calculable' do
+          expect(x).to be_calculable
+        end
+
+        it 'sets demand' do
+          x.calculate!
+          expect(x.demand).to eql(50.0)
         end
       end # when one edge is missing a share
     end # with two children; demand set
@@ -235,13 +245,8 @@ module Refinery::Demand ; describe 'Demand calculations:' do
         a_node.set(:preset_demand, 100.0)
       end
 
-      it 'is calculable' do
-        expect(x).to be_calculable
-      end
-
-      it 'sets demand' do
-        x.calculate!
-        expect(x.demand).to eql(75.0)
+      it 'is not calculable' do
+        expect(x).to_not be_calculable
       end
 
       context 'and an ancestor edge has no share' do
@@ -256,6 +261,28 @@ module Refinery::Demand ; describe 'Demand calculations:' do
           expect(x).to_not be_calculable
         end
       end # and an ancestor edge has no share
+
+      context 'when an ancestor has demand' do
+        #        X   B (30)
+        #  (0.75) \ / (0.6)
+        #          A (100)
+        before do
+          b_node.out_edges.first.set(:share, nil)
+        end
+
+        it 'is not calculable' do
+          pending do
+            expect(x).to be_calculable
+          end
+        end
+
+        it 'sets demand' do
+          pending do
+            x.calculate!
+            expect(x.demand).to eql((100.0 - 18) / 0.75)
+          end
+        end
+      end # and an ancestor has demand
     end # when the child receives demand from multiple ancestors
   end # calculating from children
 end ; end # Refinery::Demand

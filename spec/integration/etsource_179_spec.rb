@@ -108,7 +108,7 @@ describe 'ETsource #179 stub graph' do
 
   it 'fills needed electricity demand from the elec. network' do
     expect(node(:elec_network).get(:expected_demand)).
-      to be_within(1e-4).of(76.923)
+      to be_within(1e-2).of(68.3)
   end
 
   it 'propagates electricity demand to descendants of fd_elec' do
