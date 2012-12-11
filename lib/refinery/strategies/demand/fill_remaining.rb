@@ -26,8 +26,7 @@ module Refinery::Strategies
 
         node.out.in_edges.
           reject { |edge| edge.from == node }.
-          all?   { |edge| edge.get(:share) &&
-                          edge.from.get(:calculator).demand }
+          all?   { |edge| edge.get(:calculator).demand }
       end
 
       def self.calculate(node)
@@ -45,7 +44,7 @@ module Refinery::Strategies
         edges = child.in_edges.reject { |edge| edge.from == parent }
 
         child.get(:calculator).demand - edges.inject(0.0) do |sum, edge|
-          sum + edge.from.get(:calculator).demand * edge.get(:share)
+          sum + edge.get(:calculator).demand
         end
       end
 

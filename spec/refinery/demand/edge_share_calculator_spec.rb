@@ -14,6 +14,48 @@ module Refinery::Demand ; describe 'Share calculations' do
     sibling.set(:calculator, NodeDemandCalculator.new(sibling))
   end
 
+  describe '#demand' do
+    context 'when the parent node has demand' do
+      before { parent.set(:expected_demand, 50.0) }
+
+      context 'and the edge has a share' do
+        before { edge.set(:share, 0.5) }
+
+        it 'returns the demand supplied by the edge' do
+          expect(x.demand).to eql(25.0)
+        end
+      end
+
+      context 'and the edge has no share' do
+        before { edge.set(:share, nil) }
+
+        it 'does not calculate the demand supplied by the edge' do
+          expect(x.demand).to be_nil
+        end
+      end
+    end
+
+    context 'when the parent node does not have demand' do
+      before { parent.set(:expected_demand, nil) }
+
+      context 'and the edge has a share' do
+        before { edge.set(:share, 0.5) }
+
+        it 'does not calculate the demand supplied by the edge' do
+          expect(x.demand).to be_nil
+        end
+      end
+
+      context 'and the edge has no share' do
+        before { edge.set(:share, nil) }
+
+        it 'does not calculate the demand supplied by the edge' do
+          expect(x.demand).to be_nil
+        end
+      end
+    end
+  end # demand
+
   # --------------------------------------------------------------------------
 
   context 'when the "from" node has no other out edges' do

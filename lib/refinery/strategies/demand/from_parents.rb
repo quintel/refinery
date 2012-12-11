@@ -4,14 +4,13 @@ module Refinery::Strategies
     # outbound edges have a share.
     class FromParents
       def self.calculable?(node)
-        node.in_edges.any? && node.in_edges.all? do |edge|
-          edge.get(:share) && edge.from.get(:calculator).demand
-        end
+        node.in_edges.any? &&
+          node.in_edges.get(:calculator).map(&:demand).all?
       end
 
       def self.calculate(node)
         node.in_edges.reduce(0) do |sum, edge|
-          sum + (edge.get(:share) * edge.from.get(:calculator).demand)
+          sum + edge.get(:calculator).demand
         end
       end
     end # FromParents
