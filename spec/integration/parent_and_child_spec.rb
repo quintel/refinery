@@ -108,8 +108,9 @@ describe 'Graph calculations; a parent and child' do
     #         [M]
     #    :gas | | :electricity
     #         [C]
-    let(:mc_gas_edge)  { mother.connect_to(child, :gas) }
-    let(:mc_elec_edge) { mother.connect_to(child, :electricity) }
+    let!(:mc_gas_edge)  { mother.connect_to(child, :gas) }
+    let!(:mc_elec_edge) { mother.connect_to(child, :electricity) }
+    before { calculate! }
 
     it 'sets the gas share to 1.0' do
       pending do
