@@ -22,11 +22,8 @@ module Refinery::Strategies
       end
 
       def self.calculate(edge)
-        others = edge.from.out.uniq.inject(0.0) do |sum, node|
-          sum + node.get(:calculator).demand
-        end
-
-        edge.to.get(:calculator).demand / others
+        edge.to.get(:calculator).demand / #
+          edge.from.out.uniq.get(:calculator).map(&:demand).sum
       end
     end # InferFromChild
   end # Share

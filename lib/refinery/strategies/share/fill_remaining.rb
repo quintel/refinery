@@ -10,9 +10,7 @@ module Refinery::Strategies
       end
 
       def self.calculate(edge)
-        1.0 - edge.from.out_edges.inject(0.0) do |sum, other|
-          sum + (other.get(:share) || 0.0)
-        end
+        1.0 - edge.from.out_edges.sum { |edge| edge.get(:share) || 0.0 }
       end
     end # OnlyEdge
   end # Share

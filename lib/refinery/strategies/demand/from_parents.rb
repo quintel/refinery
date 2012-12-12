@@ -9,9 +9,7 @@ module Refinery::Strategies
       end
 
       def self.calculate(node)
-        node.in_edges.reduce(0) do |sum, edge|
-          sum + edge.get(:calculator).demand
-        end
+        node.in_edges.get(:calculator).map(&:demand).sum
       end
     end # FromParents
   end # Demand

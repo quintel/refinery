@@ -4,6 +4,7 @@ require 'turbine'
 
 require 'refinery/catalyst/calculators'
 require 'refinery/catalyst/convert_final_demand'
+require 'refinery/core_ext/enumerable'
 require 'refinery/strategies/demand/fill_remaining'
 require 'refinery/strategies/demand/from_children'
 require 'refinery/strategies/demand/from_parents'

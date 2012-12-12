@@ -30,9 +30,7 @@ module Refinery::Strategies
       end
 
       def self.calculate(node)
-        node.out.inject(0.0) do |sum, child|
-          sum + remaining_demand(node, child)
-        end
+        node.out.sum { |child| remaining_demand(node, child) }
       end
 
       # Internal: Given a +child+ node, sums the demand supplied by edges not
@@ -41,11 +39,10 @@ module Refinery::Strategies
       #
       # Returns a float.
       def self.remaining_demand(parent, child)
-        edges = child.in_edges.reject { |edge| edge.from == parent }
+        related_edges = child.in_edges.reject { |edge| edge.from == parent }
 
-        child.get(:calculator).demand - edges.inject(0.0) do |sum, edge|
-          sum + edge.get(:calculator).demand
-        end
+        child.get(:calculator).demand -
+          related_edges.get(:calculator).map(&:demand).sum
       end
 
       # Internal: Asserts that all of the node's children have demand defined.

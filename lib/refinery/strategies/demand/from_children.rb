@@ -11,8 +11,8 @@ module Refinery::Strategies
       end
 
       def self.calculate(node)
-        node.out_edges.reduce(0) do |sum, edge|
-          sum + share_of_input(edge) * edge.to.get(:calculator).demand
+        node.out_edges.sum do |edge|
+          share_of_input(edge) * edge.to.get(:calculator).demand
         end
       end
 
@@ -23,8 +23,7 @@ module Refinery::Strategies
       #
       # Returns a float.
       def self.share_of_input(edge)
-        edge.get(:share) /
-          edge.to.in_edges.get(:share).reduce(0) { |sum, value| sum + value }
+        edge.get(:share) / edge.to.in_edges.get(:share).sum
       end
     end # FromChildren
   end # Demand
