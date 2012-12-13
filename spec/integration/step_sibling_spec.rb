@@ -137,17 +137,13 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets edge shares' do
-      pending do
-        expect(ms_edge.get(:share)).to eql(1.0)
-        expect(mc_edge.get(:share)).to eql(0.25)
-        expect(fc_edge.get(:share)).to eql(1.0)
-      end
+      expect(ms_edge.get(:share)).to eql(0.75)
+      expect(mc_edge.get(:share)).to eql(0.25)
+      expect(fc_edge.get(:share)).to eql(1.0)
     end
 
     it "sets the parent's demand" do
-      pending do
-        expect(demand(father)).to eql(100)
-      end
+      expect(demand(father)).to eql(100.0)
     end
   end # and the second parent has no demand
 

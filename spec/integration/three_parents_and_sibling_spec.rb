@@ -22,10 +22,11 @@ describe 'Graph calculations; three parents and a sibling' do
     mother.set(:expected_demand, 100.0)
     child.set(:preset_demand, 125.0)
     father.set(:expected_demand, 15.0)
-    calculate!
   end
 
   context 'with no edge shares' do
+    before {calculate! }
+
     it 'sets edge shares' do
       expect(ms_edge.get(:share)).to eql(0.75)
       expect(mc_edge.get(:share)).to eql(0.25)
