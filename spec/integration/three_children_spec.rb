@@ -54,11 +54,9 @@ describe 'Graph calculations; with three children' do
     end
 
     it 'sets edge shares' do
-      pending do
-        expect(mc1_edge.get(:share)).to eql(50.0 / 225.0)
-        expect(mc2_edge.get(:share)).to eql(75.0 / 225.0)
-        expect(mc3_edge.get(:share)).to eql(100.0 / 225.0)
-      end
+      expect(mc1_edge.get(:share)).to be_within(1e-8).of(50.0 / 225.0)
+      expect(mc2_edge.get(:share)).to be_within(1e-8).of(75.0 / 225.0)
+      expect(mc3_edge.get(:share)).to be_within(1e-8).of(100.0 / 225.0)
     end
   end # when a child is missing demand
 

@@ -13,7 +13,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
   before do
     sibling.set(:preset_demand, 75.0)
     mother.set(:expected_demand, 100.0)
-    child.set(:preset_demand, 75.0)
+    child.set(:preset_demand, 125.0)
     father.set(:expected_demand, 100.0)
   end
 
@@ -28,21 +28,44 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates M->S share' do
-      pending do
-        expect(ms_edge.get(:share)).to eql(0.75)
-      end
+      expect(ms_edge.get(:share)).to eql(0.75)
     end
 
     it 'calculates M->C share, accounting for supply from F' do
-      pending do
-        expect(mc_edge.get(:share)).to eql(0.25)
-      end
+      expect(mc_edge.get(:share)).to eql(0.25)
     end
 
     it 'calculates F->C share' do
       expect(fc_edge.get(:share)).to eql(1.0)
     end
   end # and all nodes have demand
+
+  context 'and the parent has no demand' do
+    #           [M]     [F] (100)
+    #           / \     /
+    #          /   \   /
+    #         /     \ /
+    #  (75) [S]     [C] (125)
+    before do
+      calculate!
+    end
+
+    it 'calculates parent demand' do
+      expect(demand(mother)).to eql(100.0)
+    end
+
+    it 'calculates M->S share' do
+      expect(ms_edge.get(:share)).to eql(0.75)
+    end
+
+    it 'calculates M->C share, accounting for supply from F' do
+      expect(mc_edge.get(:share)).to eql(0.25)
+    end
+
+    it 'calculates F->C share' do
+      expect(fc_edge.get(:share)).to eql(1.0)
+    end
+  end # and the parent has no demand
 
   context 'and the sibling has no demand' do
     #     (100) [M]     [F] (100)
@@ -55,16 +78,16 @@ describe 'Graph calculations; with two parents and a step sibling' do
       calculate!
     end
 
+    it 'calculates sibling demand' do
+      expect(demand(sibling)).to eql(75.0)
+    end
+
     it 'calculates M->S share' do
-      pending do
-        expect(ms_edge.get(:share)).to eql(0.75)
-      end
+      expect(ms_edge.get(:share)).to eql(0.75)
     end
 
     it 'calculates M->C share, accounting for supply from F' do
-      pending do
-        expect(mc_edge.get(:share)).to eql(0.25)
-      end
+      expect(mc_edge.get(:share)).to eql(0.25)
     end
 
     it 'calculates F->C share' do
@@ -141,17 +164,13 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets the sibling demand' do
-      pending do
-        expect(demand(sibling)).to eql(50.0)
-      end
+      expect(demand(sibling)).to eql(50.0)
     end
 
     it 'sets the edge shares' do
-      pending do
-        expect(ms_edge.get(:share)).to eql(0.5)
-        expect(mc_edge.get(:share)).to eql(0.5)
-        expect(fc_edge.get(:share)).to eql(1.0)
-      end
+      expect(ms_edge.get(:share)).to eql(0.5)
+      expect(mc_edge.get(:share)).to eql(0.5)
+      expect(fc_edge.get(:share)).to eql(1.0)
     end
   end # and the second parent is a partial supplier by demand
 
@@ -168,17 +187,13 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets the sibling demand' do
-      pending do
-        expect(demand(sibling)).to eql(25.0)
-      end
+      expect(demand(sibling)).to eql(25.0)
     end
 
     it 'sets the edge shares' do
-      pending do
-        expect(ms_edge.get(:share)).to eql(0.25)
-        expect(mc_edge.get(:share)).to eql(0.75)
-        expect(fc_edge.get(:share)).to eql(1.0)
-      end
+      expect(ms_edge.get(:share)).to eql(0.25)
+      expect(mc_edge.get(:share)).to eql(0.75)
+      expect(fc_edge.get(:share)).to eql(0.5)
     end
   end # and the second parent is a partial supplier by share
 
@@ -223,10 +238,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
       expect(mc_edge.get(:share)).to be_nil
     end
 
-    it 'does not set F->C share' do
-      pending do
-        expect(fc_edge.get(:share)).to be_nil
-      end
+    it 'sets F->C share' do
+      expect(fc_edge.get(:share)).to eql(1.0)
     end
 
     it 'does not set demand' do

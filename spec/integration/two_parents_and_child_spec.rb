@@ -78,8 +78,7 @@ describe 'Graph calculations; with two parents' do
       end
 
       it "does not set the other parent's demand" do
-        expect(1).to eql 1
-        # expect(demand(father)).to be_nil
+        expect(demand(father)).to be_nil
       end
 
       it "does not set the child's demand" do
@@ -89,10 +88,11 @@ describe 'Graph calculations; with two parents' do
 
     context 'as does the child' do
       #   (60) [M] [F]
-      #   (0.75) \ / (0.6)
+      #   (0.75) \ /
       #          [C] (180)
       before do
         child.set(:expected_demand, 180.0)
+        fc_edge.set(:share, nil)
         calculate!
       end
 

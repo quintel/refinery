@@ -1,13 +1,6 @@
 require 'spec_helper'
 
 describe 'Graph calculations; two children and two spouses' do
-  # Calculating demand for [M]:
-  #
-  #    [A]     [M]     [B]
-  #      \     / \     /
-  #       \   /   \   /
-  #        \ /     \ /
-  #   (20) [Y]     [Z] (55)
   let!(:mother)   { graph.add Turbine::Node.new(:mother) }
   let!(:child)    { graph.add Turbine::Node.new(:child) }
   let!(:spouse_a) { graph.add Turbine::Node.new(:spouse_a) }
@@ -21,6 +14,11 @@ describe 'Graph calculations; two children and two spouses' do
   let!(:bz_edge)  { spouse_b.connect_to(child_z, :gas, share: 1.0) }
 
   context 'when spouses have no demand defined' do
+    #    [A]     [M]     [B]
+    #      \     / \     /
+    #       \   /   \   /
+    #        \ /     \ /
+    #   (20) [Y]     [Z] (55)
     before do
       calculate!
     end
@@ -35,6 +33,11 @@ describe 'Graph calculations; two children and two spouses' do
   end # when spouses have no demand defined
 
   context 'when one spouse has no demand defined' do
+    #  (10) [A]     [M]     [B]
+    #         \     / \     /
+    #          \   /   \   /
+    #           \ /     \ /
+    #      (20) [Y]     [Z] (55)
     before do
       spouse_a.set(:expected_demand, 10.0)
       calculate!
@@ -49,6 +52,11 @@ describe 'Graph calculations; two children and two spouses' do
   end # when one spouse has no demand defined
 
   context 'when spouses have demand' do
+    #  (10) [A]     [M]     [B] (15)
+    #         \     / \     /
+    #          \   /   \   /
+    #           \ /     \ /
+    #      (20) [Y]     [Z] (55)
     before do
       spouse_a.set(:expected_demand, 10.0)
       spouse_b.set(:expected_demand, 15.0)
@@ -74,10 +82,8 @@ describe 'Graph calculations; two children and two spouses' do
       end
 
       it 'sets the edge shares' do
-        pending do
-          expect(my_edge.get(:share)).to eql(0.2)
-          expect(mz_edge.get(:share)).to eql(0.8)
-        end
+        expect(my_edge.get(:share)).to eql(0.2)
+        expect(mz_edge.get(:share)).to eql(0.8)
       end
     end
   end # when spouses have demand

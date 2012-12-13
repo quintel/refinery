@@ -4,7 +4,8 @@ module Refinery
       STRATEGIES = [
         Strategies::Share::Solo,
         Strategies::Share::FillRemaining,
-        Strategies::Share::InferFromChild
+        Strategies::Share::InferFromChild,
+        Strategies::Share::FromDemand
       ]
 
       # Public: Performs the calculation, setting the share attribute on the

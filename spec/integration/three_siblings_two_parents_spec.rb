@@ -26,17 +26,13 @@ describe 'Graph calculations; three siblings and two parents' do
   end
 
   it 'sets child demand' do
-    pending do
-      expect(demand(child)).to eql(65.0)
-    end
+    expect(demand(child)).to eql(65.0)
   end
 
   it 'sets edge shares' do
-    pending do
-      expect(mb_edge.get(:share)).to eql(0.10)
-      expect(ms_edge.get(:share)).to eql(0.75)
-      expect(mc_edge.get(:share)).to eql(0.15)
-      expect(fc_edge.get(:share)).to eql(1.00)
-    end
+    expect(mb_edge.get(:share)).to eql(0.10)
+    expect(ms_edge.get(:share)).to eql(0.75)
+    expect(mc_edge.get(:share)).to be_within(1e-8).of(0.15) # flop precision
+    expect(fc_edge.get(:share)).to eql(1.00)
   end
 end # Graph calculations; three siblings and two parents
