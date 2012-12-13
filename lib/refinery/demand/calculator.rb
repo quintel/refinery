@@ -29,6 +29,7 @@ module Refinery
       #
       # Returns nothing.
       def calculate!
+        @model.set(:strategy_used, strategy)
         @calculated = true
       end
 
