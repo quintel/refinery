@@ -50,18 +50,17 @@ describe 'Graph calculations; parent and two children' do
       let!(:mc_edge) { mother.connect_to(child, :gas, share: 0.4) }
       let!(:ms_edge) { mother.connect_to(sibling, :gas, share: 0.6) }
 
-      before { calculate! }
+      before do
+        child.set(:preset_demand, 30.0)
+        calculate!
+      end
 
       it 'sets parent demand' do
-        pending "I'm not sure why this doesn't work yet..." do
-          expect(demand(mother)).to eql(75.0)
-        end
+        expect(demand(mother)).to eql(75.0)
       end
 
       it 'sets sibling demand' do
-        pending "I'm not sure why this doesn't work yet..." do
-          expect(demand(sibling)).to eql(45.0)
-        end
+        expect(demand(sibling)).to eql(45.0)
       end
     end
 

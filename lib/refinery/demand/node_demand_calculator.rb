@@ -6,6 +6,7 @@ module Refinery
       STRATEGIES = [
         Strategies::Demand::FillRemaining,
         Strategies::Demand::FromChildren,
+        Strategies::Demand::FromExclusiveChild,
         Strategies::Demand::FromParents
       ]
 
