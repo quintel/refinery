@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe 'Graph calculations; with two parents and a step sibling' do
-  let!(:mother)  { graph.add Turbine::Node.new(:mother) }
-  let!(:child)   { graph.add Turbine::Node.new(:child) }
-  let!(:sibling) { graph.add Turbine::Node.new(:sibling) }
-  let!(:father)  { graph.add Turbine::Node.new(:father) }
+  let!(:mother)  { graph.add Refinery::Node.new(:mother) }
+  let!(:child)   { graph.add Refinery::Node.new(:child) }
+  let!(:sibling) { graph.add Refinery::Node.new(:sibling) }
+  let!(:father)  { graph.add Refinery::Node.new(:father) }
 
   let!(:ms_edge) { mother.connect_to(sibling, :gas) }
   let!(:mc_edge) { mother.connect_to(child, :gas) }

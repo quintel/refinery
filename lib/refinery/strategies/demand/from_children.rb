@@ -5,14 +5,14 @@ module Refinery::Strategies
     class FromChildren
       def self.calculable?(node)
         node.out.any? &&
-          node.out.get(:calculator).all?(&:demand) &&
+          node.out.all?(&:demand) &&
           node.out.in_edges.all? { |edge| edge.from == node } &&
           node.out.in_edges.get(:share).all?
       end
 
       def self.calculate(node)
         node.out_edges.sum do |edge|
-          share_of_input(edge) * edge.to.get(:calculator).demand
+          share_of_input(edge) * edge.to.demand
         end
       end
 

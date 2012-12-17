@@ -24,9 +24,7 @@ module Refinery::Strategies
         return false unless node.out.any?
         return false unless children_have_demand?(node)
 
-        node.out.in_edges.
-          reject { |edge| edge.from == node }.
-          all?   { |edge| edge.get(:calculator).demand }
+        node.out.in_edges.reject { |edge| edge.from == node }.all?(&:demand)
       end
 
       def self.calculate(node)
@@ -41,15 +39,14 @@ module Refinery::Strategies
       def self.remaining_demand(parent, child)
         related_edges = child.in_edges.reject { |edge| edge.from == parent }
 
-        child.get(:calculator).demand -
-          related_edges.get(:calculator).map(&:demand).sum
+        child.demand - related_edges.map(&:demand).sum
       end
 
       # Internal: Asserts that all of the node's children have demand defined.
       #
       # Returns true or false.
       def self.children_have_demand?(node)
-        node.out.all? { |child| child.get(:calculator).demand }
+        node.out.all?(&:demand)
       end
     end # FillRemaining
   end # Demand

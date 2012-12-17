@@ -24,38 +24,11 @@ module Refinery
 
       # Public: Runs the catalyst on the +graph+.
       #
-      # Returns nothing.
-      def run!
-        assign_calculators!
-        run_calculators!
-      end
-
-      #######
-      private
-      #######
-
-      # Internal: Given a node, assigns the calculators.
-      #
-      # node - The node.
-      #
-      # Returns nothing.
-      def assign_calculators!
-        @graph.nodes.each do |node|
-          node.set(:calculator, Demand::NodeDemandCalculator.new(node))
-
-          node.out_edges.each do |edge|
-            edge.set(:calculator, Demand::EdgeShareCalculator.new(edge))
-          end
-        end
-      end
-
-      # Internal: Calculates the values for each node and edge.
-      #
       # Raises IncalculableGraph if the loop reaches a point where it is
       # impossible to compute a models value.
       #
       # Returns nothing.
-      def run_calculators!
+      def run!
         calculators = uncalculated
         cycle       = 0
 
@@ -76,15 +49,19 @@ module Refinery
         end
       end
 
+      #######
+      private
+      #######
+
       # Internal: Returns all uncalculated calculators from nodes and edges
       # in the graph.
       #
       # Returns an array of calculators.
       def uncalculated
-        calculators = @graph.nodes.map { |node| node.get(:calculator) }
+        calculators = @graph.nodes.map(&:calculator)
 
         @graph.nodes.each do |node|
-          calculators.concat(node.out_edges.get(:calculator).to_a)
+          calculators.concat(node.out_edges.map(&:calculator).to_a)
         end
 
         calculators.reject(&:calculated?)

@@ -10,7 +10,7 @@ module Refinery::Strategies
 
       def self.calculate(node)
         edge = exclusive_edge(node)
-        edge.to.get(:calculator).demand / edge.get(:share)
+        edge.to.demand / edge.get(:share)
       end
 
       # Internal: Returns the edge which connects the parent to the exclusive
@@ -22,7 +22,7 @@ module Refinery::Strategies
             # And the edge has a share value.
             edge.get(:share) &&
             # And the child node has demand defined.
-            edge.to.get(:calculator).demand
+            edge.to.demand
         end
       end
     end # FromExclusiveChild

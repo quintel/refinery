@@ -26,24 +26,19 @@ module Refinery::Strategies
     # example) don't already have demand defined.
     class FromDemand
       def self.calculable?(edge)
-        # Parent demand?
-        edge.from.get(:calculator).demand &&
-          # Child demand?
-          edge.to.get(:calculator).demand &&
+        # Parent and child demand?
+        edge.from.demand && edge.to.demand &&
           # Siblings supply from other parents is already known?
-          siblings(edge).all? { |sibling| sibling.get(:calculator).demand }
+          siblings(edge).all?(&:demand)
       end
 
       def self.calculate(edge)
         # Figure out the total amount of demand assigned to the parent's
         # children which hasn't yet been accounted for (and therefore must be
         # supplied by the parent).
-        sibling_supply = siblings(edge).sum do |sibling|
-          sibling.get(:calculator).demand
-        end
+        sibling_supply = siblings(edge).sum(&:demand)
 
-        (edge.to.get(:calculator).demand - sibling_supply) /
-          edge.from.get(:calculator).demand
+        (edge.to.demand - sibling_supply) / edge.from.demand
       end
 
       # Internal: The "in" edges on the "to" node, excluding the given +edge+.

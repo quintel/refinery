@@ -23,7 +23,7 @@ module Refinery::Spec
     #
     # Returns a float, or nil if no demand is set.
     def demand(node)
-      node.get(:calculator).demand
+      node.demand
     end
   end # Integration
 end # Refinery::Spec

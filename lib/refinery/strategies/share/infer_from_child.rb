@@ -16,14 +16,13 @@ module Refinery::Strategies
     class InferFromChild
       def self.calculable?(edge)
         # The child node and it's siblings required demand set...
-        edge.from.out.get(:calculator).all?(&:demand) &&
+        edge.from.out.all?(&:demand) &&
           # The child nodes must each only take demand from the parent.
           edge.from.out.in_edges.all? { |other| other.from == edge.from }
       end
 
       def self.calculate(edge)
-        edge.to.get(:calculator).demand / #
-          edge.from.out.uniq.get(:calculator).map(&:demand).sum
+        edge.to.demand / edge.from.out.uniq.map(&:demand).sum
       end
     end # InferFromChild
   end # Share

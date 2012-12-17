@@ -6,11 +6,11 @@ describe 'Graph calculations; three parents and a sibling' do
   #          /   \   / _________/
   #         /     \ / /
   #  (75) [S]     [C] (125)
-  let!(:mother)   { graph.add Turbine::Node.new(:mother) }
-  let!(:child)    { graph.add Turbine::Node.new(:child) }
-  let!(:sibling)  { graph.add Turbine::Node.new(:sibling) }
-  let!(:father)   { graph.add Turbine::Node.new(:father) }
-  let!(:relative) { graph.add Turbine::Node.new(:relative) }
+  let!(:mother)   { graph.add Refinery::Node.new(:mother) }
+  let!(:child)    { graph.add Refinery::Node.new(:child) }
+  let!(:sibling)  { graph.add Refinery::Node.new(:sibling) }
+  let!(:father)   { graph.add Refinery::Node.new(:father) }
+  let!(:relative) { graph.add Refinery::Node.new(:relative) }
 
   let!(:ms_edge)  { mother.connect_to(sibling, :gas) }
   let!(:mc_edge)  { mother.connect_to(child, :gas) }

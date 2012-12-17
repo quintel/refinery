@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe 'Graph calculations; parent and two children' do
-  let!(:mother)  { graph.add Turbine::Node.new(:mother) }
-  let!(:child)   { graph.add Turbine::Node.new(:child) }
-  let!(:sibling) { graph.add Turbine::Node.new(:sibling) }
+  let!(:mother)  { graph.add Refinery::Node.new(:mother) }
+  let!(:child)   { graph.add Refinery::Node.new(:child) }
+  let!(:sibling) { graph.add Refinery::Node.new(:sibling) }
 
   context 'and the children have demand' do
     #          [M]

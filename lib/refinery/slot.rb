@@ -47,7 +47,7 @@ module Refinery
     # Returns a float, or nil if one or more of the edges do not yet have
     # enough data to calculate their demand.
     def demand
-      demands = @edges.map { |edge| edge.get(:calculator).demand }
+      demands = @edges.map(&:demand)
       (demands.all? && demands.sum) || nil
     end
   end # Slot

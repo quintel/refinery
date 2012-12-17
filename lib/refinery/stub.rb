@@ -111,7 +111,7 @@ module Refinery
     #
     # Returns a Turbine node.
     def self.N(key)
-      Turbine::Node.new(key)
+      Node.new(key)
     end
 
     private_class_method :N

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe 'Graph calculations; with three children' do
-  let!(:mother)  { graph.add Turbine::Node.new(:mother) }
-  let!(:child)   { graph.add Turbine::Node.new(:child) }
-  let!(:child_2) { graph.add Turbine::Node.new(:child_2) }
-  let!(:child_3) { graph.add Turbine::Node.new(:child_3) }
+  let!(:mother)  { graph.add Refinery::Node.new(:mother) }
+  let!(:child)   { graph.add Refinery::Node.new(:child) }
+  let!(:child_2) { graph.add Refinery::Node.new(:child_2) }
+  let!(:child_3) { graph.add Refinery::Node.new(:child_3) }
 
   let!(:mc1_edge) { mother.connect_to(child, :gas) }
   let!(:mc2_edge) { mother.connect_to(child_2, :gas) }

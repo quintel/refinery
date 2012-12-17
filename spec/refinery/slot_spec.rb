@@ -3,10 +3,10 @@ require 'spec_helper'
 module Refinery
   describe Slot do
     let(:graph)   { Turbine::Graph.new }
-    let(:parent)  { graph.add Turbine::Node.new(:parent, expected_demand: 50.0) }
-    let(:spouse)  { graph.add Turbine::Node.new(:spouse, expected_demand: 10.0) }
-    let(:child)   { graph.add Turbine::Node.new(:child)   }
-    let(:sibling) { graph.add Turbine::Node.new(:sibling) }
+    let(:parent)  { graph.add Node.new(:parent, expected_demand: 50.0) }
+    let(:spouse)  { graph.add Node.new(:spouse, expected_demand: 10.0) }
+    let(:child)   { graph.add Node.new(:child)   }
+    let(:sibling) { graph.add Node.new(:sibling) }
 
     before do
       [ parent, spouse ].each do |person|
@@ -85,8 +85,7 @@ module Refinery
 
     context 'when an edge does not have demand' do
       let(:slot) { Slot.new(parent, :out, :gas) }
-      before { slot.edges.first.get(:calculator).
-               should_receive(:demand).and_return(nil) }
+      before { slot.edges.first.should_receive(:demand).and_return(nil) }
 
       it 'has no demand' do
         expect(slot.demand).to be_nil

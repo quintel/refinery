@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe 'Graph calculations; a parent and child' do
-  let!(:mother) { graph.add Turbine::Node.new(:mother) }
-  let!(:child)  { graph.add Turbine::Node.new(:child) }
+  let!(:mother) { graph.add Refinery::Node.new(:mother) }
+  let!(:child)  { graph.add Refinery::Node.new(:child) }
 
   context 'demand set on parent' do
     #   (45) [M]

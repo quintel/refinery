@@ -5,11 +5,11 @@ module Refinery::Strategies
     class FromParents
       def self.calculable?(node)
         node.in_edges.any? &&
-          node.in_edges.get(:calculator).map(&:demand).all?
+          node.in_edges.map(&:demand).all?
       end
 
       def self.calculate(node)
-        node.in_edges.get(:calculator).map(&:demand).sum
+        node.in_edges.map(&:demand).sum
       end
     end # FromParents
   end # Demand

@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe 'Graph calculations; two children and two spouses' do
-  let!(:mother)   { graph.add Turbine::Node.new(:mother) }
-  let!(:child)    { graph.add Turbine::Node.new(:child) }
-  let!(:spouse_a) { graph.add Turbine::Node.new(:spouse_a) }
-  let!(:spouse_b) { graph.add Turbine::Node.new(:spouse_b) }
-  let!(:child_y)  { graph.add Turbine::Node.new(:child_y, preset_demand: 20.0) }
-  let!(:child_z)  { graph.add Turbine::Node.new(:child_z, preset_demand: 55.0) }
+  let!(:mother)   { graph.add Refinery::Node.new(:mother) }
+  let!(:child)    { graph.add Refinery::Node.new(:child) }
+  let!(:spouse_a) { graph.add Refinery::Node.new(:spouse_a) }
+  let!(:spouse_b) { graph.add Refinery::Node.new(:spouse_b) }
+  let!(:child_y)  { graph.add Refinery::Node.new(:child_y, preset_demand: 20.0) }
+  let!(:child_z)  { graph.add Refinery::Node.new(:child_z, preset_demand: 55.0) }
 
   let!(:ay_edge)  { spouse_a.connect_to(child_y, :gas, share: 1.0) }
   let!(:my_edge)  { mother.connect_to(child_y, :gas, share: 0.2) }
