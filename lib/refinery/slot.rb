@@ -35,7 +35,7 @@ module Refinery
     # Returns the slot.
     def initialize(node, direction, carrier, properties = {})
       @node      = node
-      @edges     = node.edges(direction, carrier)
+      @edges     = node.edges(direction, carrier).dup.freeze
       @direction = direction
       @carrier   = carrier
 
