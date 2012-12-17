@@ -20,6 +20,7 @@ require 'refinery/diagram'
 require 'refinery/errors'
 require 'refinery/exporter'
 require 'refinery/reactor'
+require 'refinery/slot'
 require 'refinery/stub'
 
 module Refinery
