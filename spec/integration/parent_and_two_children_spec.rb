@@ -21,7 +21,7 @@ describe 'Graph calculations; parent and two children' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(demand(mother)).to eql(50.0)
+        expect(mother.demand).to eql(50.0)
       end
     end
 
@@ -32,7 +32,7 @@ describe 'Graph calculations; parent and two children' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(demand(mother)).to eql(50.0)
+        expect(mother.demand).to eql(50.0)
       end
 
       it 'sets the edge shares' do
@@ -56,11 +56,11 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets parent demand' do
-        expect(demand(mother)).to eql(75.0)
+        expect(mother.demand).to eql(75.0)
       end
 
       it 'sets sibling demand' do
-        expect(demand(sibling)).to eql(45.0)
+        expect(sibling.demand).to eql(45.0)
       end
     end
 
@@ -74,11 +74,11 @@ describe 'Graph calculations; parent and two children' do
       before { calculate! }
 
       it 'does not set mother demand' do
-        expect(demand(mother)).to be_nil
+        expect(mother.demand).to be_nil
       end
 
       it 'does not set sibling demand' do
-        expect(demand(sibling)).to be_nil
+        expect(sibling.demand).to be_nil
       end
     end
   end # and only one child has demand
@@ -110,11 +110,11 @@ describe 'Graph calculations; parent and two children' do
     end
 
     it 'sets child demand' do
-      expect(demand(child)).to eql(30.0)
+      expect(child.demand).to eql(30.0)
     end
 
     it 'sets sibling demand' do
-      expect(demand(sibling)).to eql(20.0)
+      expect(sibling.demand).to eql(20.0)
     end
   end # and the parent has demand
 
@@ -139,13 +139,13 @@ describe 'Graph calculations; parent and two children' do
 
     it 'sets child demand' do
       pending do
-        expect(demand(child)).to eql(30.0)
+        expect(child.demand).to eql(30.0)
       end
     end
 
     it 'sets sibling demand' do
       pending do
-        expect(demand(sibling)).to eql(20.0)
+        expect(sibling.demand).to eql(20.0)
       end
     end
   end # and the edges use different carriers

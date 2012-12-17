@@ -21,7 +21,7 @@ describe 'Graph calculations; with two parents' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(demand(child)).to eql(70.0)
+        expect(child.demand).to eql(70.0)
       end
     end
 
@@ -32,7 +32,7 @@ describe 'Graph calculations; with two parents' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(demand(child)).to eql(70.0)
+        expect(child.demand).to eql(70.0)
       end
 
       it 'sets the edge shares' do
@@ -54,7 +54,7 @@ describe 'Graph calculations; with two parents' do
       end
 
       it 'does not set demand' do
-        expect(demand(child)).to be_nil
+        expect(child.demand).to be_nil
       end
 
       it 'sets the edge shares' do
@@ -78,11 +78,11 @@ describe 'Graph calculations; with two parents' do
       end
 
       it "does not set the other parent's demand" do
-        expect(demand(father)).to be_nil
+        expect(father.demand).to be_nil
       end
 
       it "does not set the child's demand" do
-        expect(demand(child)).to be_nil
+        expect(child.demand).to be_nil
       end
     end
 
@@ -98,7 +98,7 @@ describe 'Graph calculations; with two parents' do
 
       it "sets the other parent's demand" do
         pending do
-          expect(demand(father)).to eql(135.0)
+          expect(father.demand).to eql(135.0)
         end
       end
     end
@@ -117,8 +117,8 @@ describe 'Graph calculations; with two parents' do
     end
 
     it 'does not set parent demand' do
-      expect(demand(mother)).to be_nil
-      expect(demand(father)).to be_nil
+      expect(mother.demand).to be_nil
+      expect(father.demand).to be_nil
     end
   end # the child has demand
 end # Graph calcualtions; with two parents

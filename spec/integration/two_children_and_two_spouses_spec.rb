@@ -26,9 +26,9 @@ describe 'Graph calculations; two children and two spouses' do
     it 'does not set demand' do
       # It is not possible to determine the demand of M without knowing
       # how much is supplied by A and B.
-      expect(demand(spouse_a)).to be_nil
-      expect(demand(mother)).to be_nil
-      expect(demand(spouse_b)).to be_nil
+      expect(spouse_a.demand).to be_nil
+      expect(mother.demand).to be_nil
+      expect(spouse_b.demand).to be_nil
     end
   end # when spouses have no demand defined
 
@@ -46,8 +46,8 @@ describe 'Graph calculations; two children and two spouses' do
     it 'does not set demand' do
       # It is not possible to determine the demand of M without knowing
       # how much is supplied by B.
-      expect(demand(mother)).to be_nil
-      expect(demand(spouse_b)).to be_nil
+      expect(mother.demand).to be_nil
+      expect(spouse_b.demand).to be_nil
     end
   end # when one spouse has no demand defined
 
@@ -66,7 +66,7 @@ describe 'Graph calculations; two children and two spouses' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(demand(mother)).to eql(50.0)
+        expect(mother.demand).to eql(50.0)
       end
     end
 
@@ -78,7 +78,7 @@ describe 'Graph calculations; two children and two spouses' do
       end
 
       it 'sets demand' do
-        expect(demand(mother)).to eql(50.0)
+        expect(mother.demand).to eql(50.0)
       end
 
       it 'sets the edge shares' do

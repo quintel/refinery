@@ -24,7 +24,7 @@ describe 'Graph calculations; with three children' do
     end
 
     it 'sets demand for the parent' do
-      expect(demand(mother)).to eql(225.0)
+      expect(mother.demand).to eql(225.0)
     end
 
     it 'sets edge shares' do
@@ -49,7 +49,7 @@ describe 'Graph calculations; with three children' do
 
     it 'sets demand for the child' do
       pending do
-        expect(demand(child)).to eql(50.0)
+        expect(child.demand).to eql(50.0)
       end
     end
 
@@ -73,11 +73,11 @@ describe 'Graph calculations; with three children' do
     end
 
     it 'does not set parent demand' do
-      expect(demand(mother)).to be_nil
+      expect(mother.demand).to be_nil
     end
 
     it 'does not set child demand' do
-      expect(demand(child)).to be_nil
+      expect(child.demand).to be_nil
     end
 
     it 'does not set edge shares' do

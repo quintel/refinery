@@ -51,7 +51,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates parent demand' do
-      expect(demand(mother)).to eql(100.0)
+      expect(mother.demand).to eql(100.0)
     end
 
     it 'calculates M->S share' do
@@ -79,7 +79,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates sibling demand' do
-      expect(demand(sibling)).to eql(75.0)
+      expect(sibling.demand).to eql(75.0)
     end
 
     it 'calculates M->S share' do
@@ -120,8 +120,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'does not calculate sibling or parent demand' do
-      expect(demand(mother)).to be_nil
-      expect(demand(sibling)).to be_nil
+      expect(mother.demand).to be_nil
+      expect(sibling.demand).to be_nil
     end
   end # and the parent and sibling have no demand
 
@@ -143,7 +143,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it "sets the parent's demand" do
-      expect(demand(father)).to eql(100.0)
+      expect(father.demand).to eql(100.0)
     end
   end # and the second parent has no demand
 
@@ -160,7 +160,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets the sibling demand' do
-      expect(demand(sibling)).to eql(50.0)
+      expect(sibling.demand).to eql(50.0)
     end
 
     it 'sets the edge shares' do
@@ -183,7 +183,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets the sibling demand' do
-      expect(demand(sibling)).to eql(25.0)
+      expect(sibling.demand).to eql(25.0)
     end
 
     it 'sets the edge shares' do
@@ -206,11 +206,11 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'does not set child demand' do
-      expect(demand(child)).to be_nil
+      expect(child.demand).to be_nil
     end
 
     it 'does not set demand for the second parent' do
-      expect(demand(father)).to be_nil
+      expect(father.demand).to be_nil
     end
   end # and the child and second parent have no demand
 
@@ -239,8 +239,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'does not set demand' do
-      expect(demand(sibling)).to be_nil
-      expect(demand(child)).to be_nil
+      expect(sibling.demand).to be_nil
+      expect(child.demand).to be_nil
     end
   end # and the child and sibling have no demand
 end # Graph calculations; with two parents and a step-sibling

@@ -35,7 +35,7 @@ describe 'Graph calculations; three parents and a sibling' do
     end
 
     it 'sets demand for the third parent' do
-      expect(demand(relative)).to eql(85.0)
+      expect(relative.demand).to eql(85.0)
     end
   end
 
@@ -47,7 +47,7 @@ describe 'Graph calculations; three parents and a sibling' do
 
     it 'sets demand for the third parent' do
       pending do
-        expect(demand(relative)).to eql(85.0 / 0.2)
+        expect(relative.demand).to eql(85.0 / 0.2)
       end
     end
   end

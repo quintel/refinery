@@ -18,7 +18,7 @@ describe 'Graph calculations; a parent and child' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(demand(child)).to eql(45.0)
+        expect(child.demand).to eql(45.0)
       end
     end
 
@@ -28,7 +28,7 @@ describe 'Graph calculations; a parent and child' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(demand(child)).to eql(45.0)
+        expect(child.demand).to eql(45.0)
       end
 
       it 'sets the edge share' do
@@ -51,7 +51,7 @@ describe 'Graph calculations; a parent and child' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(demand(mother)).to eql(45.0)
+        expect(mother.demand).to eql(45.0)
       end
     end
 
@@ -61,7 +61,7 @@ describe 'Graph calculations; a parent and child' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(demand(mother)).to eql(45.0)
+        expect(mother.demand).to eql(45.0)
       end
 
       it 'sets the edge share' do
@@ -96,11 +96,11 @@ describe 'Graph calculations; a parent and child' do
     end
 
     it 'does not set child demand' do
-      expect(demand(child)).to be_nil
+      expect(child.demand).to be_nil
     end
 
     it 'does not set parent demand' do
-      expect(demand(mother)).to be_nil
+      expect(mother.demand).to be_nil
     end
   end # no demand set
 

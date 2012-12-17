@@ -26,7 +26,7 @@ describe 'Graph calculations; three siblings and two parents' do
   end
 
   it 'sets child demand' do
-    expect(demand(child)).to eql(65.0)
+    expect(child.demand).to eql(65.0)
   end
 
   it 'sets edge shares' do

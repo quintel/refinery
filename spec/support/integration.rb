@@ -18,12 +18,5 @@ module Refinery::Spec
       ).run(graph)
     rescue Refinery::IncalculableGraphError
     end
-
-    # Public: Shorthand for accessing a node's demand.
-    #
-    # Returns a float, or nil if no demand is set.
-    def demand(node)
-      node.demand
-    end
   end # Integration
 end # Refinery::Spec
