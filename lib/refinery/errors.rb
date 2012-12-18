@@ -34,4 +34,11 @@ module Refinery
     "The following graph elements had insufficient data to be " \
     "calculated: \n\n#{ elements }"
   end
+
+  # Raised if an edge has more than one slot in a direction without a share
+  # already set.
+  TooManySlotsError = error_class do |node, direction|
+    "#{ node.inspect } has too many #{ direction } slots without a " \
+    "predefined share; the maximum is one."
+  end
 end # Refinery
