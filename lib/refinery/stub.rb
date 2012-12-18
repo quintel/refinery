@@ -72,6 +72,8 @@ module Refinery
       # Nodes
       # -----
 
+      gas_chp                = graph.node(:gas_chp)
+
       elec_network           = graph.add(N :elec_network)
       locally_available_elec = graph.add(N :locally_available_elec)
       fd_elec                = graph.add(N :fd_elec)
@@ -94,15 +96,20 @@ module Refinery
       space_heating_elec.connect_to(electric_heater, :electricity)
       electric_heater.connect_to(graph.node(:ud_heating_hh), :heat)
 
-      graph.node(:gas_chp).connect_to(locally_available_elec, :electricity)
+      gas_chp.connect_to(locally_available_elec, :electricity)
 
       graph.node(:combi_heater).in_edges.first.set(:share, 0.5)
-      graph.node(:gas_chp).in_edges.first.set(:share, 0.4)
+      gas_chp.in_edges.first.set(:share, 0.4)
 
       # Temporary - set efficiencies on gas CHP.
-      graph.node(:gas_chp).out_edges.each do |edge|
+      gas_chp.out_edges.each do |edge|
         edge.set(:share, edge.label == :heat ? 0.7 : 0.3)
       end
+
+      gas_chp.set(:slots, out: {
+        heat:        Slot.new(gas_chp, :out, :heat,        share: 0.7),
+        electricity: Slot.new(gas_chp, :out, :electricity, share: 0.3)
+      })
 
       graph
     end
