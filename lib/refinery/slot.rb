@@ -35,11 +35,18 @@ module Refinery
     # Returns the slot.
     def initialize(node, direction, carrier, properties = {})
       @node      = node
-      @edges     = node.edges(direction, carrier).dup.freeze
       @direction = direction
       @carrier   = carrier
 
       self.properties = properties
+    end
+
+    # Public: The edges which are aggregated by the slot. Cached after the
+    # first call.
+    #
+    # Returns an array of Edges.
+    def edges
+      @edges ||= node.edges(direction, carrier).dup.freeze
     end
 
     # Public: The sum of all demand supplied through the edges in the slot.
@@ -47,7 +54,7 @@ module Refinery
     # Returns a float, or nil if one or more of the edges do not yet have
     # enough data to calculate their demand.
     def demand
-      demands = @edges.map(&:demand)
+      demands = edges.map(&:demand)
       (demands.all? && demands.sum) || nil
     end
   end # Slot
