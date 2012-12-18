@@ -2,6 +2,7 @@ require 'bundler' ; Bundler.setup
 require 'graphviz'
 require 'turbine'
 
+require 'refinery/catalyst/assign_slots'
 require 'refinery/catalyst/calculators'
 require 'refinery/catalyst/convert_final_demand'
 require 'refinery/core_ext/enumerable'
