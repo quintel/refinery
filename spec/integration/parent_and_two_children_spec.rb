@@ -127,7 +127,9 @@ describe 'Graph calculations; parent and two children' do
 
     before do
       mother.set(:expected_demand, 50.0)
-      calculate!
+      pending do
+        calculate!
+      end
     end
 
     it 'sets the edge shares' do
