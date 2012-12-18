@@ -82,7 +82,7 @@ module Refinery
     # Returns a string.
     def edge_label(edge)
       if share = edge.get(:share)
-        flow = edge.from.get(:calculator).demand
+        flow = edge.from.demand
         flow = flow ? " <font color='#bbbbbb'>(#{ (flow * share).round(1) })</font>" : ''
 
         "<<font> #{ edge.get(:share).round(5) }#{ flow }</font>>"
@@ -96,14 +96,13 @@ module Refinery
     #
     # Returns a string.
     def node_label(node)
-      demand = node.get(:expected_demand) || node.get(:preset_demand)
       base   = %(<<font>#{ node.key }</font> )
       attrs  = 'point-size="9" face="Helvetica Bold"'
 
-      base + if demand.nil?
+      base + if node.demand.nil?
         %(<font #{ attrs } color="red">?!</font>>)
       else
-        %(<font #{ attrs } color="#8c8c8c">#{ demand.round(5) }</font>>)
+        %(<font #{ attrs } color="#8c8c8c">#{ node.demand.round(5) }</font>>)
       end
     end
   end # Diagram
