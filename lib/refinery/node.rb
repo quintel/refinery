@@ -14,6 +14,21 @@ module Refinery
       get(calculator.demand_attribute)
     end
 
+    # Public: Provides a fluent API for accessing the slots on the node.
+    #
+    # For example
+    #
+    #   node.slots.out
+    #   # => [#<Slot>, #<Slot>, ...]
+    #
+    #   node.slots.in(:gas)
+    #   # => #<Slot>
+    #
+    # Returns a SlotsProxy.
+    def slots
+      @slots ||= SlotsProxy.new(self)
+    end
+
     # Public: Connects this node to another.
     #
     # Overwrites Turbine#connect_to to automatically use the Refinery Edge

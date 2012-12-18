@@ -31,16 +31,15 @@ module Refinery::Catalyst
         before { AssignSlots.call(graph) }
 
         it 'stores the incoming slots' do
-          expect(child_one.get(:slots)).to have_key(:in)
-          expect(child_one.get(:slots)[:in]).to have(2).slots
+          expect(child_one.slots.in).to have(2).slots
         end
 
         it 'assigns the :parent slot' do
-          expect(child_one.get(:slots)[:in][:child]).to be
+          expect(child_one.slots.in(:child)).to be
         end
 
         it 'assigns the :sibling slot' do
-          expect(child_one.get(:slots)[:in][:sibling]).to be
+          expect(child_one.slots.in(:sibling)).to be
         end
       end # and no slots are predefined
 
@@ -55,16 +54,15 @@ module Refinery::Catalyst
         end
 
         it 'stores the incoming slots' do
-          expect(child_one.get(:slots)).to have_key(:in)
-          expect(child_one.get(:slots)[:in]).to have(2).slots
+          expect(child_one.slots.in).to have(2).slots
         end
 
         it 'assigns the non-present slot' do
-          expect(child_one.get(:slots)[:in][:child]).to be
+          expect(child_one.slots.in(:child)).to be
         end
 
         it 'does not reassign the existing slot' do
-          slot = child_one.get(:slots)[:in][:sibling]
+          slot = child_one.slots.in(:sibling)
 
           expect(slot).to eql(exists)
           expect(slot.get(:share)).to eql(0.5)
@@ -77,16 +75,15 @@ module Refinery::Catalyst
         before { AssignSlots.call(graph) }
 
         it 'stores the outgoing slots' do
-          expect(child_one.get(:slots)).to have_key(:out)
-          expect(child_one.get(:slots)[:out]).to have(2).slots
+          expect(child_one.slots.out).to have(2).slots
         end
 
         it 'assigns the :child slot' do
-          expect(mother.get(:slots)[:out][:child]).to be
+          expect(mother.slots.out(:child)).to be
         end
 
         it 'assigns the :spouse slot' do
-          expect(mother.get(:slots)[:out][:spouse]).to be
+          expect(mother.slots.out(:spouse)).to be
         end
       end # and no slots are predefined
 
@@ -101,16 +98,15 @@ module Refinery::Catalyst
         end
 
         it 'stores the outgoing slots' do
-          expect(mother.get(:slots)).to have_key(:out)
-          expect(mother.get(:slots)[:out]).to have(2).slots
+          expect(mother.slots.out).to have(2).slots
         end
 
         it 'assigns the non-present slot' do
-          expect(mother.get(:slots)[:out][:spouse]).to be
+          expect(mother.slots.out(:spouse)).to be
         end
 
         it 'does not reassign the existing slot' do
-          slot = mother.get(:slots)[:out][:child]
+          slot = mother.slots.out(:child)
 
           expect(slot).to eql(exists)
           expect(slot.get(:share)).to eql(0.5)

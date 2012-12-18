@@ -12,10 +12,6 @@ module Refinery::Catalyst
       father.connect_to(child, :child)
     end
 
-    def share(node, direction, carrier)
-      node.get(:slots)[direction][carrier].get(:share)
-    end
-
     # ------------------------------------------------------------------------
 
     describe 'when all slots are orphans' do
@@ -25,11 +21,11 @@ module Refinery::Catalyst
       end
 
       it 'assigns shares to output slots' do
-        expect(share(mother, :out, :child)).to eql(1.0)
+        expect(mother.slots.out(:child).get(:share)).to eql(1.0)
       end
 
       it 'assigns shares to input slots' do
-        expect(share(child, :in, :child)).to eql(1.0)
+        expect(child.slots.in(:child).get(:share)).to eql(1.0)
       end
     end # when all slots are orphans
 
@@ -49,11 +45,11 @@ module Refinery::Catalyst
         end
 
         it 'does not change the share value of the first' do
-          expect(share(mother, :out, :child)).to eql(0.7)
+          expect(mother.slots.out(:child).get(:share)).to eql(0.7)
         end
 
         it 'does not change the share value of the second' do
-          expect(share(mother, :out, :spouse)).to eql(0.3)
+          expect(mother.slots.out(:spouse).get(:share)).to eql(0.3)
         end
       end
 
@@ -78,7 +74,7 @@ module Refinery::Catalyst
       end
 
       it 'does not change the share value' do
-        expect(share(mother, :out, :child)).to eql(0.5)
+        expect(mother.slots.out(:child).get(:share)).to eql(0.5)
       end
     end # and a slot has a predefined share
 
