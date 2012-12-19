@@ -4,7 +4,7 @@ module Refinery::Strategies
     # outbound edge.
     class Solo
       def self.calculable?(edge)
-        edge.from.out_edges(edge.label).one?
+        edge.from.out_edges.one?
       end
 
       def self.calculate(edge)
