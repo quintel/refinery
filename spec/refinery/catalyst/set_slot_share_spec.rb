@@ -38,8 +38,8 @@ module Refinery::Catalyst
         before do
           AssignSlots.call(graph)
 
-          mother.get(:slots)[:out][:child].set(:share, 0.7)
-          mother.get(:slots)[:out][:spouse].set(:share, 0.3)
+          mother.slots.out(:child).set(:share, 0.7)
+          mother.slots.out(:spouse).set(:share, 0.3)
 
           SetSlotShares.call(graph)
         end
@@ -56,7 +56,7 @@ module Refinery::Catalyst
       context 'and one is without a "share"' do
         before do
           AssignSlots.call(graph)
-          mother.get(:slots)[:out][:spouse].set(:share, 0.5)
+          mother.slots.out(:spouse).set(:share, 0.5)
         end
 
         it 'raises an error' do
@@ -69,7 +69,7 @@ module Refinery::Catalyst
     describe 'and a slot has a predefined share' do
       before do
         AssignSlots.call(graph)
-        mother.get(:slots)[:out][:child].set(:share, 0.5)
+        mother.slots.out(:child).set(:share, 0.5)
         SetSlotShares.call(graph)
       end
 

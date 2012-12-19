@@ -57,5 +57,10 @@ module Refinery
       demands = edges.map(&:demand)
       (demands.all? && demands.sum) || nil
     end
+
+    def inspect
+      "#<#{ self.class.name } (#{ @direction }, #{ @carrier }) " \
+        "node=#{ @node.key.inspect }>"
+    end
   end # Slot
 end # Refinery

@@ -41,4 +41,10 @@ module Refinery
     "#{ node.inspect } has too many #{ direction } slots without a " \
     "predefined share; the maximum is one."
   end
+
+  # Raised when adding a slot to a node which is already present.
+  SlotAlreadyExistsError = error_class do |node, direction, carrier|
+    adjective = direction == :in ? 'incoming' : 'outgoing'
+    "#{ node.inspect } already has an #{ adjective } #{ carrier } slot."
+  end
 end # Refinery

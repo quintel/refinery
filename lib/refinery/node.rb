@@ -1,5 +1,20 @@
 module Refinery
   class Node < Turbine::Node
+    # Internal: Used in Node#slots to provide a nice API for accessing slots.
+    SlotsFacade = Struct.new(:in_collection, :out_collection) do
+      # Public: Returns the nodes incoming slots. If a +carrier+ is supplied
+      # only that slot is returned.
+      def in(carrier = nil)
+        carrier ? in_collection.get(carrier) : in_collection
+      end
+
+      # Public: Returns the nodes outgoing slots. If a +carrier+ is supplied
+      # only that slot is returned.
+      def out(carrier = nil)
+        carrier ? out_collection.get(carrier) : out_collection
+      end
+    end
+
     # Public: The demand calculator for this node.
     #
     # Returns a NodeDemandCalculator.
@@ -24,9 +39,12 @@ module Refinery
     #   node.slots.in(:gas)
     #   # => #<Slot>
     #
-    # Returns a SlotsProxy.
+    # Returns a SlotsFacade.
     def slots
-      @slots ||= SlotsProxy.new(self)
+      @slots ||= SlotsFacade.new(
+        SlotsCollection.new(self, :in),
+        SlotsCollection.new(self, :out)
+      )
     end
 
     # Public: Connects this node to another.

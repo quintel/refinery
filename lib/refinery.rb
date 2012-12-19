@@ -25,7 +25,7 @@ require 'refinery/exporter'
 require 'refinery/node'
 require 'refinery/reactor'
 require 'refinery/slot'
-require 'refinery/slots_proxy'
+require 'refinery/slots_collection'
 require 'refinery/stub'
 
 module Refinery

@@ -35,17 +35,17 @@ module Refinery::Catalyst
         end
 
         it 'assigns the :parent slot' do
-          expect(child_one.slots.in(:child)).to be
+          expect(child_one.slots.in).to include(:child)
         end
 
         it 'assigns the :sibling slot' do
-          expect(child_one.slots.in(:sibling)).to be
+          expect(child_one.slots.in).to include(:sibling)
         end
       end # and no slots are predefined
 
       context 'and one of the slots is already present' do
         let!(:exists) do
-          Refinery::Slot.new(child_one, :in, :sibling, share: 0.5)
+          child_one.slots.in.add(:sibling, share: 0.5)
         end
 
         before do
@@ -58,7 +58,7 @@ module Refinery::Catalyst
         end
 
         it 'assigns the non-present slot' do
-          expect(child_one.slots.in(:child)).to be
+          expect(child_one.slots.in).to include(:child)
         end
 
         it 'does not reassign the existing slot' do
@@ -79,17 +79,17 @@ module Refinery::Catalyst
         end
 
         it 'assigns the :child slot' do
-          expect(mother.slots.out(:child)).to be
+          expect(mother.slots.out).to include(:child)
         end
 
         it 'assigns the :spouse slot' do
-          expect(mother.slots.out(:spouse)).to be
+          expect(mother.slots.out).to include(:spouse)
         end
       end # and no slots are predefined
 
       context 'and one of the slots is already present' do
         let!(:exists) do
-          Refinery::Slot.new(mother, :out, :child, share: 0.5)
+          mother.slots.out.add(:child, share: 0.5)
         end
 
         before do
@@ -102,7 +102,7 @@ module Refinery::Catalyst
         end
 
         it 'assigns the non-present slot' do
-          expect(mother.slots.out(:spouse)).to be
+          expect(mother.slots.out).to include(:spouse)
         end
 
         it 'does not reassign the existing slot' do

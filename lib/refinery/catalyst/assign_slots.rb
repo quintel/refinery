@@ -18,12 +18,8 @@ module Refinery
       # Returns nothing.
       def self.call(graph)
         graph.nodes.each do |node|
-          slots = node.get(:slots) || { in: {}, out: {} }
-
-          slots[:in]  = slots_for(node, :in).merge(slots[:in] || {})
-          slots[:out] = slots_for(node, :out).merge(slots[:out] || {})
-
-          node.set(:slots, slots)
+          assign_slots(node, :in)
+          assign_slots(node, :out)
         end
       end
 
@@ -34,15 +30,16 @@ module Refinery
       # direction - :in or :out.
       #
       # Returns a hash in the form {Symbol => Slot}.
-      def self.slots_for(node, direction)
-        carriers = node.edges(direction).map(&:label).uniq
+      def self.assign_slots(node, direction)
+        carriers   = node.edges(direction).map(&:label).uniq
+        collection = node.slots.public_send(direction)
 
         carriers.each_with_object({}) do |label, slots|
-          slots[label] = Slot.new(node, direction, label)
+          collection.add(label) unless collection.include?(label)
         end
       end
 
-      private_class_method :slots_for
+      private_class_method :assign_slots
     end # AssignSlots
   end # Catalyst
 end # Refinery

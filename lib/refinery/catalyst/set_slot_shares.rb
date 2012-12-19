@@ -27,7 +27,7 @@ module Refinery
       #
       # Returns nothing.
       def self.assign_shares_for(node, direction)
-        slots = node.slots.public_send(direction)
+        slots = node.slots.public_send(direction).to_a
 
         if slots.length > 1 && slots.any? { |slot| slot.get(:share).nil? }
           raise TooManySlotsError.new(node, direction)
