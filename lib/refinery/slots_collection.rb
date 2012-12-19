@@ -68,7 +68,8 @@ module Refinery
     #
     # Returns a string.
     def inspect
-      "#<SlotCollection(#{ @direction }) node=#{ @node.key }>"
+      "#<SlotCollection (#{ @direction }) node=#{ @node.key } " \
+        "carriers=[#{ to_a.map(&:carrier).sort.join(', ') }]>"
     end
 
     alias_method :to_s, :inspect
