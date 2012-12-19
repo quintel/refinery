@@ -106,10 +106,8 @@ module Refinery
         edge.set(:share, edge.label == :heat ? 0.7 : 0.3)
       end
 
-      gas_chp.set(:slots, out: {
-        heat:        Slot.new(gas_chp, :out, :heat,        share: 0.7),
-        electricity: Slot.new(gas_chp, :out, :electricity, share: 0.3)
-      })
+      gas_chp.slots.out.add(:heat, share: 0.7)
+      gas_chp.slots.out.add(:electricity, share: 0.3)
 
       graph
     end
