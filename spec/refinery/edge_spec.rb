@@ -7,8 +7,10 @@ module Refinery
 
     let(:edge)   { Edge.new(parent, child, :gas) }
 
-    before       { parent.connect_via(edge)
-                   child.connect_via(edge) }
+    before do
+      parent.connect_via(edge)
+      child.connect_via(edge)
+    end
 
     describe '#demand' do
       context 'when the parent node has demand' do
@@ -27,6 +29,17 @@ module Refinery
 
           it 'does not calculate the demand supplied by the edge' do
             expect(edge.demand).to be_nil
+          end
+        end
+
+        context 'and the outbound slot has a custom share' do
+          before do
+            edge.set(:share, 0.5)
+            parent.slots.out(:gas).set(:share, 0.2)
+          end
+
+          it 'reduces demand by the share' do
+            expect(edge.demand).to eql(50.0 * 0.5 * 0.2)
           end
         end
       end

@@ -102,9 +102,9 @@ module Refinery
       gas_chp.in_edges.first.set(:share, 0.4)
 
       # Temporary - set efficiencies on gas CHP.
-      gas_chp.out_edges.each do |edge|
-        edge.set(:share, edge.label == :heat ? 0.7 : 0.3)
-      end
+      # gas_chp.out_edges.each do |edge|
+        # edge.set(:share, edge.label == :heat ? 0.7 : 0.3)
+      # end
 
       gas_chp.slots.out(:heat).set(:share, 0.7)
       gas_chp.slots.out(:electricity).set(:share, 0.3)

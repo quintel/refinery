@@ -90,7 +90,7 @@ module Refinery
       # Returns nothing.
       def validate_slot_shares!
         @graph.nodes.each do |node|
-          assert_valid_slot_shares(node, :in)
+          # assert_valid_slot_shares(node, :in)
           assert_valid_slot_shares(node, :out)
         end
       end

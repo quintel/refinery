@@ -110,19 +110,59 @@ describe 'Graph calculations; a parent and child' do
     #         [C]
     let!(:mc_gas_edge)  { mother.connect_to(child, :gas) }
     let!(:mc_elec_edge) { mother.connect_to(child, :electricity) }
-    before { pending { calculate! } }
 
-    it 'sets the gas share to 1.0' do
-      pending do
+    before do
+      mother.slots.out(:gas).set(:share, 0.7)
+      mother.slots.out(:electricity).set(:share, 0.3)
+    end
+
+    context 'with demand defined on the child' do
+      before do
+        child.set(:preset_demand, 200.0)
+        calculate!
+      end
+
+      it 'sets the gas share to 1.0' do
         expect(mc_gas_edge.get(:share)).to eql(1.0)
       end
-    end
 
-    it 'sets the electricity share to 1.0' do
-      pending do
+      it 'sets the electricity share to 1.0' do
         expect(mc_elec_edge.get(:share)).to eql(1.0)
       end
-    end
+
+      it 'sets parent demand' do
+        expect(mother.demand).to eql(200.0)
+      end
+
+      it 'can calculate demand passed through each edge' do
+        expect(mc_gas_edge.demand).to eql(140.0)
+        expect(mc_elec_edge.demand).to eql(60.0)
+      end
+    end # with demand defined on the child
+
+    context 'with demand defined on the parent' do
+      before do
+        mother.set(:expected_demand, 100.0)
+        calculate!
+      end
+
+      it 'sets the gas share to 1.0' do
+        expect(mc_gas_edge.get(:share)).to eql(1.0)
+      end
+
+      it 'sets the electricity share to 1.0' do
+        expect(mc_elec_edge.get(:share)).to eql(1.0)
+      end
+
+      it 'sets child demand' do
+        expect(child.demand).to eql(100.0)
+      end
+
+      it 'can calculate demand passed through each edge' do
+        expect(mc_gas_edge.demand).to eql(70.0)
+        expect(mc_elec_edge.demand).to eql(30.0)
+      end
+    end # with demand defined on the parent
   end # with parallel edges using different carriers
 
 end # Graph calculations

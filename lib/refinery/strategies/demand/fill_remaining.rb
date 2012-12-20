@@ -28,7 +28,7 @@ module Refinery::Strategies
       end
 
       def self.calculate(node)
-        node.out.sum { |child| remaining_demand(node, child) }
+        node.out.uniq.sum { |child| remaining_demand(node, child) }
       end
 
       # Internal: Given a +child+ node, sums the demand supplied by edges not
