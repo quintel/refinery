@@ -95,6 +95,53 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
   end # and the sibling has no demand
 
+  context 'and the sibling has multiple carriers and no demand' do
+    #     (100) [M]     [F] (100)
+    #          // \     /
+    #         //   \   /
+    #        //     \ /
+    #       [S]     [C] (125)
+    #
+    # [M] generates 95 gas energy and 5 electricity. [C] requires 25 gas from
+    # [M], leaving 70 gas to be assigned to [S].
+    let!(:ms_elec_edge) { mother.connect_to(sibling, :electricity) }
+
+    before do
+      sibling.set(:preset_demand, nil)
+
+      # father.set(:expected_demand, 100.0)
+      # child.set(:preset_demand, 125.0)
+
+      mother.slots.out(:electricity).set(:share, 0.05)
+      mother.slots.out(:gas).set(:share, 0.95)
+
+      calculate!
+    end
+
+    it 'calculates sibling demand' do
+      expect(sibling.demand).to eql(75.0)
+    end
+
+    it 'calculates M->S (gas) share' do
+      expect(ms_edge.get(:share)).to be_within(1e-7).of(70.0 / 95.0)
+      expect(ms_edge.demand).to eql(70.0)
+    end
+
+    it 'calculates M->S (electricity) share' do
+      expect(ms_elec_edge.get(:share)).to eql(1.0)
+      expect(ms_elec_edge.demand).to eql(5.0)
+    end
+
+    it 'calculates M->C share, accounting for supply from F' do
+      expect(mc_edge.get(:share)).to eql(25.0 / 95.0)
+      expect(mc_edge.demand).to eql(25.0)
+    end
+
+    it 'calculates F->C share' do
+      expect(fc_edge.get(:share)).to eql(1.0)
+    end
+  end # and the sibling has no demand
+
   context 'and the parent and sibling have no demand' do
     #           [M]     [F] (100)
     #           / \     /
