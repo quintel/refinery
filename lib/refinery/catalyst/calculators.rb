@@ -100,7 +100,7 @@ module Refinery
       #
       # Returns nothing.
       def assert_valid_slot_shares(node, direction)
-        return true if node.slots.public_send(direction).to_a.empty?
+        return true if node.slots.public_send(direction).empty?
 
         sum = node.slots.public_send(direction).sum { |s| s.get(:share) }
         raise InvalidSlotSumError.new(node, direction, sum) if sum != 1.0

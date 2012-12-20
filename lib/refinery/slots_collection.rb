@@ -56,6 +56,20 @@ module Refinery
       @slots.values
     end
 
+    # Public: Returns how many slots are contained within the collection.
+    #
+    # Returns an integer.
+    def length
+      @slots.length
+    end
+
+    # Public: Returns whether the the collection has no slots.
+    #
+    # Returns true or false.
+    def empty?
+      length == 0
+    end
+
     # Public: Required by Enumerable. Iterates through each slot in the
     # collection.
     #

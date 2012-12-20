@@ -62,5 +62,29 @@ module Refinery
         expect(coll.inspect).to include(node.key.to_s)
       end
     end # inspect
+
+    describe '#empty?' do
+      it 'is true then the collection has no slots' do
+        expect(coll).to be_empty
+      end
+
+      it 'is false when the collection has one or more slots' do
+        coll.add(:gas)
+        expect(coll).to_not be_empty
+      end
+    end # empty?
+
+    describe '#length' do
+      it 'is 0 when the collection has no slots' do
+        expect(coll.length).to be_zero
+      end
+
+      it 'is 2 when the collection has two slots' do
+        coll.add(:electricity)
+        coll.add(:gas)
+
+        expect(coll.length).to eql(2)
+      end
+    end # length
   end # SlotsCollection
 end # Refinery
