@@ -10,7 +10,9 @@ module Refinery::Strategies
 
       def self.calculate(node)
         edge = exclusive_edge(node)
-        edge.to.demand / edge.get(:share)
+
+        edge.to.demand / edge.get(:share) /
+          node.slots.out(edge.label).get(:share)
       end
 
       # Internal: Returns the edge which connects the parent to the exclusive

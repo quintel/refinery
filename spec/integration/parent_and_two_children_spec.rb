@@ -119,36 +119,58 @@ describe 'Graph calculations; parent and two children' do
   end # and the parent has demand
 
   context 'and the edges use different carriers' do
-    #         [M] (50)
-    #    :gas / \ :electricity
-    #       [C] [S]
     let!(:mc_edge) { mother.connect_to(child, :gas) }
     let!(:ms_edge) { mother.connect_to(sibling, :electricity) }
 
     before do
-      mother.set(:expected_demand, 50.0)
-      pending do
-        calculate!
-      end
+      mother.slots.out(:gas).set(:share, 0.6)
+      mother.slots.out(:electricity).set(:share, 0.4)
     end
 
-    it 'sets the edge shares' do
-      pending do
+    context 'and the parent defines demand' do
+      #         [M] (50)
+      #    :gas / \ :electricity
+      #       [C] [S]
+      before do
+        mother.set(:expected_demand, 50.0)
+        calculate!
+      end
+
+      it 'sets the edge shares' do
         expect(mc_edge.get(:share)).to eql(1.0)
         expect(ms_edge.get(:share)).to eql(1.0)
       end
-    end
 
-    it 'sets child demand' do
-      pending do
+      it 'sets child demand' do
         expect(child.demand).to eql(30.0)
       end
-    end
 
-    it 'sets sibling demand' do
-      pending do
+      it 'sets sibling demand' do
         expect(sibling.demand).to eql(20.0)
       end
-    end
+    end # and the parent defines demand
+
+    context 'and one of the children defines demand' do
+      #           [M]
+      #      :gas / \ :electricity
+      #    (50) [C] [S]
+      before do
+        child.set(:preset_demand, 120.0)
+        calculate!
+      end
+
+      it 'sets the edge shares' do
+        expect(mc_edge.get(:share)).to eql(1.0)
+        expect(ms_edge.get(:share)).to eql(1.0)
+      end
+
+      it 'sets parent demand' do
+        expect(mother.demand).to eql(200.0)
+      end
+
+      it 'sets sibling demand' do
+        expect(sibling.demand).to eql(80.0)
+      end
+    end # and one of the children defines demand
   end # and the edges use different carriers
 end # Graph calculations; with two children
