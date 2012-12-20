@@ -59,13 +59,6 @@ module Refinery
     # properties - Optional key/value properties to be associated with the
     #              edge.
     #
-    # Example:
-    #
-    #   phil = Turbine::Node.new(:phil)
-    #   luke = Turbine::Node.new(:luke)
-    #
-    #   phil.connect_to(luke, :child)
-    #
     # Returns the Edge which was created.
     #
     # Raises a Turbine::DuplicateEdgeError if the Edge already existed.
@@ -74,6 +67,24 @@ module Refinery
         self.connect_via(edge)
         target.connect_via(edge)
       end
+    end
+
+    # Internal: Given an Edge, established the connection for this node.
+    # Overwrites Turbine#connect_via to also set up the relevant slots.
+    #
+    # See Turbine#connect_via
+    #
+    # Returns the given edge.
+    def connect_via(edge)
+      if edge.to == self && ! slots.in.include?(edge.label)
+        slots.in.add(edge.label)
+      end
+
+      if edge.from == self && ! slots.out.include?(edge.label)
+        slots.out.add(edge.label)
+      end
+
+      super
     end
   end # Node
 end # Refinery
