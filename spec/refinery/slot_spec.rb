@@ -13,11 +13,21 @@ module Refinery
         person.connect_to(child, :gas, share: 0.5)
         person.connect_to(sibling, :gas, share: 0.5)
       end
-
-      Catalyst::Calculators.new(graph).run!
     end
 
     # ------------------------------------------------------------------------
+
+    context 'when initialized' do
+      it 'defaults "share" to 1.0' do
+        slot = Slot.new(parent, :out, :gas)
+        expect(slot.get(:share)).to eql(1.0)
+      end
+
+      it 'accepts a custom "share" when provided' do
+        slot = Slot.new(parent, :out, :gas, share: 0.3)
+        expect(slot.get(:share)).to eql(0.3)
+      end
+    end
 
     context 'on a node with outgoing edges' do
       let(:slot) { Slot.new(parent, :out, :gas) }

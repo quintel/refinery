@@ -15,7 +15,6 @@ module Refinery::Spec
       Refinery::Reactor.new(
         Refinery::Catalyst::ConvertFinalDemand,
         Refinery::Catalyst::AssignSlots,
-        Refinery::Catalyst::SetSlotShares,
         Refinery::Catalyst::Calculators
       ).run(graph)
     rescue Refinery::IncalculableGraphError

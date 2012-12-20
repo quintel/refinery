@@ -22,8 +22,6 @@ module Refinery
     end
   end
 
-  # Added a node to a graph, when one already exists with the same key.
-
   # Raised when performing the demand calculation loop, but a point was
   # reached where it is impossible to continue calculating.
   IncalculableGraphError = error_class do |remaining_models|
@@ -35,11 +33,13 @@ module Refinery
     "calculated: \n\n#{ elements }"
   end
 
-  # Raised if an edge has more than one slot in a direction without a share
-  # already set.
-  TooManySlotsError = error_class do |node, direction|
-    "#{ node.inspect } has too many #{ direction } slots without a " \
-    "predefined share; the maximum is one."
+  # Raised when the sum of the slot shares on one side of a node do not add up
+  # to 1.0.
+  InvalidSlotSumError = error_class do |node, direction, sum|
+    adjective = direction == :in ? 'incoming' : 'outgoing'
+
+    "#{ node.inspect } has invalid #{ adjective } slots. The sum of their " \
+    "shares should be 1.0, but it was #{ sum }"
   end
 
   # Raised when adding a slot to a node which is already present.

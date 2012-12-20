@@ -33,7 +33,7 @@ module Refinery
     # with the same carrier.
     #
     # Returns the slot.
-    def add(carrier, properties = nil)
+    def add(carrier, properties = {})
       if include?(carrier)
         raise SlotAlreadyExistsError.new(@node, @direction, carrier)
       end

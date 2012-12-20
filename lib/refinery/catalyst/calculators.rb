@@ -24,11 +24,24 @@ module Refinery
 
       # Public: Runs the catalyst on the +graph+.
       #
+      # Returns nothing.
+      def run!
+        validate_slot_shares!
+        run_calculators!
+      end
+
+      #######
+      private
+      #######
+
+      # Internal: Runs the calculators, computing the demands of nodes and
+      # shares of edges.
+      #
       # Raises IncalculableGraph if the loop reaches a point where it is
       # impossible to compute a models value.
       #
       # Returns nothing.
-      def run!
+      def run_calculators!
         calculators = uncalculated
         cycle       = 0
 
@@ -49,10 +62,6 @@ module Refinery
         end
       end
 
-      #######
-      private
-      #######
-
       # Internal: Returns all uncalculated calculators from nodes and edges
       # in the graph.
       #
@@ -65,6 +74,36 @@ module Refinery
         end
 
         calculators.reject(&:calculated?)
+      end
+
+      # Internal: Asserts that the in and out slots for each node sum up to
+      # 1.0. This is mostly a sanity check which asserts that:
+      #
+      #   1. Nodes are only automatically assigned a single slot on each side
+      #      (we can't magically know that CHPs need to output 70% heat and
+      #      30% electricity, a user has to input this manually).
+      #
+      #   2. Nodes which have user-assigned slots were given sensible shares.
+      #
+      # Raises InvalidSlotSumError if any node failed the above conditions.
+      #
+      # Returns nothing.
+      def validate_slot_shares!
+        @graph.nodes.each do |node|
+          assert_valid_slot_shares(node, :in)
+          assert_valid_slot_shares(node, :out)
+        end
+      end
+
+      # Internal: Asserts that the slots on a single side of a node add up to
+      # 1.0. See validate_slot_shares!
+      #
+      # Returns nothing.
+      def assert_valid_slot_shares(node, direction)
+        return true if node.slots.public_send(direction).to_a.empty?
+
+        sum = node.slots.public_send(direction).sum { |s| s.get(:share) }
+        raise InvalidSlotSumError.new(node, direction, sum) if sum != 1.0
       end
     end # Calculators
   end # Catalyst

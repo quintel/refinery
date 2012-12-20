@@ -4,6 +4,10 @@ module Refinery
   class Slot
     include Turbine::Properties
 
+    # Assigned to all slots by default. Individual properties can be
+    # overridden when initializing the slot.
+    DEFAULT_PROPERTIES = { share: 1.0 }.freeze
+
     # Public: The node to which the slot belongs.
     attr_reader :node
 
@@ -38,7 +42,7 @@ module Refinery
       @direction = direction
       @carrier   = carrier
 
-      self.properties = properties
+      self.properties = DEFAULT_PROPERTIES.merge(properties)
     end
 
     # Public: The edges which are aggregated by the slot. Cached after the

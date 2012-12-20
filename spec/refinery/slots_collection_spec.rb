@@ -13,7 +13,7 @@ module Refinery
     end
 
     describe '#add' do
-      let!(:result) { coll.add(:gas, conversion: 0.5) }
+      let!(:result) { coll.add(:gas, share: 0.5) }
 
       it 'adds the slot' do
         expect(coll.to_a.detect { |s| s.carrier == :gas }).to be
@@ -32,7 +32,7 @@ module Refinery
       end
 
       it 'sets the given properties' do
-        expect(result.properties).to eql(conversion: 0.5)
+        expect(result.properties).to eql(share: 0.5)
       end
 
       context 'when a duplicate slot is already present' do
