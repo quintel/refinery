@@ -1,7 +1,7 @@
 module Refinery::Strategies
   module Demand
-    # A strategy for calculate edge shares when all of the node's other
-    # outbound edges have a share.
+    # A strategy for calculating the demand of a node when we know the demand
+    # of all its parents, and the shares of all incoming edges.
     class FromParents
       def self.calculable?(node)
         node.in_edges.any? &&
