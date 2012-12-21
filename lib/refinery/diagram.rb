@@ -97,8 +97,9 @@ module Refinery
     #
     # Returns a string.
     def node_label(node)
-      base   = %(<<font>#{ node.key }</font> )
-      attrs  = 'point-size="9" face="Helvetica Bold"'
+      key_attrs = node.get(:final_demand) ? ' face="Helvetica Bold"' : ''
+      base      = %(<<font#{ key_attrs }>#{ node.key }</font> )
+      attrs     = 'point-size="9" face="Helvetica Bold"'
 
       base + if node.demand.nil?
         %(<font #{ attrs } color="red">?!</font>>)
