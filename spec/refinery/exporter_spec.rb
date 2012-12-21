@@ -9,8 +9,8 @@ describe Refinery::Exporter do
       middle = graph.add(Refinery::Node.new(:middle, name: 'Mid'))
       bottom = graph.add(Refinery::Node.new(:bottom, name: 'Tail'))
 
-      top.connect_to(middle, :gas)
-      middle.connect_to(bottom, :electricity)
+      top.connect_to(middle, :gas, share: 1.0)
+      middle.connect_to(bottom, :electricity, share: 0.3)
 
       graph
     end
@@ -35,7 +35,9 @@ describe Refinery::Exporter do
 
       it 'includes the link to the second node' do
         expect(node['links']).to have(1).member
-        expect(node['links'].first).to eql('top-(gas) -- ? --> (gas)-middle')
+
+        expect(node['links'].first).
+          to eql('top-(gas) -- 1.0 --> (gas)-middle')
       end
     end # the first node
 
@@ -61,7 +63,7 @@ describe Refinery::Exporter do
       it 'includes the link to the second node' do
         expect(node['links']).to have(1).member
         expect(node['links'].first).
-          to eql('middle-(electricity) -- ? --> (electricity)-bottom')
+          to eql('middle-(electricity) -- 0.3 --> (electricity)-bottom')
       end
     end # the second node
 
