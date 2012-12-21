@@ -1,5 +1,9 @@
 module Refinery
   class Exporter
+    # Properties which are commonly present on Node instances, which are only
+    # for internal use in Refinery, and should not be included in exports.
+    OMITTED_NODE_KEYS = [ :strategy_used ]
+
     # Public: Creates a new Exporter which takes a Turbine graph and creates
     # ETsource YAML.
     #
@@ -26,8 +30,14 @@ module Refinery
     # Returns a hash.
     def to_h
       @graph.nodes.each_with_object({}) do |node, data|
-        data[node.key.to_s] = stringify_keys(
-          node.properties.merge(links: links_for(node)))
+        properties = node.properties.reject do |key, value|
+          OMITTED_NODE_KEYS.include?(key)
+        end
+
+        properties[:links] = links_for(node)
+        properties[:slots] = slots_for(node)
+
+        data[node.key.to_s] = stringify_keys(properties)
       end
     end
 
@@ -35,9 +45,9 @@ module Refinery
     private
     #######
 
-    # Internal: Given a node, returns it's YAML-formatted outward links.
+    # Internal: Given a node, returns its YAML-formatted outward links.
     #
-    # node - The node whose edges are to be formatted.
+    # node - The node whose edges are to be exported.
     #
     # Returns an array of strings.
     def links_for(node)
@@ -45,6 +55,27 @@ module Refinery
         "#{ edge.from.key }-(#{ edge.label }) -- ? --> " \
         "(#{ edge.label })-#{ edge.to.key }"
       end.to_a
+    end
+
+    # Internal: Given a node, returns its YAML-foramtted slots.
+    #
+    # node - The node whose slots are to be exported.
+    #
+    # Returns an array of strings.
+    def slots_for(node)
+      slots = {}
+
+      node.slots.in.each do |slot|
+        slots["(#{ slot.carrier })-#{ node.key }"] =
+          stringify_keys(slot.properties)
+      end
+
+      node.slots.out.each do |slot|
+        slots["#{ node.key }-(#{ slot.carrier })"] =
+          stringify_keys(slot.properties)
+      end
+
+      slots
     end
 
     # Internal: Given a Hash, converts its keys to strings.

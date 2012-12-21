@@ -5,9 +5,9 @@ describe Refinery::Exporter do
     let(:graph) do
       graph  = Turbine::Graph.new
 
-      top    = graph.add(Turbine::Node.new(:top, name: 'Head'))
-      middle = graph.add(Turbine::Node.new(:middle, name: 'Mid'))
-      bottom = graph.add(Turbine::Node.new(:bottom, name: 'Tail'))
+      top    = graph.add(Refinery::Node.new(:top, name: 'Head'))
+      middle = graph.add(Refinery::Node.new(:middle, name: 'Mid'))
+      bottom = graph.add(Refinery::Node.new(:bottom, name: 'Tail'))
 
       top.connect_to(middle, :gas)
       middle.connect_to(bottom, :electricity)
@@ -28,6 +28,11 @@ describe Refinery::Exporter do
         expect(node['name']).to eql('Head')
       end
 
+      it 'includes the outgoing gas slot' do
+        expect(node['slots']).to have(1).member
+        expect(node['slots'].keys.first).to eql('top-(gas)')
+      end
+
       it 'includes the link to the second node' do
         expect(node['links']).to have(1).member
         expect(node['links'].first).to eql('top-(gas) -- ? --> (gas)-middle')
@@ -43,6 +48,14 @@ describe Refinery::Exporter do
 
       it 'includes the node attributes' do
         expect(node['name']).to eql('Mid')
+      end
+
+      it 'includes the incoming gas slot' do
+        expect(node['slots'].keys).to include('(gas)-middle')
+      end
+
+      it 'includes the outgoing electricity slot' do
+        expect(node['slots'].keys).to include('middle-(electricity)')
       end
 
       it 'includes the link to the second node' do
@@ -61,6 +74,10 @@ describe Refinery::Exporter do
 
       it 'includes the node attributes' do
         expect(node['name']).to eql('Tail')
+      end
+
+      it 'includes the incoming electricity slot' do
+        expect(node['slots'].keys.first).to eql('(electricity)-bottom')
       end
 
       it 'includes no links' do
