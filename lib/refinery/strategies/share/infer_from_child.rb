@@ -22,7 +22,7 @@ module Refinery::Strategies
       end
 
       def self.calculate(edge)
-        edge.to.demand / edge.from.out.uniq.map(&:demand).sum
+        edge.to.demand / edge.from.out(edge.label).uniq.map(&:demand).sum
       end
     end # InferFromChild
   end # Share
