@@ -82,8 +82,9 @@ module Refinery
     # Returns a string.
     def edge_label(edge)
       if share = edge.get(:share)
-        flow = edge.from.demand
-        flow = flow ? " <font color='#bbbbbb'>(#{ (flow * share).round(1) })</font>" : ''
+        flow = if edge.demand
+          " <font color='#bbbbbb'>(#{ edge.demand.round(1) })</font>"
+        end
 
         "<<font> #{ edge.get(:share).round(5) }#{ flow }</font>>"
       else
