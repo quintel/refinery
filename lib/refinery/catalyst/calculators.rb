@@ -52,6 +52,11 @@ module Refinery
             # calculator.calculable? && (calculator.calculate! || true)
             if calculator.calculable?
               (calculator.calculate! || true)
+            elsif calculator.calculated?
+              # Some calculators are used just to create a temporary value
+              # used to assist in calculating something else (e.g. output
+              # share is used to assist in calculating "input" share).
+              true
             end
           end
 
@@ -70,7 +75,19 @@ module Refinery
         calculators = @graph.nodes.map(&:calculator)
 
         @graph.nodes.each do |node|
-          calculators.concat(node.out_edges.map(&:calculator).to_a)
+          calculators.concat(node.out_edges.map do |edge|
+            [ edge.calculator,
+              # antw: I consider this to be a temporary workaround for helping
+              # calculate edge shares when a node has a single *outgoing* edge
+              # for a certain carrier. This helps give the node edge
+              # calculator a push in the right direction, and ensures the stub
+              # graphs calculate fully.
+              #
+              # I plan to explore the possibility of replacing an edge share
+              # calculation with an edge *demand* calculation which will
+              # cater to this this special case in a nicer way.
+              Demand::EdgeOutputShareCalculator.new(edge) ]
+          end.to_a.flatten)
         end
 
         calculators.reject(&:calculated?)

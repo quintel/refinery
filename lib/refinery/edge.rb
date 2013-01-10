@@ -11,8 +11,10 @@ module Refinery
     #
     # Returns a float, or nil if no demand can be determined.
     def demand
-      if get(:share) && from.demand
-        from.demand * from.slots.out(label).get(:share) * get(:share)
+      if get(:share) && to.demand
+        to.demand * to.slots.in(label).get(:share) * get(:share)
+      elsif get(:output_share) && from.demand
+        from.demand * from.slots.out(label).get(:share) * get(:output_share)
       end
     end
   end # Edge

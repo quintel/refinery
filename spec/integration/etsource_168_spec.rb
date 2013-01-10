@@ -26,16 +26,17 @@ describe 'ETsource #168 stub graph' do
 
   it 'calculates the preset demand for household gas descendants' do
     # preset edge share = 0.0
-    expect(node(:cooling).get(:preset_demand)).to eql(0.0)
+    expect(node(:cooling).get(:preset_demand)).to be_within(1e-9).of(0.0)
 
     # preset edge share = 0.24
-    expect(node(:hot_water).get(:preset_demand)).to eql(86.832)
+    expect(node(:hot_water).get(:preset_demand)).to be_within(1e-9).of(86.832)
 
     # preset edge share = 0.03
-    expect(node(:cooking).get(:preset_demand)).to eql(10.854)
+    expect(node(:cooking).get(:preset_demand)).to be_within(1e-9).of(10.854)
 
     # preset edge share = 0.73
-    expect(node(:space_heating_gas).get(:expected_demand)).to eql(264.114)
+    expect(node(:space_heating_gas).get(:expected_demand)).
+      to be_within(1e-9).of(264.114)
   end
 
   it 'does not set the expected demand for household gas descendants' do
@@ -47,16 +48,20 @@ describe 'ETsource #168 stub graph' do
 
   it 'calculates demand for space heating descendants' do
     # preset edge share = 0.1
-    expect(node(:gas_heater).get(:expected_demand)).to eql(26.4114)
+    expect(node(:gas_heater).get(:expected_demand)).
+      to be_within(1e-9).of(26.4114)
 
     # preset edge share = 0.9
-    expect(node(:combi_heater).get(:expected_demand)).to eql(237.7026)
+    expect(node(:combi_heater).get(:expected_demand)).
+      to be_within(1e-9).of(237.7026)
 
     # preset edge share = 0.0
-    expect(node(:gas_heat_pump).get(:expected_demand)).to eql(0.0)
+    expect(node(:gas_heat_pump).get(:expected_demand)).
+      to be_within(1e-9).of(0.0)
 
     # preset edge share = 0.0
-    expect(node(:gas_chp).get(:expected_demand)).to eql(0.0)
+    expect(node(:gas_chp).get(:expected_demand)).
+      to be_within(1e-9).of(0.0)
   end
 
   it 'calculates the edge shares for industrial gas descendants' do
@@ -67,7 +72,8 @@ describe 'ETsource #168 stub graph' do
 
   it 'calculates the preset demand of household heating' do
     # feeds from all of the outputs of space heating.
-    expect(node(:ud_heating_hh).get(:preset_demand)).to eql(264.114)
+    expect(node(:ud_heating_hh).get(:preset_demand)).
+      to be_within(1e-9).of(264.114)
 
     # expected demand is not set on leaf nodes.
     expect(node(:ud_heating_hh).get(:expected_demand)).to be_nil
@@ -86,7 +92,7 @@ describe 'ETsource #168 stub graph' do
       select { |edge| edge.to.key == :fd_hh_gas }.first
 
     # total demand of 628.4, households demand is 361.8
-    expect(edge.get(:share)).to be_within(0.001).of(361.8 / 628.4)
+    expect(edge.get(:share)).to eql(1.0)
   end
 
   it 'calculates the edge shares for the main gas node to industry' do
@@ -94,11 +100,39 @@ describe 'ETsource #168 stub graph' do
       select { |edge| edge.to.key == :fd_ind_gas }.first
 
     # total demand of 628.4, industry demand is 266.6
-    expect(edge.get(:share)).to be_within(0.001).of(266.6 / 628.4)
+    expect(edge.get(:share)).to eql(1.0)
   end
 
   it 'calculates the expected demand for the main gas node gas' do
     # combines the demand of the two descendants: 361.8 and 266.6
     expect(node(:fd_gas).get(:expected_demand)).to be_within(0.001).of(628.4)
+  end
+
+  it 'calcualtes the output edge share of gas heating' do
+    edge = node(:gas_heater).out_edges.
+      select { |edge| edge.to.key == :ud_heating_hh }.first
+
+    expect(edge.get(:share)).to be_within(1e-9).of(0.1)
+  end
+
+  it 'calcualtes the output edge share of combi heaters' do
+    edge = node(:combi_heater).out_edges.
+      select { |edge| edge.to.key == :ud_heating_hh }.first
+
+    expect(edge.get(:share)).to be_within(1e-9).of(0.9)
+  end
+
+  it 'calcualtes the output edge share of gas heat pumps' do
+    edge = node(:gas_heat_pump).out_edges.
+      select { |edge| edge.to.key == :ud_heating_hh }.first
+
+    expect(edge.get(:share)).to be_zero
+  end
+
+  it 'calcualtes the output edge share of gas CHPs' do
+    edge = node(:gas_chp).out_edges.
+      select { |edge| edge.to.key == :ud_heating_hh }.first
+
+    expect(edge.get(:share)).to be_zero
   end
 end # ETsource #168 stub graph

@@ -1,52 +1,57 @@
 module Refinery::Strategies
   module Demand
-    # Fill remaining is a calculation strategy which looks at a nodes children
-    # in order to determine how much demand remains to be accounted for, and
-    # assigns that demand to the node. For example:
+    # FillRemaining is a strategy for calculating demand which looks at a
+    # node's children in order to determine how much demand is unaccounted
+    # for, and assigns that demand to the node. For example:
     #
-    #            A
-    #           / \
-    #    (50) [B] [C] (20)
+    #   (50) [A] [B] (20)
+    #          \ /
+    #          [X]
     #
-    # In this case, it is quite clear that A needs to have a demand of 70 in
-    # order to satisfy the needs of it's children. It will also work if the
-    # child nodes have other parents, so long as those parents have a demand
-    # already calculated, and the edges connecting them have a share:
+    # In this case, it's quite clear that X needs to have a demand of 70 in
+    # order to satisfy the needs of it's children. Simple cases like this
+    # would be handled by the FromParents strategy.
     #
-    #   (20) [Y]     [A]     [Z] (5)
-    #          \     / \     /
-    #     (1.0) \   /   \   / (1.0)
-    #            \ /     \ /
-    #       (50) [B]     [C] (20)
+    # More complicated cases can arise when the node has siblings, since we
+    # can't simply assign all of the parent demand to the child, but must
+    # instead account for the demand of those siblings also.
     #
+    #       (50) [A]     [B] (20)
+    #            / \     / \
+    #     (1.0) /   \   /   \ (1.0)
+    #          /     \ /     \
+    #   (20) [X]     [Y]     [Z] (5)
+    #
+    # Here we can determine that A supplies Y with 30 (since 20 of its output
+    # goes to X) and B supplies 15. Therefore Y has a demand of 45.
     class FillRemaining
       def self.calculable?(node)
-        return false unless node.out.any?
-        return false unless children_have_demand?(node)
+        return false unless node.in.any?
+        return false unless parents_have_demand?(node)
 
-        node.out.in_edges.reject { |edge| edge.from == node }.all?(&:demand)
+        node.in.out_edges.reject { |edge| edge.to == node }.all?(&:demand)
       end
 
       def self.calculate(node)
-        node.out.uniq.sum { |child| remaining_demand(node, child) }
+        node.in.uniq.sum { |child| remaining_demand(node, child) }
       end
 
       # Internal: Given a +child+ node, sums the demand supplied by edges not
-      # connected to the node (+parent+) being calculated, and tells us how
-      # much demand the parent needs to supply.
+      # connected to the +parent+, and tells us how much demand the parent
+      # needs to supply in order to fulfil demand.
       #
       # Returns a float.
       def self.remaining_demand(parent, child)
-        related_edges = child.in_edges.reject { |edge| edge.from == parent }
+        related_edges = child.out_edges.reject { |edge| edge.to == parent }
 
         child.demand - related_edges.map(&:demand).sum
       end
 
-      # Internal: Asserts that all of the node's children have demand defined.
+      # Internal: Asserts that all of the node's parents have demand defined.
       #
       # Returns true or false.
-      def self.children_have_demand?(node)
-        node.out.all?(&:demand)
+      def self.parents_have_demand?(node)
+        node.in.all?(&:demand)
       end
     end # FillRemaining
   end # Demand

@@ -4,30 +4,28 @@ module Refinery::Strategies
     # of the parent and child nodes.
     #
     # To calculate the share of the edge, we need to know how much energy is
-    # supplied by the node to each of its children. Since the parent node may
-    # have multiple outgoing edges with shares, we have to figure this out by
-    # computing how much demand of its children is not supplied by other
-    # nodes.
+    # supplied by the parent node to each of the children. Since the parent
+    # node may have multiple outgoing edges with shares, we have to figure
+    # this out by computing how much demand of its children is not supplied by
+    # other nodes.
     #
     # Take the following example:
     #
-    #              (100)
-    #   (5) [R]     [M]     [F] (100)
-    #         \     / \     /
-    #    (1.0) \   /   \   / (1.0)
-    #           \ /     \ /
-    #      (80) [S]     [C] (125)
+    #      (10) [A]     [B] (75)   [C]
+    #           / \     /          /
+    #          /   \   / _________/
+    #         /     \ / /
+    #   (5) [X]     [Y] (100)
     #
-    # Here we know the demand of all five nodes, and the share of two edges
-    # which supply demand to the children. This means we can figure out how
-    # much energy [S] and [C] demand which is *not* provided by [R] or [F].
-    # We cannot, however, calculate the two unknown edge shares if the parent
-    # node [M] has *any* children whose other parents ([R] and [F] in this
-    # example) don't already have demand defined.
+    # Here we know the demand of four nodes, while one parent [C] remains
+    # unknown. Share::Solo will tell us that A->X carries 5 energy (to supply
+    # the demand from [X]). Share::FillDemand will then be able to compute
+    # values for A->X, B->Y, and finally Share::FromDemand will be able to
+    # determine a value for C->Y.
     class FromDemand
       def self.calculable?(edge)
         # Parent and child demand?
-        edge.from.demand && edge.to.demand &&
+        edge.to.demand && edge.from.demand &&
           # Siblings supply from other parents is already known?
           siblings(edge).all?(&:demand)
       end
@@ -38,8 +36,8 @@ module Refinery::Strategies
         # supplied by the parent).
         sibling_supply = siblings(edge).sum(&:demand)
 
-        (edge.to.demand - sibling_supply) /
-          (edge.from.demand * edge.from.slots.out(edge.label).get(:share))
+        (edge.from.demand - sibling_supply) /
+          (edge.to.demand * edge.to.slots.in(edge.label).get(:share))
       end
 
       # Internal: The "in" edges on the "to" node, excluding the given +edge+.
@@ -48,7 +46,7 @@ module Refinery::Strategies
       #
       # Returns an array of edges.
       def self.siblings(edge)
-        edge.to.in_edges.to_a - [edge]
+        edge.from.out_edges.to_a - [edge]
       end
     end # FromDemand
   end # Share

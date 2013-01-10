@@ -1,54 +1,133 @@
 require 'spec_helper'
 
 describe 'Graph calculations; three parents and a sibling' do
-  #     (100) [M]     [F] (15)   [R]
-  #           / \     /          /
-  #          /   \   / _________/
-  #         /     \ / /
-  #  (75) [S]     [C] (125)
-  let!(:mother)   { graph.add Refinery::Node.new(:mother) }
-  let!(:child)    { graph.add Refinery::Node.new(:child) }
-  let!(:sibling)  { graph.add Refinery::Node.new(:sibling) }
-  let!(:father)   { graph.add Refinery::Node.new(:father) }
-  let!(:relative) { graph.add Refinery::Node.new(:relative) }
-
-  let!(:ms_edge)  { mother.connect_to(sibling, :gas) }
-  let!(:mc_edge)  { mother.connect_to(child, :gas) }
-  let!(:fc_edge)  { father.connect_to(child, :gas) }
-  let!(:rc_edge)  { relative.connect_to(child, :gas) }
-
-  before do
-    sibling.set(:preset_demand, 75.0)
-    mother.set(:expected_demand, 100.0)
-    child.set(:preset_demand, 125.0)
-    father.set(:expected_demand, 15.0)
+  [ :a, :b, :c, :x, :y ].each do |key|
+    let(key) { graph.add Refinery::Node.new(key) }
   end
 
-  context 'with no edge shares' do
-    before {calculate! }
+  context 'with a single carrier' do
+    #      (10) [A]     [B] (75)   [C]
+    #           / \     /          /
+    #          /   \   / _________/
+    #         /     \ / /
+    #   (5) [X]     [Y] (100)
 
-    it 'sets edge shares' do
-      expect(ms_edge.get(:share)).to eql(0.75)
-      expect(mc_edge.get(:share)).to eql(0.25)
-      expect(fc_edge.get(:share)).to eql(1.0)
-      expect(rc_edge.get(:share)).to eql(1.0)
-    end
+    let!(:ax_edge) { a.connect_to(x, :gas) }
+    let!(:ay_edge) { a.connect_to(y, :gas) }
+    let!(:by_edge) { b.connect_to(y, :gas) }
+    let!(:cy_edge) { c.connect_to(y, :gas) }
 
-    it 'sets demand for the third parent' do
-      expect(relative.demand).to eql(85.0)
-    end
-  end
-
-  context 'with a share on the third parent' do
     before do
-      rc_edge.set(:share, 0.2)
+      a.set(:expected_demand, 10.0)
+      b.set(:expected_demand, 75.0)
+      c.set(:expected_demand, 20.0)
+      x.set(:preset_demand,    5.0)
+      y.set(:preset_demand,  100.0)
+    end
+
+    context 'with no edge shares' do
+      before { calculate! }
+
+      it 'sets A->X edge share' do
+        expect(ax_edge.get(:share)).to eql(1.0)
+      end
+
+      it 'sets A->Y edge share' do
+        expect(ay_edge.get(:share)).to eql(0.05)
+      end
+
+      it 'sets B->Y edge share' do
+        expect(by_edge.get(:share)).to eql(0.75)
+      end
+
+      it 'sets C->Y edge share' do
+        expect(cy_edge.get(:share)).to be_within(1e-9).of(0.2)
+      end
+    end
+
+    context 'and a missing supplier demand' do
+      before do
+        c.set(:expected_demand, nil)
+        calculate!
+      end
+
+      it 'sets A->X edge share' do
+        expect(ax_edge.get(:share)).to eql(1.0)
+      end
+
+      it 'sets A->Y edge share' do
+        expect(ay_edge.get(:share)).to eql(0.05)
+      end
+
+      it 'sets B->Y edge share' do
+        expect(by_edge.get(:share)).to eql(0.75)
+      end
+
+      it 'sets C->Y edge share' do
+        expect(cy_edge.get(:share)).to be_within(1e-9).of(0.2)
+      end
+
+      it 'sets demand of the remaining parent' do
+        expect(c.demand).to be_within(1e-9).of(20.0)
+      end
+    end
+  end # with a single carrier
+
+  context 'with parallel edges using different carriers' do
+    #  (175) [A]   (100) [B]     [C]
+    #          \___     // \     /
+    #              \   //   \   /
+    #               \ //     \ /
+    #         (250) [X]      [Y] (125)
+
+    let!(:ax_elec_edge) { a.connect_to(x, :electricity) }
+    let!(:bx_elec_edge) { b.connect_to(x, :electricity) }
+    let!(:bx_gas_edge)  { b.connect_to(x, :gas) }
+    let!(:by_gas_edge)  { b.connect_to(y, :gas) }
+    let!(:cy_gas_edge)  { c.connect_to(y, :gas) }
+
+    before do
+      a.set(:expected_demand, 175.0)
+      b.set(:expected_demand, 100.0)
+      x.set(:preset_demand,   250.0)
+      y.set(:preset_demand,   125.0)
+
+      b.slots.out(:gas).set(:share, 0.5)
+      b.slots.out(:electricity).set(:share, 0.5)
+
+      x.slots.in(:gas).set(:share, 0.2)
+      x.slots.in(:electricity).set(:share, 0.8)
+
       calculate!
     end
 
-    it 'sets demand for the third parent' do
-      pending do
-        expect(relative.demand).to eql(85.0 / 0.2)
-      end
+    it 'sets the A->X elec edge share' do
+      expect(ax_elec_edge.get(:share)).to eql(0.875)
+      expect(ax_elec_edge.demand).to eql(175.0)
     end
-  end
+
+    it 'sets the B->X elec edge share' do
+      expect(bx_elec_edge.get(:share)).to eql(0.125)
+      expect(bx_elec_edge.demand).to eql(25.0)
+    end
+
+    it 'sets the B->X gas edge share' do
+      expect(bx_gas_edge.get(:share)).to eql(1.0)
+      expect(bx_gas_edge.demand).to eql(50.0)
+    end
+
+    it 'sets the B->Y gas edge share' do
+      expect(by_gas_edge.get(:share)).to eql(25.0 / 125)
+      expect(by_gas_edge.demand).to eql(25.0)
+    end
+
+    it 'sets the C->Y gas edge share' do
+      expect(cy_gas_edge.get(:share)).to eql(100.0 / 125)
+      expect(cy_gas_edge.demand).to eql(100.0)
+    end
+
+    it 'sets demand of the remaining parent' do
+      expect(c.demand).to eql(100.0)
+    end
+  end # with parallel edges using different carriers
 end # Graph calculations; three parents and a sibling

@@ -1,15 +1,15 @@
 module Refinery::Strategies
-  module Share
+  module OutputShare
     # A strategy for calculate edge shares when the node has only a single
     # outbound edge.
     class Solo
       def self.calculable?(edge)
-        edge.to.in_edges(edge.label).one?
+        edge.from.out_edges(edge.label).one?
       end
 
       def self.calculate(edge)
         1.0
       end
     end # Solo
-  end # Share
+  end # OutputShare
 end # Refinery::Strategies

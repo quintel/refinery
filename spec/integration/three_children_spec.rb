@@ -12,7 +12,7 @@ describe 'Graph calculations; with three children' do
     let!(:mc3_edge) { mother.connect_to(child_3, :gas) }
 
     context 'when the parent is missing demand' do
-      #                        [P]
+      #                        [M]
       #                      / / \
       #           __________/ /   \
       #          /           /     \
@@ -29,14 +29,14 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'sets edge shares' do
-        expect(mc1_edge.get(:share)).to eql(50.0 / 225.0)
-        expect(mc2_edge.get(:share)).to eql(75.0 / 225.0)
-        expect(mc3_edge.get(:share)).to eql(100.0 / 225.0)
+        expect(mc1_edge.get(:share)).to eql(1.0)
+        expect(mc2_edge.get(:share)).to eql(1.0)
+        expect(mc3_edge.get(:share)).to eql(1.0)
       end
     end
 
     context 'when a child is missing demand' do
-      #             (225) [P]
+      #             (225) [M]
       #                 / / \
       #      __________/ /   \
       #     /           /     \
@@ -49,20 +49,18 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'sets demand for the child' do
-        pending do
-          expect(child.demand).to eql(50.0)
-        end
+        expect(child.demand).to eql(50.0)
       end
 
       it 'sets edge shares' do
-        expect(mc1_edge.get(:share)).to be_within(1e-8).of(50.0 / 225.0)
-        expect(mc2_edge.get(:share)).to be_within(1e-8).of(75.0 / 225.0)
-        expect(mc3_edge.get(:share)).to be_within(1e-8).of(100.0 / 225.0)
+        expect(mc1_edge.get(:share)).to eql(1.0)
+        expect(mc2_edge.get(:share)).to eql(1.0)
+        expect(mc3_edge.get(:share)).to eql(1.0)
       end
     end # when a child is missing demand
 
     context 'when a child and parent are missing demand' do
-      #                   [P]
+      #                   [M]
       #                 / / \
       #      __________/ /   \
       #     /           /     \
@@ -82,9 +80,9 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'does not set edge shares' do
-        expect(mc1_edge.get(:share)).to be_nil
-        expect(mc2_edge.get(:share)).to be_nil
-        expect(mc3_edge.get(:share)).to be_nil
+        expect(mc1_edge.get(:share)).to eql(1.0)
+        expect(mc2_edge.get(:share)).to eql(1.0)
+        expect(mc3_edge.get(:share)).to eql(1.0)
       end
     end # when a child and parent are missing demand
   end # with the same carriers
@@ -94,7 +92,7 @@ describe 'Graph calculations; with three children' do
     let!(:mc2_edge) { mother.connect_to(child_2, :gas) }
     let!(:mc3_edge) { mother.connect_to(child_3, :gas) }
 
-    #                        [P]
+    #                        [M]
     #        :electricity  / / \  :gas
     #           __________/ /   \
     #          /           /     \
@@ -119,8 +117,8 @@ describe 'Graph calculations; with three children' do
     end
 
     it 'sets gas edge shares' do
-      expect(mc2_edge.get(:share)).to eql(75.0 / 175.0)
-      expect(mc3_edge.get(:share)).to eql(100.0 / 175.0)
+      expect(mc2_edge.get(:share)).to eql(1.0)
+      expect(mc3_edge.get(:share)).to eql(1.0)
     end
   end # when the child is connected with a different carrier
 end # Graph calculations; with three children

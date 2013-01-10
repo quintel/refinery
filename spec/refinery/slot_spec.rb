@@ -3,10 +3,10 @@ require 'spec_helper'
 module Refinery
   describe Slot do
     let(:graph)   { Turbine::Graph.new }
-    let(:parent)  { graph.add Node.new(:parent, expected_demand: 50.0) }
-    let(:spouse)  { graph.add Node.new(:spouse, expected_demand: 10.0) }
-    let(:child)   { graph.add Node.new(:child)   }
-    let(:sibling) { graph.add Node.new(:sibling) }
+    let(:parent)  { graph.add Node.new(:parent,  expected_demand: 100.0) }
+    let(:spouse)  { graph.add Node.new(:spouse,  expected_demand: 20.0) }
+    let(:child)   { graph.add Node.new(:child,   preset_demand:   40.0) }
+    let(:sibling) { graph.add Node.new(:sibling, preset_demand:   80.0) }
 
     before do
       [ parent, spouse ].each do |person|
@@ -41,7 +41,7 @@ module Refinery
       end
 
       it 'sums the demand of each link' do
-        expect(slot.demand).to eql(50.0)
+        expect(slot.demand).to eql(60.0)
       end
     end # on a node with outgoing edges
 
@@ -57,7 +57,7 @@ module Refinery
       end
 
       it 'sums the demand of each link' do
-        expect(slot.demand).to eql(30.0)
+        expect(slot.demand).to eql(40.0)
       end
     end # on a node with incoming edges
 

@@ -114,6 +114,9 @@ describe 'Graph calculations; a parent and child' do
     before do
       mother.slots.out(:gas).set(:share, 0.7)
       mother.slots.out(:electricity).set(:share, 0.3)
+
+      child.slots.in(:gas).set(:share, 0.7)
+      child.slots.in(:electricity).set(:share, 0.3)
     end
 
     context 'with demand defined on the child' do

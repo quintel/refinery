@@ -41,15 +41,15 @@ module Refinery
       fd_gas.connect_to(fd_hh_gas, :gas)
       fd_gas.connect_to(fd_ind_gas, :gas)
 
-      fd_hh_gas.connect_to(cooling, :gas, share: 0.0)
-      fd_hh_gas.connect_to(hot_water, :gas, share: 0.24)
-      fd_hh_gas.connect_to(cooking, :gas, share: 0.03)
-      fd_hh_gas.connect_to(space_heating_gas, :gas, share: 0.73)
+      fd_hh_gas.connect_to(cooling, :gas, output_share: 0.0)
+      fd_hh_gas.connect_to(hot_water, :gas, output_share: 0.24)
+      fd_hh_gas.connect_to(cooking, :gas, output_share: 0.03)
+      fd_hh_gas.connect_to(space_heating_gas, :gas, output_share: 0.73)
 
-      space_heating_gas.connect_to(gas_heater, :gas, share: 0.1)
-      space_heating_gas.connect_to(combi_heater, :gas, share: 0.9)
-      space_heating_gas.connect_to(gas_heat_pump, :gas, share: 0.0)
-      space_heating_gas.connect_to(gas_chp, :gas, share: 0.0)
+      space_heating_gas.connect_to(gas_heater, :gas, output_share: 0.1)
+      space_heating_gas.connect_to(combi_heater, :gas, output_share: 0.9)
+      space_heating_gas.connect_to(gas_heat_pump, :gas, output_share: 0.0)
+      space_heating_gas.connect_to(gas_chp, :gas, output_share: 0.0)
 
       gas_heater.connect_to(ud_heating_hh, :heat)
       combi_heater.connect_to(ud_heating_hh, :heat)
@@ -98,8 +98,8 @@ module Refinery
 
       gas_chp.connect_to(locally_available_elec, :electricity)
 
-      graph.node(:combi_heater).in_edges.first.set(:share, 0.5)
-      gas_chp.in_edges.first.set(:share, 0.4)
+      graph.node(:combi_heater).in_edges.first.set(:output_share, 0.5)
+      gas_chp.in_edges.first.set(:output_share, 0.4)
 
       # Gas CHP efficiencies
       gas_chp.slots.out(:heat).set(:share, 0.7)

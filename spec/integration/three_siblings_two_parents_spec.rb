@@ -1,38 +1,46 @@
 require 'spec_helper'
 
 describe 'Graph calculations; three siblings and two parents' do
-  #                (100) [M]     [F] (50)
+  #                (100) [A]     [B] (50)
   #                    / / \     /
   #         __________/ /   \   /
   #        /           /     \ /
-  #  (10) [B]   (75) [S]     [C]
-  let!(:mother)  { graph.add Refinery::Node.new(:mother) }
-  let!(:child)   { graph.add Refinery::Node.new(:child) }
-  let!(:brother) { graph.add Refinery::Node.new(:brother) }
-  let!(:sister)  { graph.add Refinery::Node.new(:sister) }
-  let!(:father)  { graph.add Refinery::Node.new(:father) }
+  #  (10) [X]   (75) [Y]     [Z]
+  [ :a, :b, :x, :y, :z ].each do |key|
+    let(key) { graph.add Refinery::Node.new(key) }
+  end
 
-  let!(:mb_edge) { mother.connect_to(brother, :gas) }
-  let!(:ms_edge) { mother.connect_to(sister, :gas) }
-  let!(:mc_edge) { mother.connect_to(child, :gas) }
-  let!(:fc_edge) { father.connect_to(child, :gas) }
+  let!(:ax_edge) { a.connect_to(x, :gas) }
+  let!(:ay_edge) { a.connect_to(y, :gas) }
+  let!(:az_edge) { a.connect_to(z, :gas) }
+  let!(:bz_edge) { b.connect_to(z, :gas) }
 
   before do
-    brother.set(:preset_demand, 10.0)
-    sister.set(:preset_demand, 75.0)
-    mother.set(:expected_demand, 100.0)
-    father.set(:expected_demand, 50.0)
+    a.set(:expected_demand, 100.0)
+    b.set(:expected_demand,  50.0)
+    x.set(:preset_demand,    10.0)
+    y.set(:preset_demand,    75.0)
+
     calculate!
   end
 
   it 'sets child demand' do
-    expect(child.demand).to eql(65.0)
+    expect(z.demand).to eql(65.0)
   end
 
-  it 'sets edge shares' do
-    expect(mb_edge.get(:share)).to eql(0.10)
-    expect(ms_edge.get(:share)).to eql(0.75)
-    expect(mc_edge.get(:share)).to be_within(1e-8).of(0.15) # flop precision
-    expect(fc_edge.get(:share)).to eql(1.00)
+  it 'sets A->X edge share' do
+    expect(ax_edge.get(:share)).to eql(1.0)
+  end
+
+  it 'sets A->Y edge share' do
+    expect(ay_edge.get(:share)).to eql(1.0)
+  end
+
+  it 'sets A->Z edge share' do
+    expect(az_edge.get(:share)).to eql(15.0 / 65)
+  end
+
+  it 'sets B->Z edge share' do
+    expect(bz_edge.get(:share)).to be_within(1e-9).of(50.0 / 65)
   end
 end # Graph calculations; three siblings and two parents
