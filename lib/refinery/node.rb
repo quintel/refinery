@@ -29,6 +29,32 @@ module Refinery
       get(calculator.demand_attribute)
     end
 
+    # Public: The demand of the node for a given +carrier+.
+    #
+    # If the node demands a total of 200 energy, and its incoming gas slot has
+    # a share of 0.25 (25% of all energy input), then the demand for gas is
+    # 50.0.
+    #
+    # Raises NoSuchSlotError if the node has no inward slot for the carrier.
+    #
+    # Returns a float or nil if the node does not have a demand value set.
+    def demand_for(carrier)
+      demand * slots.in(carrier).get(:share) if demand
+    end
+
+    # Public: The energy output of the node for a given +carrier+.
+    #
+    # If the node demands a total of 200 energy, and its outgoing gas slot has
+    # a share of 0.25 (25% of all energy leaving the node), then the output of
+    # gas is 50.0.
+    #
+    # Raises NoSuchSlotError if the node has no outward slot for the carrier.
+    #
+    # Returns a float or nil if the node does not have a demand value set.
+    def output_of(carrier)
+      demand * slots.out(carrier).get(:share) if demand
+    end
+
     # Public: Provides a fluent API for accessing the slots on the node.
     #
     # For example

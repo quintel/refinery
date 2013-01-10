@@ -47,4 +47,10 @@ module Refinery
     adjective = direction == :in ? 'incoming' : 'outgoing'
     "#{ node.inspect } already has an #{ adjective } #{ carrier } slot."
   end
+
+  # Raised when a asking for a slot which does not exist.
+  NoSuchCarrierError = error_class do |node, direction, carrier|
+    adjective = direction == :in ? 'incoming' : 'outgoing'
+    "#{ node.inspect } has no #{ adjective } #{ carrier.inspect } slot."
+  end
 end # Refinery

@@ -23,7 +23,8 @@ module Refinery
     #
     # Returns a Slot, or nil if no such slot exists in the collection.
     def get(carrier)
-      @slots[carrier]
+      @slots[carrier] ||
+        raise(NoSuchCarrierError.new(@node, @direction, carrier))
     end
 
     # Public: Adds a new slot to the collection, using the given +carrier+.
