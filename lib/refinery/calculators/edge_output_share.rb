@@ -1,6 +1,6 @@
 module Refinery
-  module Demand
-    class EdgeOutputShareCalculator < Calculator
+  module Calculators
+    class EdgeOutputShare < Base
       STRATEGIES = [ Strategies::OutputShare::Solo ]
 
       # Public: Performs the calculation, setting the share attribute on the
@@ -21,6 +21,6 @@ module Refinery
       def calculated?
         super || @model.get(:share) || @model.get(:output_share)
       end
-    end # EdgeOutputShareCalculator
-  end # Demand
+    end # EdgeOutputShare
+  end # Calculators
 end # Refinery

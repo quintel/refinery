@@ -87,7 +87,7 @@ module Refinery
               # I plan to explore the possibility of replacing an edge share
               # calculation with an edge *demand* calculation which will
               # cater to this this special case in a nicer way.
-              Demand::EdgeOutputShareCalculator.new(edge) ]
+              Refinery::Calculators::EdgeOutputShare.new(edge) ]
           end.to_a.flatten)
         end
 

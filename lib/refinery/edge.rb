@@ -2,9 +2,9 @@ module Refinery
   class Edge < Turbine::Edge
     # Public: The share calculator for the edge.
     #
-    # Returns an EdgeShareCalculator.
+    # Returns an Calculators::EdgeShare.
     def calculator
-      @calculator ||= Demand::EdgeShareCalculator.new(self)
+      @calculator ||= Calculators::EdgeShare.new(self)
     end
 
     # Public: The demand for energy supplied through the edge.

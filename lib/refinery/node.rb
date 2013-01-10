@@ -17,9 +17,9 @@ module Refinery
 
     # Public: The demand calculator for this node.
     #
-    # Returns a NodeDemandCalculator.
+    # Returns a Calculators::NodeDemand.
     def calculator
-      @calculator ||= Demand::NodeDemandCalculator.new(self)
+      @calculator ||= Calculators::NodeDemand.new(self)
     end
 
     # Public: The demand assigned to the node.

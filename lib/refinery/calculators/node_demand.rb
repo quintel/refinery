@@ -1,8 +1,8 @@
 module Refinery
-  module Demand
+  module Calculators
     # Calculates the total expected or preset demand of a node by looking
     # either to the child nodes, or to a parent node.
-    class NodeDemandCalculator < Calculator
+    class NodeDemand < Base
       STRATEGIES = [
         Strategies::Demand::FromChildren,
         Strategies::Demand::OnlyChild,
@@ -34,6 +34,6 @@ module Refinery
       def demand_attribute
         @attr ||= @model.out_edges.none? ? :preset_demand : :expected_demand
       end
-    end # NodeDemandCalculator
-  end # Demand
+    end # NodeDemand
+  end # Calculators
 end # Refinery

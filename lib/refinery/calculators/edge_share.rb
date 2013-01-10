@@ -1,6 +1,6 @@
 module Refinery
-  module Demand
-    class EdgeShareCalculator < Calculator
+  module Calculators
+    class EdgeShare < Base
       STRATEGIES = [
         Strategies::Share::Solo,
         Strategies::Share::FromDemand,
@@ -22,6 +22,6 @@ module Refinery
       def calculated?
         super || @model.get(:share)
       end
-    end # EdgeShareCalculator
-  end # Demand
+    end # EdgeShare
+  end # Calculators
 end # Refinery

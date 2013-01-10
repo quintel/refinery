@@ -1,9 +1,9 @@
 module Refinery
-  module Demand
+  module Calculators
     # For demand calculations, each node and edge receive a calculator which
     # is capable of assigning the necessary values (such as expected demand,
     # link share, etc).
-    class Calculator
+    class Base
       # Public: Returns the strategy which was used to calculate the
       # attribute or nil if no calculation has been performed yet.
       attr_reader :strategy_used
@@ -89,6 +89,6 @@ module Refinery
       def strategy
         self.class::STRATEGIES.detect { |strat| strat.calculable?(@model) }
       end
-    end # Calculator
-  end # Demand
+    end # Base
+  end # Calculators
 end # Refinery

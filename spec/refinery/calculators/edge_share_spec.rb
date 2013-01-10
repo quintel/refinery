@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module Refinery::Demand ; describe EdgeShareCalculator do
+module Refinery::Calculators ; describe EdgeShare do
   # Tests for the edge share calculations are included in the integration
   # tests directory.
-end ; end # Refinery::Demand
+end ; end # Refinery::Calculators
