@@ -14,7 +14,7 @@ module Refinery
       # node.
       #
       # Returns nothing.
-      def calculate!
+      def calculate!(order)
         @model.set(demand_attribute, strategy.calculate(@model))
         super
       end

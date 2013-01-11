@@ -44,6 +44,7 @@ module Refinery
       def run_calculators!
         calculators = uncalculated
         cycle       = 0
+        order       = 0
 
         while calculators.length.nonzero?
           previous_length = calculators.length
@@ -51,7 +52,7 @@ module Refinery
           calculators.reject! do |calculator|
             # calculator.calculable? && (calculator.calculate! || true)
             if calculator.calculable?
-              (calculator.calculate! || true)
+              (calculator.calculate!(order += 1) || true)
             elsif calculator.calculated?
               # Some calculators are used just to create a temporary value
               # used to assist in calculating something else (e.g. output

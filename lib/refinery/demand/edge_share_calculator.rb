@@ -11,7 +11,7 @@ module Refinery
       # edge.
       #
       # Returns nothing.
-      def calculate!
+      def calculate!(order)
         @model.set(:share, strategy.calculate(@model))
         super
       end

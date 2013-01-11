@@ -7,7 +7,7 @@ module Refinery
       # edge.
       #
       # Returns nothing.
-      def calculate!
+      def calculate!(order)
         unless @model.get(:share)
           @model.set(:output_share, strategy.calculate(@model))
         end

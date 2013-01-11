@@ -8,6 +8,10 @@ module Refinery
       # attribute or nil if no calculation has been performed yet.
       attr_reader :strategy_used
 
+      # Public: Returns an integer indicating the order in which the
+      # calculators were evalulated.
+      attr_reader :order
+
       # Public: Creates a new calculator responsible for figuring out the
       # unknown attributes for the given +model+. Calculator is a base class
       # and should be extended with the logic needed to compute the values.
@@ -19,6 +23,7 @@ module Refinery
         @model         = model
         @calculated    = false
         @strategy_used = nil
+        @order         = nil
       end
 
       # Public: Does the instance have all the data it needs to perform its
@@ -32,9 +37,13 @@ module Refinery
       # Public: Performs the calculation, setting the appropriate attributes
       # on the model.
       #
+      # order - This is the +order+'th calculator to be run. 1 would be the
+      #         first calculator, 5 the fifth, etc.
+      #
       # Returns nothing.
-      def calculate!
+      def calculate!(order)
         @strategy_used = strategy
+        @order         = order
         @calculated    = true
       end
 
@@ -50,7 +59,13 @@ module Refinery
       #
       # Returns a string.
       def inspect
-        "#<#{ self.class.name } (#{ @model.inspect })>"
+        head = "#<#{ self.class.name } model=#{ @model.inspect }"
+
+        if calculated?
+          "#{ head } order=#{ @order } strategy_used=#{ @strategy_used }>"
+        else
+          "#{ head } (not calculated)>"
+        end
       end
 
       # Public: A pretty version of the calculator.
