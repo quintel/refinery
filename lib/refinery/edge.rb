@@ -4,7 +4,7 @@ module Refinery
     #
     # Returns an EdgeShareCalculator.
     def calculator
-      @calculator = Demand::EdgeShareCalculator.new(self)
+      @calculator ||= Demand::EdgeShareCalculator.new(self)
     end
 
     # Public: The demand for energy supplied through the edge.
