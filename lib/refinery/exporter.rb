@@ -2,7 +2,7 @@ module Refinery
   class Exporter
     # Properties which are commonly present on Node instances, which are only
     # for internal use in Refinery, and should not be included in exports.
-    OMITTED_NODE_KEYS = [ :strategy_used ]
+    OMITTED_NODE_KEYS = []
 
     # Public: Creates a new Exporter which takes a Turbine graph and creates
     # ETsource YAML.

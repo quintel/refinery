@@ -4,6 +4,10 @@ module Refinery
     # is capable of assigning the necessary values (such as expected demand,
     # link share, etc).
     class Calculator
+      # Public: Returns the strategy which was used to calculate the
+      # attribute or nil if no calculation has been performed yet.
+      attr_reader :strategy_used
+
       # Public: Creates a new calculator responsible for figuring out the
       # unknown attributes for the given +model+. Calculator is a base class
       # and should be extended with the logic needed to compute the values.
@@ -12,8 +16,9 @@ module Refinery
       #
       # Returns a Calculator.
       def initialize(model)
-        @model      = model
-        @calculated = false
+        @model         = model
+        @calculated    = false
+        @strategy_used = nil
       end
 
       # Public: Does the instance have all the data it needs to perform its
@@ -29,8 +34,8 @@ module Refinery
       #
       # Returns nothing.
       def calculate!
-        @model.set(:strategy_used, strategy)
-        @calculated = true
+        @strategy_used = strategy
+        @calculated    = true
       end
 
       # Public: Returns if the calculator has previously been successfully
