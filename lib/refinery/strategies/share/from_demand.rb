@@ -36,8 +36,8 @@ module Refinery::Strategies
         # supplied by the parent).
         sibling_supply = siblings(edge).sum(&:demand)
 
-        (edge.from.demand - sibling_supply) /
-          (edge.to.demand * edge.to.slots.in(edge.label).get(:share))
+        (edge.from.output_of(edge.label) - sibling_supply) /
+          edge.to.input_of(edge.label)
       end
 
       # Internal: The "in" edges on the "to" node, excluding the given +edge+.
@@ -46,7 +46,7 @@ module Refinery::Strategies
       #
       # Returns an array of edges.
       def self.siblings(edge)
-        edge.from.out_edges.to_a - [edge]
+        edge.from.out_edges(edge.label).to_a - [edge]
       end
     end # FromDemand
   end # Share

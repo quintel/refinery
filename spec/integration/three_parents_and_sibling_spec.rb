@@ -92,8 +92,8 @@ describe 'Graph calculations; three parents and a sibling' do
       x.set(:preset_demand,   250.0)
       y.set(:preset_demand,   125.0)
 
-      b.slots.out(:gas).set(:share, 0.5)
-      b.slots.out(:electricity).set(:share, 0.5)
+      b.slots.out(:gas).set(:share, 0.75)
+      b.slots.out(:electricity).set(:share, 0.25)
 
       x.slots.in(:gas).set(:share, 0.2)
       x.slots.in(:electricity).set(:share, 0.8)
@@ -101,29 +101,29 @@ describe 'Graph calculations; three parents and a sibling' do
       calculate!
     end
 
-    it 'sets the A->X elec edge share' do
-      expect(ax_elec_edge).to have_share.of(0.875)
-      expect(ax_elec_edge).to have_demand.of(175.0)
+    it 'sets the A->X elec edge demand' do
+      expect(ax_elec_edge.get(:share)).to eql(0.875)
+      expect(ax_elec_edge.demand).to eql(175.0)
     end
 
-    it 'sets the B->X elec edge share' do
-      expect(bx_elec_edge).to have_share.of(0.125)
-      expect(bx_elec_edge).to have_demand.of(25.0)
+    it 'sets the B->X elec edge demand' do
+      expect(bx_elec_edge.get(:share)).to eql(0.125)
+      expect(bx_elec_edge.demand).to eql(25.0)
     end
 
-    it 'sets the B->X gas edge share' do
-      expect(bx_gas_edge).to have_share.of(1.0)
-      expect(bx_gas_edge).to have_demand.of(50.0)
+    it 'sets the B->X gas edge demand' do
+      expect(bx_gas_edge.get(:share)).to eql(1.0)
+      expect(bx_gas_edge.demand).to eql(50.0)
     end
 
-    it 'sets the B->Y gas edge share' do
-      expect(by_gas_edge).to have_share.of(25.0 / 125)
-      expect(by_gas_edge).to have_demand.of(25.0)
+    it 'sets the B->Y gas edge demand' do
+      expect(by_gas_edge.get(:share)).to eql(25.0 / 125)
+      expect(by_gas_edge.demand).to eql(25.0)
     end
 
-    it 'sets the C->Y gas edge share' do
-      expect(cy_gas_edge).to have_share.of(100.0 / 125)
-      expect(cy_gas_edge).to have_demand.of(100.0)
+    it 'sets the C->Y gas edge demand' do
+      expect(cy_gas_edge.get(:share)).to eql(100.0 / 125)
+      expect(cy_gas_edge.demand).to eql(100.0)
     end
 
     it 'sets demand of the remaining parent' do

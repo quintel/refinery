@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'Graph calculations; with a sibling which is also a parent' do
   #     (100) [M] [F] (50)
   #           / \ /
-  #   (0.13) /__[S]       Someone call Jerry Springer...
+  #     (20) /__[S]       Someone call Jerry Springer...
   #         //
   #  (150) [C]
   let!(:mother)  { graph.add Refinery::Node.new(:mother) }
@@ -12,7 +12,7 @@ describe 'Graph calculations; with a sibling which is also a parent' do
   let!(:father)  { graph.add Refinery::Node.new(:father) }
 
   let!(:ms_edge) { mother.connect_to(sibling, :gas) }
-  let!(:mc_edge) { mother.connect_to(child, :gas, share: 20.0 / 150) }
+  let!(:mc_edge) { mother.connect_to(child, :gas, demand: 20) }
   let!(:sc_edge) { sibling.connect_to(child, :gas) }
   let!(:fs_edge) { father.connect_to(sibling, :gas) }
 
@@ -29,6 +29,18 @@ describe 'Graph calculations; with a sibling which is also a parent' do
 
   it 'sets sibling demand' do
     expect(sibling).to have_demand.of(130.0)
+  end
+
+  it 'sets M->S demand' do
+    expect(ms_edge.get(:demand)).to eql(80.0)
+  end
+
+  it 'sets F->S demand' do
+    expect(fs_edge.get(:demand)).to eql(50.0)
+  end
+
+  it 'sets S->C demand' do
+    expect(sc_edge.get(:demand)).to eql(130.0)
   end
 
   it 'sets M->S share' do

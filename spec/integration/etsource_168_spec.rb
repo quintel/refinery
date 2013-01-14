@@ -12,7 +12,8 @@ describe 'ETsource #168 stub graph' do
   before do
     Refinery::Reactor.new(
       Refinery::Catalyst::ConvertFinalDemand,
-      Refinery::Catalyst::Calculators
+      Refinery::Catalyst::Calculators,
+      Refinery::Catalyst::CalculateEdgeShares
     ).run(graph)
   end
 

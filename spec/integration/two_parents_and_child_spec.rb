@@ -14,9 +14,9 @@ describe 'Graph calculations; with two parents' do
       father.set(:expected_demand, 20.0)
     end
 
-    context 'and the edges both have shares' do
-      let!(:mc_edge) { mother.connect_to(child, :gas, share: 0.6) }
-      let!(:fc_edge) { father.connect_to(child, :gas, share: 0.4) }
+    context 'and the edges both have demands' do
+      let!(:mc_edge) { mother.connect_to(child, :gas, demand: 30.0) }
+      let!(:fc_edge) { father.connect_to(child, :gas, demand: 20.0) }
 
       before { calculate! }
 
@@ -25,7 +25,7 @@ describe 'Graph calculations; with two parents' do
       end
     end
 
-    context 'and neither edge has a share' do
+    context 'and neither edge has a demand' do
       let!(:mc_edge) { mother.connect_to(child, :gas) }
       let!(:fc_edge) { father.connect_to(child, :gas) }
 
@@ -35,9 +35,9 @@ describe 'Graph calculations; with two parents' do
         expect(child).to have_demand.of(50.0)
       end
 
-      it 'sets the edge shares' do
-        expect(mc_edge).to have_share.of(30.0 / 50)
-        expect(fc_edge).to have_share.of(20.0 / 50)
+      it 'sets the edge demands' do
+        expect(mc_edge.get(:demand)).to eql(30.0)
+        expect(fc_edge.get(:demand)).to eql(20.0)
       end
     end
 
@@ -57,26 +57,27 @@ describe 'Graph calculations; with two parents' do
         expect(child).to_not have_demand
       end
 
-      it 'does not set the M->C share' do
-        expect(mc_edge.get(:share)).to be_nil
+      it 'sets the M->C demand' do
+        expect(mc_edge.get(:demand)).to eql(30.0)
       end
 
-      it 'does not set the F->C share' do
-        expect(fc_edge.get(:share)).to be_nil
+      it 'does not set the F->C demand' do
+        expect(fc_edge.get(:demand)).to be_nil
       end
     end
   end # the parents have demand
 
   context 'one parent has demand' do
-    let!(:mc_edge) { mother.connect_to(child, :gas, share: 0.2) }
-    let!(:fc_edge) { father.connect_to(child, :gas, share: 0.8) }
+    let!(:mc_edge) { mother.connect_to(child, :gas, demand: 60.0) }
+    let!(:fc_edge) { father.connect_to(child, :gas) }
 
     context "but the child doesn't" do
       #   (60) [M] [F]
-      #   (0.2)  \ / (0.8)
+      #    (60)  \ / (240)
       #          [C]
       before do
         mother.set(:expected_demand, 60.0)
+        fc_edge.set(:demand, 240.0)
         calculate!
       end
 
@@ -91,12 +92,10 @@ describe 'Graph calculations; with two parents' do
 
     context 'as does the child' do
       #   (60) [M] [F]
-      #   (0.25) \ /
+      #     (60) \ /
       #          [C] (240)
       before do
         child.set(:preset_demand, 240.0)
-        mc_edge.set(:share, 0.25)
-        fc_edge.set(:share, nil)
         calculate!
       end
 

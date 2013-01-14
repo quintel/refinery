@@ -61,7 +61,7 @@ module Refinery
       def inspect
         head = "#<#{ self.class.name } model=#{ @model.inspect }"
 
-        if calculated?
+        if @strategy_used
           "#{ head } order=#{ @order } strategy_used=#{ @strategy_used }>"
         else
           "#{ head } (not calculated)>"

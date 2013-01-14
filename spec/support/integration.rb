@@ -49,7 +49,8 @@ module Refinery::Spec
     def calculate!
       Refinery::Reactor.new(
         Refinery::Catalyst::ConvertFinalDemand,
-        Refinery::Catalyst::Calculators
+        Refinery::Catalyst::Calculators,
+        Refinery::Catalyst::CalculateEdgeShares
       ).run(graph)
     rescue Refinery::IncalculableGraphError
     end

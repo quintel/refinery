@@ -12,8 +12,8 @@ describe 'Graph calculations; a parent and child' do
       mother.set(:expected_demand, 45.0)
     end
 
-    context 'and the edge has a share' do
-      let!(:edge) { mother.connect_to(child, :gas, share: 1.0) }
+    context 'and the edge has demand' do
+      let!(:edge) { mother.connect_to(child, :gas, demand: 45.0) }
 
       before { calculate! }
 
@@ -22,7 +22,7 @@ describe 'Graph calculations; a parent and child' do
       end
     end
 
-    context 'and the edge has no share' do
+    context 'and the edge has no demand' do
       let!(:edge) { mother.connect_to(child, :gas) }
 
       before { calculate! }
@@ -45,8 +45,8 @@ describe 'Graph calculations; a parent and child' do
       child.set(:preset_demand, 45.0)
     end
 
-    context 'and the edge has a share' do
-      let!(:edge) { mother.connect_to(child, :gas, share: 1.0) }
+    context 'and the edge has demand' do
+      let!(:edge) { mother.connect_to(child, :gas, demand: 45.0) }
 
       before { calculate! }
 
@@ -55,7 +55,7 @@ describe 'Graph calculations; a parent and child' do
       end
     end
 
-    context 'and the edge has no share' do
+    context 'and the edge has no demand' do
       let!(:edge) { mother.connect_to(child, :gas) }
 
       before { calculate! }
@@ -92,7 +92,7 @@ describe 'Graph calculations; a parent and child' do
     before { calculate! }
 
     it 'sets the edge share' do
-      expect(edge).to have_share.of(1.0)
+      expect(edge).to_not have_share
     end
 
     it 'does not set child demand' do

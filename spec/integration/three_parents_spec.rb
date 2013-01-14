@@ -54,7 +54,7 @@ describe 'Graph calculations; three parents' do
         calculate!
       end
 
-      context 'and there are no edge shares' do
+      context 'and there are no edge demands' do
         it 'does not set demand of the child' do
           expect(x).to_not have_demand
         end
@@ -63,10 +63,16 @@ describe 'Graph calculations; three parents' do
           expect(c).to_not have_demand
         end
 
-        it 'does not set edge shares' do
-          expect(ax_edge.get(:share)).to be_nil
-          expect(bx_edge.get(:share)).to be_nil
-          expect(cx_edge.get(:share)).to be_nil
+        it 'sets A->X demand' do
+          expect(ax_edge.demand).to eql(10.0)
+        end
+
+        it 'sets B->X demand' do
+          expect(bx_edge.demand).to eql(75.0)
+        end
+
+        it 'does not set C->X demand' do
+          expect(cx_edge.demand).to be_nil
         end
       end
 
@@ -81,6 +87,10 @@ describe 'Graph calculations; three parents' do
 
         it 'sets demand of the child' do
           expect(x).to have_demand.of(100.0)
+        end
+
+        it 'sets C->X demand' do
+          expect(cx_edge.demand).to eql(15.0)
         end
 
         it 'sets demand of the missing parent' do
