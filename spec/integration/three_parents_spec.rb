@@ -25,19 +25,19 @@ describe 'Graph calculations; three parents' do
       end
 
       it 'sets demand of the child' do
-        expect(x.demand).to eql(100.0)
+        expect(x).to have_demand.of(100.0)
       end
 
       it 'sets A->X share' do
-        expect(ax_edge.get(:share)).to eql(0.1)
+        expect(ax_edge).to have_share.of(0.1)
       end
 
       it 'sets B->X share' do
-        expect(bx_edge.get(:share)).to eql(0.75)
+        expect(bx_edge).to have_share.of(0.75)
       end
 
       it 'sets C->X share' do
-        expect(cx_edge.get(:share)).to be_within(1e-9).of(0.15) # FP precision
+        expect(cx_edge).to have_share.of(0.15)
       end
     end # but all parents do
 
@@ -56,11 +56,11 @@ describe 'Graph calculations; three parents' do
 
       context 'and there are no edge shares' do
         it 'does not set demand of the child' do
-          expect(x.demand).to be_nil
+          expect(x).to_not have_demand
         end
 
         it 'does not set demand of missing parent' do
-          expect(c.demand).to be_nil
+          expect(c).to_not have_demand
         end
 
         it 'does not set edge shares' do
@@ -80,11 +80,11 @@ describe 'Graph calculations; three parents' do
         end
 
         it 'sets demand of the child' do
-          expect(x.demand).to eql(100.0)
+          expect(x).to have_demand.of(100.0)
         end
 
         it 'sets demand of the missing parent' do
-          expect(c.demand).to eql(15.0)
+          expect(c).to have_demand.of(15.0)
         end
       end
     end # and neither does one parent
@@ -108,15 +108,15 @@ describe 'Graph calculations; three parents' do
       end
 
       it 'sets demand of the first parent' do
-        expect(a.demand).to eql(20.0)
+        expect(a).to have_demand.of(20.0)
       end
 
       it 'sets demand of the second parent' do
-        expect(b.demand).to eql(150.0)
+        expect(b).to have_demand.of(150.0)
       end
 
       it 'sets demand of the third parent' do
-        expect(c.demand).to eql(30.0)
+        expect(c).to have_demand.of(30.0)
       end
     end
 
@@ -130,9 +130,9 @@ describe 'Graph calculations; three parents' do
       end
 
       it 'does not set parent demands' do
-        expect(a.demand).to be_nil
-        expect(b.demand).to be_nil
-        expect(c.demand).to be_nil
+        expect(a).to_not have_demand
+        expect(b).to_not have_demand
+        expect(c).to_not have_demand
       end
     end
   end # when the child has demand

@@ -23,15 +23,15 @@ describe 'Graph calculations; two children and two spouses' do
     end
 
     it 'sets demand for the first parent' do
-      expect(spouse_a.demand).to eql(10.0)
+      expect(spouse_a).to have_demand.of(10.0)
     end
 
     it 'sets demand for the second parent' do
-      expect(mother.demand).to eql(50.0)
+      expect(mother).to have_demand.of(50.0)
     end
 
     it 'sets demand for the third parent' do
-      expect(spouse_b.demand).to be_within(1e-9).of(15.0)
+      expect(spouse_b).to have_demand.of(15.0)
     end
   end # when spouses have no demand defined
 
@@ -50,8 +50,8 @@ describe 'Graph calculations; two children and two spouses' do
     it 'does not set demand' do
       # It is not possible to determine the demand of M without knowing
       # how much is supplied by B.
-      expect(mother.demand).to be_nil
-      expect(spouse_b.demand).to be_nil
+      expect(mother).to_not have_demand
+      expect(spouse_b).to_not have_demand
     end
   end # when one spouse has no demand defined
 
@@ -70,11 +70,11 @@ describe 'Graph calculations; two children and two spouses' do
     end
 
     it 'does not set demand for the first child' do
-      expect(child_y.demand).to be_nil
+      expect(child_y).to_not have_demand
     end
 
     it 'does not set demand for the second child' do
-      expect(child_z.demand).to be_nil
+      expect(child_z).to_not have_demand
     end
   end # when all the parents have demand
 
@@ -93,7 +93,7 @@ describe 'Graph calculations; two children and two spouses' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(mother.demand).to eql(50.0)
+        expect(mother).to have_demand.of(50.0)
       end
     end
 
@@ -108,12 +108,12 @@ describe 'Graph calculations; two children and two spouses' do
       end
 
       it 'sets demand' do
-        expect(mother.demand).to eql(50.0)
+        expect(mother).to have_demand.of(50.0)
       end
 
       it 'sets the edge shares' do
-        expect(my_edge.get(:share)).to eql(0.5)
-        expect(mz_edge.get(:share)).to eql(40.0 / 55)
+        expect(my_edge).to have_share.of(0.5)
+        expect(mz_edge).to have_share.of(40.0 / 55)
       end
     end
   end # when spouses have demand

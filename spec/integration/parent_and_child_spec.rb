@@ -18,7 +18,7 @@ describe 'Graph calculations; a parent and child' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(child.demand).to eql(45.0)
+        expect(child).to have_demand.of(45)
       end
     end
 
@@ -28,11 +28,11 @@ describe 'Graph calculations; a parent and child' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(child.demand).to eql(45.0)
+        expect(child).to have_demand.of(45.0)
       end
 
       it 'sets the edge share' do
-        expect(edge.get(:share)).to eql(1.0)
+        expect(edge).to have_share.of(1.0)
       end
     end
   end # demand set on parent
@@ -51,7 +51,7 @@ describe 'Graph calculations; a parent and child' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(mother.demand).to eql(45.0)
+        expect(mother).to have_demand.of(45.0)
       end
     end
 
@@ -61,11 +61,11 @@ describe 'Graph calculations; a parent and child' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(mother.demand).to eql(45.0)
+        expect(mother).to have_demand.of(45.0)
       end
 
       it 'sets the edge share' do
-        expect(edge.get(:share)).to eql(1.0)
+        expect(edge).to have_share.of(1.0)
       end
     end
 
@@ -79,7 +79,7 @@ describe 'Graph calculations; a parent and child' do
       end
 
       it 'sets the edge share, not exceeding 1.0' do
-        expect(edge.get(:share)).to eql(1.0)
+        expect(edge).to have_share.of(1.0)
       end
     end
   end # demand set on child
@@ -92,15 +92,15 @@ describe 'Graph calculations; a parent and child' do
     before { calculate! }
 
     it 'sets the edge share' do
-      expect(edge.get(:share)).to eql(1.0)
+      expect(edge).to have_share.of(1.0)
     end
 
     it 'does not set child demand' do
-      expect(child.demand).to be_nil
+      expect(child).to_not have_demand
     end
 
     it 'does not set parent demand' do
-      expect(mother.demand).to be_nil
+      expect(mother).to_not have_demand
     end
   end # no demand set
 
@@ -126,20 +126,20 @@ describe 'Graph calculations; a parent and child' do
       end
 
       it 'sets the gas share to 1.0' do
-        expect(mc_gas_edge.get(:share)).to eql(1.0)
+        expect(mc_gas_edge).to have_share.of(1.0)
       end
 
       it 'sets the electricity share to 1.0' do
-        expect(mc_elec_edge.get(:share)).to eql(1.0)
+        expect(mc_elec_edge).to have_share.of(1.0)
       end
 
       it 'sets parent demand' do
-        expect(mother.demand).to eql(200.0)
+        expect(mother).to have_demand.of(200.0)
       end
 
       it 'can calculate demand passed through each edge' do
-        expect(mc_gas_edge.demand).to eql(140.0)
-        expect(mc_elec_edge.demand).to eql(60.0)
+        expect(mc_gas_edge).to have_demand.of(140.0)
+        expect(mc_elec_edge).to have_demand.of(60.0)
       end
     end # with demand defined on the child
 
@@ -150,20 +150,20 @@ describe 'Graph calculations; a parent and child' do
       end
 
       it 'sets the gas share to 1.0' do
-        expect(mc_gas_edge.get(:share)).to eql(1.0)
+        expect(mc_gas_edge).to have_share.of(1.0)
       end
 
       it 'sets the electricity share to 1.0' do
-        expect(mc_elec_edge.get(:share)).to eql(1.0)
+        expect(mc_elec_edge).to have_share.of(1.0)
       end
 
       it 'sets child demand' do
-        expect(child.demand).to eql(100.0)
+        expect(child).to have_demand.of(100.0)
       end
 
       it 'can calculate demand passed through each edge' do
-        expect(mc_gas_edge.demand).to eql(70.0)
-        expect(mc_elec_edge.demand).to eql(30.0)
+        expect(mc_gas_edge).to have_demand.of(70.0)
+        expect(mc_elec_edge).to have_demand.of(30.0)
       end
     end # with demand defined on the parent
   end # with parallel edges using different carriers

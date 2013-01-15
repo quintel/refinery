@@ -21,7 +21,7 @@ describe 'Graph calculations; with two parents' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(child.demand).to eql(50.0)
+        expect(child).to have_demand.of(50.0)
       end
     end
 
@@ -32,12 +32,12 @@ describe 'Graph calculations; with two parents' do
       before { calculate! }
 
       it 'sets demand' do
-        expect(child.demand).to eql(50.0)
+        expect(child).to have_demand.of(50.0)
       end
 
       it 'sets the edge shares' do
-        expect(mc_edge.get(:share)).to eql(30.0 / 50)
-        expect(fc_edge.get(:share)).to eql(20.0 / 50)
+        expect(mc_edge).to have_share.of(30.0 / 50)
+        expect(fc_edge).to have_share.of(20.0 / 50)
       end
     end
 
@@ -54,7 +54,7 @@ describe 'Graph calculations; with two parents' do
       end
 
       it 'does not set demand' do
-        expect(child.demand).to be_nil
+        expect(child).to_not have_demand
       end
 
       it 'does not set the M->C share' do
@@ -81,11 +81,11 @@ describe 'Graph calculations; with two parents' do
       end
 
       it "does sets the other parent's demand" do
-        expect(father.demand).to eql(240.0)
+        expect(father).to have_demand.of(240.0)
       end
 
       it "does sets the child's demand" do
-        expect(child.demand).to eql(300.0)
+        expect(child).to have_demand.of(300.0)
       end
     end
 
@@ -101,11 +101,11 @@ describe 'Graph calculations; with two parents' do
       end
 
       it 'sets F->C share' do
-        expect(fc_edge.get(:share)).to eql(0.75)
+        expect(fc_edge).to have_share.of(0.75)
       end
 
       it "sets the other parent's demand" do
-        expect(father.demand).to eql(180.0)
+        expect(father).to have_demand.of(180.0)
       end
     end
   end # one parent has demand
@@ -123,11 +123,11 @@ describe 'Graph calculations; with two parents' do
     end
 
     it "sets the first parent's demand" do
-      expect(mother.demand).to eql(75.0)
+      expect(mother).to have_demand.of(75.0)
     end
 
     it "sets the second parent's demand" do
-      expect(father.demand).to eql(25.0)
+      expect(father).to have_demand.of(25.0)
     end
   end # the child has demand
 end # Graph calcualtions; with two parents

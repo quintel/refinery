@@ -25,13 +25,13 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'sets demand for the parent' do
-        expect(mother.demand).to eql(225.0)
+        expect(mother).to have_demand.of(225.0)
       end
 
       it 'sets edge shares' do
-        expect(mc1_edge.get(:share)).to eql(1.0)
-        expect(mc2_edge.get(:share)).to eql(1.0)
-        expect(mc3_edge.get(:share)).to eql(1.0)
+        expect(mc1_edge).to have_share.of(1.0)
+        expect(mc2_edge).to have_share.of(1.0)
+        expect(mc3_edge).to have_share.of(1.0)
       end
     end
 
@@ -49,13 +49,13 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'sets demand for the child' do
-        expect(child.demand).to eql(50.0)
+        expect(child).to have_demand.of(50.0)
       end
 
       it 'sets edge shares' do
-        expect(mc1_edge.get(:share)).to eql(1.0)
-        expect(mc2_edge.get(:share)).to eql(1.0)
-        expect(mc3_edge.get(:share)).to eql(1.0)
+        expect(mc1_edge).to have_share.of(1.0)
+        expect(mc2_edge).to have_share.of(1.0)
+        expect(mc3_edge).to have_share.of(1.0)
       end
     end # when a child is missing demand
 
@@ -72,17 +72,17 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'does not set parent demand' do
-        expect(mother.demand).to be_nil
+        expect(mother).to_not have_demand
       end
 
       it 'does not set child demand' do
-        expect(child.demand).to be_nil
+        expect(child).to_not have_demand
       end
 
       it 'does not set edge shares' do
-        expect(mc1_edge.get(:share)).to eql(1.0)
-        expect(mc2_edge.get(:share)).to eql(1.0)
-        expect(mc3_edge.get(:share)).to eql(1.0)
+        expect(mc1_edge).to have_share.of(1.0)
+        expect(mc2_edge).to have_share.of(1.0)
+        expect(mc3_edge).to have_share.of(1.0)
       end
     end # when a child and parent are missing demand
   end # with the same carriers
@@ -109,16 +109,16 @@ describe 'Graph calculations; with three children' do
     end
 
     it 'sets demand for the parent' do
-      expect(mother.demand).to eql(225.0)
+      expect(mother).to have_demand.of(225.0)
     end
 
     it 'sets electricity edge shares' do
-      expect(mc1_edge.get(:share)).to eql(1.0)
+      expect(mc1_edge).to have_share.of(1.0)
     end
 
     it 'sets gas edge shares' do
-      expect(mc2_edge.get(:share)).to eql(1.0)
-      expect(mc3_edge.get(:share)).to eql(1.0)
+      expect(mc2_edge).to have_share.of(1.0)
+      expect(mc3_edge).to have_share.of(1.0)
     end
   end # when the child is connected with a different carrier
 end # Graph calculations; with three children

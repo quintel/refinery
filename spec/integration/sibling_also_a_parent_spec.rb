@@ -24,22 +24,22 @@ describe 'Graph calculations; with a sibling which is also a parent' do
   end
 
   it 'sets child demand' do
-    expect(child.demand).to eql(150.0)
+    expect(child).to have_demand.of(150.0)
   end
 
   it 'sets sibling demand' do
-    expect(sibling.demand).to eql(130.0)
+    expect(sibling).to have_demand.of(130.0)
   end
 
   it 'sets M->S share' do
-    expect(ms_edge.get(:share)).to eql(80.0 / 130)
+    expect(ms_edge).to have_share.of(80.0 / 130)
   end
 
   it 'sets F->S share' do
-    expect(fs_edge.get(:share)).to be_within(1e-9).of(50.0 / 130)
+    expect(fs_edge).to have_share.of(50.0 / 130)
   end
 
   it 'sets S->C share' do
-    expect(sc_edge.get(:share)).to eql(130.0 / 150)
+    expect(sc_edge).to have_share.of(130.0 / 150)
   end
 end # Graph calculations; with a sibling which is also a parent

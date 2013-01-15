@@ -21,7 +21,7 @@ describe 'Graph calculations; parent and two children' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(mother.demand).to eql(21.0)
+        expect(mother).to have_demand.of(21.0)
       end
     end
 
@@ -35,11 +35,11 @@ describe 'Graph calculations; parent and two children' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(mother.demand).to eql(35.0)
+        expect(mother).to have_demand.of(35.0)
       end
 
       it 'sets the sibling edge share' do
-        expect(ms_edge.get(:share)).to eql(1.0)
+        expect(ms_edge).to have_share.of(1.0)
       end
     end
 
@@ -53,12 +53,12 @@ describe 'Graph calculations; parent and two children' do
       before { calculate! }
 
       it 'sets parent demand' do
-        expect(mother.demand).to eql(50.0)
+        expect(mother).to have_demand.of(50.0)
       end
 
       it 'sets the edge shares' do
-        expect(mc_edge.get(:share)).to eql(1.0)
-        expect(ms_edge.get(:share)).to eql(1.0)
+        expect(mc_edge).to have_share.of(1.0)
+        expect(ms_edge).to have_share.of(1.0)
       end
     end
   end # and the children have demand
@@ -77,11 +77,11 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'does not set parent demand' do
-        expect(mother.demand).to be_nil
+        expect(mother).to_not have_demand
       end
 
       it 'does not set sibling demand' do
-        expect(sibling.demand).to be_nil
+        expect(sibling).to_not have_demand
       end
     end
 
@@ -98,15 +98,15 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'does not set parent demand' do
-        expect(mother.demand).to be_nil
+        expect(mother).to_not have_demand
       end
 
       it 'does sets the sibling edge share' do
-        expect(ms_edge.get(:share)).to eql(1.0)
+        expect(ms_edge).to have_share.of(1.0)
       end
 
       it 'does not set sibling demand' do
-        expect(sibling.demand).to be_nil
+        expect(sibling).to_not have_demand
       end
     end
 
@@ -120,11 +120,11 @@ describe 'Graph calculations; parent and two children' do
       before { calculate! }
 
       it 'does not set mother demand' do
-        expect(mother.demand).to be_nil
+        expect(mother).to_not have_demand
       end
 
       it 'does not set sibling demand' do
-        expect(sibling.demand).to be_nil
+        expect(sibling).to_not have_demand
       end
     end
   end # and only one child has demand
@@ -139,12 +139,12 @@ describe 'Graph calculations; parent and two children' do
     before { calculate! }
 
     it 'sets M->S share' do
-      expect(ms_edge.get(:share)).to eql(1.0)
+      expect(ms_edge).to have_share.of(1.0)
     end
 
     it 'does not set demand of the children' do
-      expect(child.demand).to be_nil
-      expect(sibling.demand).to be_nil
+      expect(child).to_not have_demand
+      expect(sibling).to_not have_demand
     end
   end
 
@@ -161,8 +161,8 @@ describe 'Graph calculations; parent and two children' do
     end
 
     it 'does not set demand of the children' do
-      expect(child.demand).to be_nil
-      expect(sibling.demand).to be_nil
+      expect(child).to_not have_demand
+      expect(sibling).to_not have_demand
     end
   end # and the parent has demand
 
@@ -185,16 +185,16 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets the edge shares' do
-        expect(mc_gas_edge.get(:share)).to eql(1.0)
-        expect(ms_elec_edge.get(:share)).to eql(1.0)
+        expect(mc_gas_edge).to have_share.of(1.0)
+        expect(ms_elec_edge).to have_share.of(1.0)
       end
 
       it 'does not set child demand' do
-        expect(child.demand).to be_nil
+        expect(child).to_not have_demand
       end
 
       it 'does not set sibling demand' do
-        expect(sibling.demand).to be_nil
+        expect(sibling).to_not have_demand
       end
     end # and the parent defines demand
 
@@ -208,16 +208,16 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets the edge shares' do
-        expect(mc_gas_edge.get(:share)).to eql(1.0)
-        expect(ms_elec_edge.get(:share)).to eql(1.0)
+        expect(mc_gas_edge).to have_share.of(1.0)
+        expect(ms_elec_edge).to have_share.of(1.0)
       end
 
       it 'does not set parent demand' do
-        expect(mother.demand).to be_nil
+        expect(mother).to_not have_demand
       end
 
       it 'does not set sibling demand' do
-        expect(sibling.demand).to be_nil
+        expect(sibling).to_not have_demand
       end
     end # and one of the children defines demand
 
@@ -233,12 +233,12 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets the edge shares' do
-        expect(mc_gas_edge.get(:share)).to eql(1.0)
-        expect(ms_elec_edge.get(:share)).to eql(1.0)
+        expect(mc_gas_edge).to have_share.of(1.0)
+        expect(ms_elec_edge).to have_share.of(1.0)
       end
 
       it 'sets parent demand' do
-        expect(mother.demand).to eql(200.0)
+        expect(mother).to have_demand.of(200.0)
       end
     end # and both children define demand
 
@@ -261,19 +261,19 @@ describe 'Graph calculations; parent and two children' do
         end
 
         it 'sets the M->S electricity edge share' do
-          expect(ms_elec_edge.get(:share)).to eql(1.0)
+          expect(ms_elec_edge).to have_share.of(1.0)
         end
 
         it 'sets the M->C gas edge share' do
-          expect(mc_gas_edge.get(:share)).to eql(1.0)
+          expect(mc_gas_edge).to have_share.of(1.0)
         end
 
         it 'sets the M->S gas edge share' do
-          expect(ms_gas_edge.get(:share)).to eql(1.0)
+          expect(ms_gas_edge).to have_share.of(1.0)
         end
 
         it 'sets sibling demand' do
-          expect(sibling.demand).to eql(100.0)
+          expect(sibling).to have_demand.of(100.0)
         end
       end # with demand
 
@@ -288,23 +288,23 @@ describe 'Graph calculations; parent and two children' do
         end
 
         it 'sets the M->S electricity edge share' do
-          expect(ms_elec_edge.get(:share)).to eql(1.0)
+          expect(ms_elec_edge).to have_share.of(1.0)
         end
 
         it 'sets the M->C gas edge share' do
-          expect(mc_gas_edge.get(:share)).to eql(1.0)
+          expect(mc_gas_edge).to have_share.of(1.0)
         end
 
         it 'sets the M->S gas edge share' do
-          expect(ms_gas_edge.get(:share)).to eql(1.0)
+          expect(ms_gas_edge).to have_share.of(1.0)
         end
 
         it 'does not set child demand' do
-          expect(child.demand).to be_nil
+          expect(child).to_not have_demand
         end
 
         it 'does not set sibling demand' do
-          expect(sibling.demand).to be_nil
+          expect(sibling).to_not have_demand
         end
       end # without demand
 
@@ -319,23 +319,23 @@ describe 'Graph calculations; parent and two children' do
         end
 
         it 'sets the M->C gas edge shares' do
-          expect(mc_gas_edge.get(:share)).to eql(1.0)
+          expect(mc_gas_edge).to have_share.of(1.0)
         end
 
         it 'sets the M->S gas share' do
-          expect(ms_gas_edge.get(:share)).to eql(1.0)
+          expect(ms_gas_edge).to have_share.of(1.0)
         end
 
         it 'sets the M->S electricity share' do
-          expect(ms_elec_edge.get(:share)).to eql(1.0)
+          expect(ms_elec_edge).to have_share.of(1.0)
         end
 
         it 'does not set child demand' do
-          expect(child.demand).to be_nil
+          expect(child).to_not have_demand
         end
 
         it 'does not set parent' do
-          expect(mother.demand).to be_nil
+          expect(mother).to_not have_demand
         end
       end # without parent demand
     end # and one of the children has parallel edges
