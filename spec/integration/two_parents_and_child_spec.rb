@@ -36,8 +36,8 @@ describe 'Graph calculations; with two parents' do
       end
 
       it 'sets the edge demands' do
-        expect(mc_edge.get(:demand)).to eql(30.0)
-        expect(fc_edge.get(:demand)).to eql(20.0)
+        expect(mc_edge).to have_demand.of(30.0)
+        expect(fc_edge).to have_demand.of(20.0)
       end
     end
 
@@ -58,11 +58,11 @@ describe 'Graph calculations; with two parents' do
       end
 
       it 'sets the M->C demand' do
-        expect(mc_edge.get(:demand)).to eql(30.0)
+        expect(mc_edge).to have_demand.of(30.0)
       end
 
       it 'does not set the F->C demand' do
-        expect(fc_edge.get(:demand)).to be_nil
+        expect(fc_edge).to_not have_demand
       end
     end
   end # the parents have demand

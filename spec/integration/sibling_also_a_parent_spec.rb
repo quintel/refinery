@@ -32,15 +32,15 @@ describe 'Graph calculations; with a sibling which is also a parent' do
   end
 
   it 'sets M->S demand' do
-    expect(ms_edge.get(:demand)).to eql(80.0)
+    expect(ms_edge).to have_demand.of(80.0)
   end
 
   it 'sets F->S demand' do
-    expect(fs_edge.get(:demand)).to eql(50.0)
+    expect(fs_edge).to have_demand.of(50.0)
   end
 
   it 'sets S->C demand' do
-    expect(sc_edge.get(:demand)).to eql(130.0)
+    expect(sc_edge).to have_demand.of(130.0)
   end
 
   it 'sets M->S share' do
