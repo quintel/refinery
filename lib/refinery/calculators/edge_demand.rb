@@ -8,7 +8,7 @@ module Refinery
         Strategies::EdgeDemand::FromDemand,
         Strategies::EdgeDemand::FillRemaining,
         Strategies::EdgeDemand::FillRemainingFromParent,
-        Strategies::EdgeDemand::OutputShare
+        Strategies::EdgeDemand::OnlyChild
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the
