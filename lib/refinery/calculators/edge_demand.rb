@@ -4,7 +4,7 @@ module Refinery
     # either to the child nodes, or to a parent node.
     class EdgeDemand < Base
       STRATEGIES = [
-        Strategies::EdgeDemand::Solo,
+        Strategies::EdgeDemand::SingleParent,
         Strategies::EdgeDemand::FromDemand,
         Strategies::EdgeDemand::FillRemaining,
         Strategies::EdgeDemand::FillRemainingFromParent,
