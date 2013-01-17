@@ -26,7 +26,7 @@ module Refinery
       #
       # Returns true or false.
       def calculated?
-        super || @model.get(:demand) || @model.get(:share)
+        super || @model.demand
       end
     end # EdgeDemand
   end # Calculators

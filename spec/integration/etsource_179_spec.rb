@@ -36,7 +36,8 @@ describe 'ETsource #179 stub graph' do
     expect(node(:cooking).get(:preset_demand)).to eql(10.854)
 
     # preset edge share = 0.73
-    expect(node(:space_heating_gas).get(:expected_demand)).to eql(264.114)
+    expect(node(:space_heating_gas).get(:expected_demand)).
+      to be_within(1e-9).of(264.114)
   end
 
   it 'does not set the expected demand for household gas descendants' do
@@ -48,10 +49,12 @@ describe 'ETsource #179 stub graph' do
 
   it 'calculates demand for space heating descendants' do
     # preset edge share = 0.1
-    expect(node(:gas_heater).get(:expected_demand)).to eql(26.4114)
+    expect(node(:gas_heater).get(:expected_demand)).
+      to be_within(1e-9).of(26.4114)
 
     # preset edge share = 0.5
-    expect(node(:combi_heater).get(:expected_demand)).to eql(132.057)
+    expect(node(:combi_heater).get(:expected_demand)).
+      to be_within(1e-9).of(132.057)
 
     # preset edge share = 0.0
     expect(node(:gas_heat_pump).get(:expected_demand)).to eql(0.0)

@@ -10,8 +10,8 @@ module Refinery
 
     before do
       [ parent, spouse ].each do |person|
-        person.connect_to(child, :gas, share: 0.5)
-        person.connect_to(sibling, :gas, share: 0.5)
+        person.connect_to(child, :gas, demand: child.demand * 0.5)
+        person.connect_to(sibling, :gas, demand: sibling.demand * 0.5)
       end
     end
 
