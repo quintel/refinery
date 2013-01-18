@@ -12,8 +12,7 @@ describe 'ETsource #179 stub graph' do
   before do
     Refinery::Reactor.new(
       Refinery::Catalyst::ConvertFinalDemand,
-      Refinery::Catalyst::Calculators,
-      Refinery::Catalyst::CalculateEdgeShares
+      Refinery::Catalyst::Calculators
     ).run(graph)
   end
 
@@ -90,7 +89,7 @@ describe 'ETsource #179 stub graph' do
       select { |edge| edge.to.key == :fd_hh_gas }.first
 
     # total demand of 628.4, households demand is 361.8
-    expect(edge.get(:share)).to eql(1.0)
+    expect(edge).to have_share.of(1.0)
   end
 
   it 'calculates the edge shares for the main gas node to industry' do
@@ -98,7 +97,7 @@ describe 'ETsource #179 stub graph' do
       select { |edge| edge.to.key == :fd_ind_gas }.first
 
     # total demand of 628.4, industry demand is 266.6
-    expect(edge.get(:share)).to eql(1.0)
+    expect(edge).to have_share.of(1.0)
   end
 
   it 'calculates the expected demand for the main gas node gas' do

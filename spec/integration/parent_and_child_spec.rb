@@ -91,8 +91,8 @@ describe 'Graph calculations; a parent and child' do
     let!(:edge) { mother.connect_to(child, :gas) }
     before { calculate! }
 
-    it 'sets the edge share' do
-      expect(edge).to_not have_share
+    it 'sets the edge demand' do
+      expect(edge).to_not have_demand
     end
 
     it 'does not set child demand' do

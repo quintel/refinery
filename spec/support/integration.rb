@@ -39,7 +39,7 @@ module Refinery::Spec
     #
     # Returns an RSpec matcher.
     def have_share
-      have_calculated_value(:share, ->(edge){ edge.get(:share) })
+      have_calculated_value(:share)
     end
 
     # Public: Calculates demand and edge shares for the graph. If the graph
@@ -49,8 +49,7 @@ module Refinery::Spec
     def calculate!
       Refinery::Reactor.new(
         Refinery::Catalyst::ConvertFinalDemand,
-        Refinery::Catalyst::Calculators,
-        Refinery::Catalyst::CalculateEdgeShares
+        Refinery::Catalyst::Calculators
       ).run(graph)
     rescue Refinery::IncalculableGraphError
     end
