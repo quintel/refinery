@@ -134,9 +134,9 @@ describe 'Graph calculations; three parents' do
       before { calculate! }
 
       it 'does not set edge shares' do
-        expect(ax_edge.get(:share)).to be_nil
-        expect(bx_edge.get(:share)).to be_nil
-        expect(cx_edge.get(:share)).to be_nil
+        expect(ax_edge).to_not have_share
+        expect(bx_edge).to_not have_share
+        expect(cx_edge).to_not have_share
       end
 
       it 'does not set parent demands' do

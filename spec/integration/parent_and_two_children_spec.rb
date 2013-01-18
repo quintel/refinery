@@ -101,8 +101,8 @@ describe 'Graph calculations; parent and two children' do
         expect(mother).to_not have_demand
       end
 
-      it 'does not set the sibling edge share' do
-        expect(ms_edge.get(:share)).to be_nil
+      it 'does not set the sibling edge demand' do
+        expect(ms_edge).to_not have_demand
       end
 
       it 'does not set sibling demand' do
@@ -198,6 +198,11 @@ describe 'Graph calculations; parent and two children' do
         expect(ms_elec_edge).to have_share.of(1.0)
       end
 
+      it 'sets the edge demands' do
+        expect(mc_gas_edge).to have_demand.of(30.0)
+        expect(ms_elec_edge).to have_demand.of(20.0)
+      end
+
       it 'sets child demand' do
         expect(child.demand).to eql(30.0)
       end
@@ -216,9 +221,12 @@ describe 'Graph calculations; parent and two children' do
         calculate!
       end
 
-      it 'does not set the edge shares' do
-        expect(mc_gas_edge.get(:share)).to be_nil
-        expect(ms_elec_edge.get(:share)).to be_nil
+      it 'sets M->C edge demand' do
+        expect(mc_gas_edge).to have_demand.of(120.0)
+      end
+
+      it 'does not set M->S edge demand' do
+        expect(ms_elec_edge).to_not have_demand
       end
 
       it 'does not set parent demand' do
@@ -241,9 +249,9 @@ describe 'Graph calculations; parent and two children' do
         calculate!
       end
 
-      it 'sets the edge shares' do
-        expect(mc_gas_edge).to have_share.of(1.0)
-        expect(ms_elec_edge).to have_share.of(1.0)
+      it 'sets the edge demands' do
+        expect(mc_gas_edge).to have_demand.of(120.0)
+        expect(ms_elec_edge).to have_demand.of(80.0)
       end
 
       it 'sets parent demand' do
@@ -257,6 +265,9 @@ describe 'Graph calculations; parent and two children' do
       before do
         mother.slots.out(:gas).set(:share, 0.6)
         mother.slots.out(:electricity).set(:share, 0.4)
+
+        sibling.slots.in(:gas).set(:share, 0.2)
+        sibling.slots.in(:electricity).set(:share, 0.8)
       end
 
       context 'with demand' do
@@ -273,12 +284,24 @@ describe 'Graph calculations; parent and two children' do
           expect(ms_elec_edge).to have_share.of(1.0)
         end
 
+        it 'sets the M->S electricity edge demand' do
+          expect(ms_elec_edge).to have_demand.of(80.0)
+        end
+
         it 'sets the M->C gas edge share' do
           expect(mc_gas_edge).to have_share.of(1.0)
         end
 
+        it 'sets the M->C gas edge demand' do
+          expect(mc_gas_edge).to have_demand.of(100.0)
+        end
+
         it 'sets the M->S gas edge share' do
           expect(ms_gas_edge).to have_share.of(1.0)
+        end
+
+        it 'sets the M->S gas edge demand' do
+          expect(ms_gas_edge).to have_demand.of(20.0)
         end
 
         it 'sets sibling demand' do
@@ -296,16 +319,16 @@ describe 'Graph calculations; parent and two children' do
           calculate!
         end
 
-        it 'does not set M->S electricity edge share' do
-          expect(ms_elec_edge.get(:share)).to be_nil
+        it 'sets M->S electricity edge demand' do
+          expect(ms_elec_edge).to have_demand.of(80.0)
         end
 
-        it 'does not set M->C gas edge share' do
-          expect(mc_gas_edge.get(:share)).to be_nil
+        it 'does not set M->C gas edge demand' do
+          expect(mc_gas_edge).to_not have_demand
         end
 
-        it 'does not set M->S gas edge share' do
-          expect(ms_gas_edge.get(:share)).to be_nil
+        it 'does not set M->S gas edge demand' do
+          expect(ms_gas_edge).to_not have_demand
         end
 
         it 'does not set child demand' do
@@ -327,16 +350,16 @@ describe 'Graph calculations; parent and two children' do
           calculate!
         end
 
-        it 'does not set M->C gas edge shares' do
-          expect(mc_gas_edge.get(:share)).to be_nil
+        it 'does not set M->C gas edge demand' do
+          expect(mc_gas_edge).to_not have_demand
         end
 
-        it 'does not set M->S gas share' do
-          expect(ms_gas_edge.get(:share)).to be_nil
+        it 'sets M->S gas demand' do
+          expect(ms_gas_edge).to have_demand.of(20.0)
         end
 
-        it 'does not set M->S electricity share' do
-          expect(ms_elec_edge.get(:share)).to be_nil
+        it 'sets M->S electricity demand' do
+          expect(ms_elec_edge).to have_demand.of(80.0)
         end
 
         it 'does not set child demand' do
@@ -347,6 +370,46 @@ describe 'Graph calculations; parent and two children' do
           expect(mother).to_not have_demand
         end
       end # without parent demand
+
+      context 'without parent demand and a grandparent' do
+        #        [G] (200)
+        #         |
+        #        [M]
+        #   :gas / \\ :electricity, :gas
+        #      [C]  [S] (100)
+        let(:grandparent) { Node.new(:grandparent, expected_demand: 200.0) }
+        let(:gm_edge)     { grandparent.connect_to(mother, :gas) }
+
+        before do
+          mother.set(:expected_demand, nil)
+          sibling.set(:preset_demand, 100.0)
+          calculate!
+        end
+
+        it 'sets parent demand' do
+          pending do
+            expect(mother).to have_demand.of(200.0)
+          end
+        end
+
+        it 'sets M->C gas edge demand' do
+          pending do
+            expect(mc_gas_edge).to have_demand.of(100.0)
+          end
+        end
+
+        it 'sets M->S gas demand' do
+          expect(ms_gas_edge).to have_demand.of(20.0)
+        end
+
+        it 'sets M->S electricity demand' do
+          expect(ms_elec_edge).to have_demand.of(80.0)
+        end
+
+        it 'sets child demand' do
+          expect(child).to_not have_demand.of(100.0)
+        end
+      end # without parent demand and a grandparent
     end # and one of the children has parallel edges
   end # and the edges use different carriers
 end # Graph calculations; with two children

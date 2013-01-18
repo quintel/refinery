@@ -53,7 +53,8 @@ RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
     if @expectation
       "expected #{ model } to not have #{ attribute } of #{ @expectation }"
     else
-      "expected #{ model } to not have #{ attribute } calculated"
+      "expected #{ model } to not have #{ attribute } calculated, but it " \
+      "was #{ actual(model).inspect }"
     end
   end
 end

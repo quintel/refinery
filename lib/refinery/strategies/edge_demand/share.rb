@@ -4,11 +4,11 @@ module Refinery::Strategies
     # has demand defined, and we know the share of the edge.
     class Share
       def self.calculable?(edge)
-        edge.to.demand && edge.get(:share)
+        edge.to.demand && edge.share
       end
 
       def self.calculate(edge)
-        edge.to.demand_for(edge.label) * edge.get(:share)
+        edge.to.demand_for(edge.label) * edge.share
       end
     end # Share
   end # EdgeDemand
