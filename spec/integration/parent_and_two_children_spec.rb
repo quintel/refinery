@@ -377,25 +377,22 @@ describe 'Graph calculations; parent and two children' do
         #        [M]
         #   :gas / \\ :electricity, :gas
         #      [C]  [S] (100)
-        let(:grandparent) { Node.new(:grandparent, expected_demand: 200.0) }
-        let(:gm_edge)     { grandparent.connect_to(mother, :gas) }
+        let!(:grandparent) { graph.add Refinery::Node.new(:grandparent) }
+        let!(:gm_edge)     { grandparent.connect_to(mother, :gas) }
 
         before do
+          grandparent.set(:expected_demand, 200.0)
           mother.set(:expected_demand, nil)
           sibling.set(:preset_demand, 100.0)
           calculate!
         end
 
         it 'sets parent demand' do
-          pending do
-            expect(mother).to have_demand.of(200.0)
-          end
+          expect(mother).to have_demand.of(200.0)
         end
 
         it 'sets M->C gas edge demand' do
-          pending do
-            expect(mc_gas_edge).to have_demand.of(100.0)
-          end
+          expect(mc_gas_edge).to have_demand.of(100.0)
         end
 
         it 'sets M->S gas demand' do
@@ -407,7 +404,7 @@ describe 'Graph calculations; parent and two children' do
         end
 
         it 'sets child demand' do
-          expect(child).to_not have_demand.of(100.0)
+          expect(child).to have_demand.of(100.0)
         end
       end # without parent demand and a grandparent
     end # and one of the children has parallel edges
