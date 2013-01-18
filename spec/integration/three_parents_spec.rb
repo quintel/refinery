@@ -64,11 +64,11 @@ describe 'Graph calculations; three parents' do
         end
 
         it 'sets A->X demand' do
-          expect(ax_edge.demand).to eql(10.0)
+          expect(ax_edge).to have_demand.of(10.0)
         end
 
         it 'sets B->X demand' do
-          expect(bx_edge.demand).to eql(75.0)
+          expect(bx_edge).to have_demand.of(75.0)
         end
 
         it 'does not set C->X demand' do
@@ -90,7 +90,7 @@ describe 'Graph calculations; three parents' do
         end
 
         it 'sets C->X demand' do
-          expect(cx_edge.demand).to eql(15.0)
+          expect(cx_edge).to have_demand.of(15.0)
         end
 
         it 'sets demand of the missing parent' do

@@ -29,9 +29,9 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'sets edge demands' do
-        expect(mc1_edge.demand).to eql(50.0)
-        expect(mc2_edge.demand).to eql(75.0)
-        expect(mc3_edge.demand).to eql(100.0)
+        expect(mc1_edge).to have_demand.of(50.0)
+        expect(mc2_edge).to have_demand.of(75.0)
+        expect(mc3_edge).to have_demand.of(100.0)
       end
     end
 
@@ -53,9 +53,9 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'sets edge demands' do
-        expect(mc1_edge.demand).to eql(50.0)
-        expect(mc2_edge.demand).to eql(75.0)
-        expect(mc3_edge.demand).to eql(100.0)
+        expect(mc1_edge).to have_demand.of(50.0)
+        expect(mc2_edge).to have_demand.of(75.0)
+        expect(mc3_edge).to have_demand.of(100.0)
       end
     end # when a child is missing demand
 
@@ -84,11 +84,11 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'sets M->C2 demand' do
-        expect(mc2_edge.demand).to eql(75.0)
+        expect(mc2_edge).to have_demand.of(75.0)
       end
 
       it 'sets M->C3 demand' do
-        expect(mc3_edge.demand).to eql(100.0)
+        expect(mc3_edge).to have_demand.of(100.0)
       end
     end # when a child and parent are missing demand
   end # with the same carriers
@@ -119,12 +119,12 @@ describe 'Graph calculations; with three children' do
     end
 
     it 'sets electricity edge demand' do
-      expect(mc1_edge.demand).to eql(50.0)
+      expect(mc1_edge).to have_demand.of(50.0)
     end
 
     it 'sets gas edge demand' do
-      expect(mc2_edge.demand).to eql(75.0)
-      expect(mc3_edge.demand).to eql(100.0)
+      expect(mc2_edge).to have_demand.of(75.0)
+      expect(mc3_edge).to have_demand.of(100.0)
     end
   end # when the child is connected with a different carrier
 end # Graph calculations; with three children

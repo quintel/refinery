@@ -28,15 +28,15 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates M->S demand' do
-      expect(ms_edge.demand).to eql(75.0)
+      expect(ms_edge).to have_demand.of(75.0)
     end
 
     it 'calculates M->C demand, accounting for supply from F' do
-      expect(mc_edge.demand).to eql(25.0)
+      expect(mc_edge).to have_demand.of(25.0)
     end
 
     it 'calculates F->C demand' do
-      expect(fc_edge.demand).to eql(100.0)
+      expect(fc_edge).to have_demand.of(100.0)
     end
   end # and all nodes have demand
 
@@ -55,15 +55,15 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates M->S demand' do
-      expect(ms_edge.demand).to eql(75.0)
+      expect(ms_edge).to have_demand.of(75.0)
     end
 
     it 'calculates M->C demand, accounting for supply from F' do
-      expect(mc_edge.demand).to eql(25.0)
+      expect(mc_edge).to have_demand.of(25.0)
     end
 
     it 'calculates F->C demand' do
-      expect(fc_edge.demand).to eql(100.0)
+      expect(fc_edge).to have_demand.of(100.0)
     end
   end # and the parent has no demand
 
@@ -83,15 +83,15 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates M->S demand' do
-      expect(ms_edge.demand).to eql(75.0)
+      expect(ms_edge).to have_demand.of(75.0)
     end
 
     it 'calculates M->C demand, accounting for supply from F' do
-      expect(mc_edge.demand).to eql(25.0)
+      expect(mc_edge).to have_demand.of(25.0)
     end
 
     it 'calculates F->C demand' do
-      expect(fc_edge.demand).to eql(100.0)
+      expect(fc_edge).to have_demand.of(100.0)
     end
   end # and the sibling has no demand
 
@@ -123,11 +123,11 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates M->S (gas) demand' do
-      expect(ms_edge.demand).to eql(70.0)
+      expect(ms_edge).to have_demand.of(70.0)
     end
 
     it 'calculates M->S (electricity) demand' do
-      expect(ms_elec_edge.demand).to eql(5.0)
+      expect(ms_elec_edge).to have_demand.of(5.0)
     end
 
     it 'calculates M->C demand, accounting for supply from F' do
@@ -135,7 +135,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates F->C demand' do
-      expect(fc_edge.demand).to eql(100.0)
+      expect(fc_edge).to have_demand.of(100.0)
     end
   end # and the sibling has no demand
 
@@ -156,11 +156,11 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'does not calculate M->C demand' do
-      expect(mc_edge.demand).to eql(25.0)
+      expect(mc_edge).to have_demand.of(25.0)
     end
 
     it 'calculates F->C demand' do
-      expect(fc_edge.demand).to eql(100.0)
+      expect(fc_edge).to have_demand.of(100.0)
     end
 
     it 'does not calculate sibling or parent demand' do
@@ -181,9 +181,9 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets edge demands' do
-      expect(ms_edge.demand).to eql(75.0)
-      expect(mc_edge.demand).to eql(25.0)
-      expect(fc_edge.demand).to eql(100.0)
+      expect(ms_edge).to have_demand.of(75.0)
+      expect(mc_edge).to have_demand.of(25.0)
+      expect(fc_edge).to have_demand.of(100.0)
     end
 
     it "sets the parent's demand" do
@@ -208,9 +208,9 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets the edge demands' do
-      expect(ms_edge.demand).to eql(50.0)
-      expect(mc_edge.demand).to eql(50.0)
-      expect(fc_edge.demand).to eql(75.0)
+      expect(ms_edge).to have_demand.of(50.0)
+      expect(mc_edge).to have_demand.of(50.0)
+      expect(fc_edge).to have_demand.of(75.0)
     end
   end # and the second parent is a partial supplier by demand
 
@@ -231,8 +231,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets the edge demands' do
-      expect(ms_edge.demand).to eql(25.0)
-      expect(mc_edge.demand).to eql(75.0)
+      expect(ms_edge).to have_demand.of(25.0)
+      expect(mc_edge).to have_demand.of(75.0)
     end
   end # and the second parent is a partial supplier
 
@@ -278,7 +278,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'sets F->C demand' do
-      expect(fc_edge.demand).to eql(100.0)
+      expect(fc_edge).to have_demand.of(100.0)
     end
 
     it 'does not set demand' do

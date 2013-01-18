@@ -77,11 +77,11 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets parent demand' do
-        expect(mother.demand).to eql(32.0)
+        expect(mother).to have_demand.of(32.0)
       end
 
       it 'sets sibling demand' do
-        expect(sibling.demand).to eql(20.0)
+        expect(sibling).to have_demand.of(20.0)
       end
     end
 
@@ -142,15 +142,15 @@ describe 'Graph calculations; parent and two children' do
     end
 
     it 'sets M->S demand' do
-      expect(ms_edge.demand).to eql(10.0)
+      expect(ms_edge).to have_demand.of(10.0)
     end
 
     it 'sets demand of the child' do
-      expect(child.demand).to eql(10.0)
+      expect(child).to have_demand.of(10.0)
     end
 
     it 'sets demand of the sibling' do
-      expect(sibling.demand).to eql(10.0)
+      expect(sibling).to have_demand.of(10.0)
     end
   end
 
@@ -167,11 +167,11 @@ describe 'Graph calculations; parent and two children' do
     end
 
     it 'sets demand of the child' do
-      expect(child.demand).to eql(20.0)
+      expect(child).to have_demand.of(20.0)
     end
 
     it 'sets demand of the sibling' do
-      expect(sibling.demand).to eql(30.0)
+      expect(sibling).to have_demand.of(30.0)
     end
   end # and the parent has demand
 
@@ -204,11 +204,11 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets child demand' do
-        expect(child.demand).to eql(30.0)
+        expect(child).to have_demand.of(30.0)
       end
 
       it 'sets sibling demand' do
-        expect(sibling.demand).to eql(20.0)
+        expect(sibling).to have_demand.of(20.0)
       end
     end # and the parent defines demand
 

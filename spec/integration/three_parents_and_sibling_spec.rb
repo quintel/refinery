@@ -103,27 +103,27 @@ describe 'Graph calculations; three parents and a sibling' do
 
     it 'sets the A->X elec edge demand' do
       expect(ax_elec_edge).to have_share.of(0.875)
-      expect(ax_elec_edge.demand).to eql(175.0)
+      expect(ax_elec_edge).to have_demand.of(175.0)
     end
 
     it 'sets the B->X elec edge demand' do
       expect(bx_elec_edge).to have_share.of(0.125)
-      expect(bx_elec_edge.demand).to eql(25.0)
+      expect(bx_elec_edge).to have_demand.of(25.0)
     end
 
     it 'sets the B->X gas edge demand' do
       expect(bx_gas_edge).to have_share.of(1.0)
-      expect(bx_gas_edge.demand).to eql(50.0)
+      expect(bx_gas_edge).to have_demand.of(50.0)
     end
 
     it 'sets the B->Y gas edge demand' do
       expect(by_gas_edge).to have_share.of(25.0 / 125)
-      expect(by_gas_edge.demand).to eql(25.0)
+      expect(by_gas_edge).to have_demand.of(25.0)
     end
 
     it 'sets the C->Y gas edge demand' do
       expect(cy_gas_edge).to have_share.of(100.0 / 125)
-      expect(cy_gas_edge.demand).to eql(100.0)
+      expect(cy_gas_edge).to have_demand.of(100.0)
     end
 
     it 'sets demand of the remaining parent' do
