@@ -21,7 +21,7 @@ module Refinery
     #
     # dir - Path to the directory in which the YAML data is saved.
     def export(dir)
-      File.write('topology.yml', YAML.dump(to_h))
+      File.write("#{ dir }/topology.yml", YAML.dump(to_h))
     end
 
     # Internal: Converts the graph to a big hash suitable for saving as the
