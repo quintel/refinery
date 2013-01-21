@@ -92,10 +92,12 @@ describe 'Graph calculations; with two parents' do
 
     context 'as does the child' do
       #   (60) [M] [F]
-      #     (60) \ /
+      #          \ /
       #          [C] (240)
       before do
+        mother.set(:expected_demand, 60)
         child.set(:preset_demand, 240.0)
+        fc_edge.set(:share, nil) # for sanity's sake
         calculate!
       end
 
