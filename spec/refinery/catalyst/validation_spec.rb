@@ -15,8 +15,6 @@ module Refinery
       let!(:ax_edge) { a.connect_to(x, :gas, demand: 50.0) }
       let!(:bx_edge) { b.connect_to(x, :gas, demand: 0.0) }
 
-      before { validation }
-
       it 'has one invalid object' do
         expect(validation.errors).to have(1).element
       end
@@ -42,8 +40,6 @@ module Refinery
       let!(:x)       { graph.add(Node.new(:x, preset_demand:   20.0)) }
       let!(:ax_edge) { a.connect_to(x, :gas, demand: 10.0) }
 
-      before { validation }
-
       it 'has one invalid object' do
         expect(validation.errors).to have(1).element
       end
@@ -67,7 +63,6 @@ module Refinery
 
       before do
         a.slots.in.add(:electricity, share: 1.0)
-        validation
       end
 
       it 'has no invalid objects' do
@@ -94,8 +89,6 @@ module Refinery
       let!(:a)       { graph.add(Node.new(:a, expected_demand: 20.0)) }
       let!(:x)       { graph.add(Node.new(:x, preset_demand:   20.0)) }
       let!(:ax_edge) { a.connect_to(x, :gas) }
-
-      before { validation }
 
       it 'has one invalid object' do
         expect(validation.errors).to have(1).element
