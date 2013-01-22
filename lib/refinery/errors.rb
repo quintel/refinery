@@ -57,8 +57,8 @@ module Refinery
   # Raised by the Validation catalyst if any errors were detected after the
   # demand calculations were performed.
   FailedValidationError = error_class do |errors|
-    failures = errors.map do |slot, messages|
-      messages.map { |message| "  * #{ slot.inspect } #{ message }" }
+    failures = errors.map do |model, messages|
+      messages.map { |message| "  * #{ model.inspect } #{ message }" }
     end.flatten.join("\n")
 
     "Post-calculation validations failed with the following " \
