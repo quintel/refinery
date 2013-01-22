@@ -53,4 +53,15 @@ module Refinery
     adjective = direction == :in ? 'incoming' : 'outgoing'
     "#{ node.inspect } has no #{ adjective } #{ carrier.inspect } slot."
   end
+
+  # Raised by the Validation catalyst if any errors were detected after the
+  # demand calculations were performed.
+  FailedValidationError = error_class do |errors|
+    failures = errors.map do |slot, messages|
+      messages.map { |message| "  * #{ slot.inspect } #{ message }" }
+    end.flatten.join("\n")
+
+    "Post-calculation validations failed with the following " \
+    "errors:\n\n#{ failures }"
+  end
 end # Refinery
