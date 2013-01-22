@@ -55,6 +55,17 @@ module Refinery
 
     # Public: The sum of all demand supplied through the edges in the slot.
     #
+    # Note that calling Slot#demand is subtly different from calling
+    # Node#demand_for or Node#demand_from in that it asserts that all of the
+    # links aggregated in the slot have a demand figure, and then sums those
+    # demands to arrive at the result.
+    #
+    # Node#demand_for and Node#demand_from take the demand assigned to the
+    # Node, and convert it using the slot "share". Effectively, the node
+    # methods tell you what demand *should* be, and Slot#demand tells you what
+    # the demand of the links *actually are*. If the calculations were
+    # successful, both numbers should be identical.
+    #
     # Returns a float, or nil if one or more of the edges do not yet have
     # enough data to calculate their demand.
     def demand
