@@ -118,23 +118,57 @@ describe 'Graph calculations; with two parents' do
   end # one parent has demand
 
   context 'the child has demand' do
-    #       [M]  [F]
-    #  (0.75) \ / (0.25)
-    #         [C] (100)
-    let!(:mc_edge) { mother.connect_to(child, :gas, share: 0.75) }
-    let!(:fc_edge) { father.connect_to(child, :gas, share: 0.25) }
+    let!(:mc_edge) { mother.connect_to(child, :gas) }
+    let!(:fc_edge) { father.connect_to(child, :gas) }
 
-    before do
-      child.set(:preset_demand, 100.0)
-      calculate!
+    before { child.set(:preset_demand, 100.0) }
+
+    context 'and the links have shares' do
+      #       [M]  [F]
+      #   (75%) \ / (25%)
+      #         [C] (100)
+      before do
+        mc_edge.set(:share, 0.75)
+        fc_edge.set(:share, 0.25)
+
+        calculate!
+      end
+
+      it "sets the first parent's demand" do
+        expect(mother).to have_demand.of(75.0)
+      end
+
+      it "sets the second parent's demand" do
+        expect(father).to have_demand.of(25.0)
+      end
     end
 
-    it "sets the first parent's demand" do
-      expect(mother).to have_demand.of(75.0)
-    end
+    context 'and one link has a share' do
+      #       [M]  [F]
+      #   (75%) \ /
+      #         [C] (100)
+      before do
+        child.set(:preset_demand, 100.0)
+        mc_edge.set(:share, 0.75)
 
-    it "sets the second parent's demand" do
-      expect(father).to have_demand.of(25.0)
+        calculate!
+      end
+
+      it "sets the first parent's demand" do
+        expect(mother).to have_demand.of(75.0)
+      end
+
+      it "sets the second parent's demand" do
+        expect(father).to have_demand.of(25.0)
+      end
+
+      it 'sets M->C demand' do
+        expect(mc_edge).to have_demand.of(75.0)
+      end
+
+      it 'sets F->C demand' do
+        expect(fc_edge).to have_demand.of(25.0)
+      end
     end
   end # the child has demand
 end # Graph calcualtions; with two parents
