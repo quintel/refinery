@@ -97,12 +97,18 @@ describe 'Graph calculations; with two parents' do
       before do
         mother.set(:expected_demand, 60)
         child.set(:preset_demand, 240.0)
-        fc_edge.set(:share, nil) # for sanity's sake
+
+        mc_edge.set(:demand, nil)
+
         calculate!
       end
 
-      it 'sets F->C share' do
-        expect(fc_edge).to have_share.of(0.75)
+      it 'sets M->C demand'  do
+        expect(mc_edge).to have_demand.of(60.0)
+      end
+
+      it 'sets F->C demand' do
+        expect(fc_edge).to have_demand.of(180.0)
       end
 
       it "sets the other parent's demand" do
