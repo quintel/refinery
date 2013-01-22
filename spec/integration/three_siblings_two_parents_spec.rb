@@ -43,4 +43,6 @@ describe 'Graph calculations; three siblings and two parents' do
   it 'sets B->Z edge share' do
     expect(bz_edge).to have_share.of(50.0 / 65)
   end
+
+  it { expect(graph).to validate }
 end # Graph calculations; three siblings and two parents

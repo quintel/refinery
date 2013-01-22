@@ -43,6 +43,8 @@ describe 'Graph calculations; three parents and a sibling' do
       it 'sets C->Y edge share' do
         expect(cy_edge).to have_share.of(0.2)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'and a missing supplier demand' do
@@ -70,6 +72,8 @@ describe 'Graph calculations; three parents and a sibling' do
       it 'sets demand of the remaining parent' do
         expect(c).to have_demand.of(20.0)
       end
+
+      it { expect(graph).to validate }
     end
   end # with a single carrier
 
@@ -129,5 +133,7 @@ describe 'Graph calculations; three parents and a sibling' do
     it 'sets demand of the remaining parent' do
       expect(c).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # with parallel edges using different carriers
 end # Graph calculations; three parents and a sibling

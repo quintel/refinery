@@ -59,3 +59,25 @@ RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
   end
 end
 
+RSpec::Matchers.define :validate do
+  match do |graph|
+    @validator = Refinery::Catalyst::Validation.new(graph).run!
+    @validator.errors.empty?
+  end
+
+  failure_message_for_should do |graph|
+    errors = @validator.errors.map do |model, messages|
+      messages.map { |message| "  * #{ model.inspect } #{ message }" }
+    end.flatten.join("\n")
+
+    "Expected graph to validate, but had the following errors:\n\n#{ errors }"
+  end
+
+  failure_message_for_should_not do |graph|
+    "Expected graph to fail validation, but it passed"
+  end
+
+  description do |*|
+    'pass graph validation'
+  end
+end

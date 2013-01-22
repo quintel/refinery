@@ -33,6 +33,8 @@ describe 'Graph calculations; with three children' do
         expect(mc2_edge).to have_demand.of(75.0)
         expect(mc3_edge).to have_demand.of(100.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'when a child is missing demand' do
@@ -57,6 +59,8 @@ describe 'Graph calculations; with three children' do
         expect(mc2_edge).to have_demand.of(75.0)
         expect(mc3_edge).to have_demand.of(100.0)
       end
+
+      it { expect(graph).to validate }
     end # when a child is missing demand
 
     context 'when a child and parent are missing demand' do
@@ -80,7 +84,7 @@ describe 'Graph calculations; with three children' do
       end
 
       it 'does not set M->C1 demand' do
-        expect(mc1_edge.demand).to be_nil
+        expect(mc1_edge).to_not have_demand
       end
 
       it 'sets M->C2 demand' do
@@ -90,6 +94,8 @@ describe 'Graph calculations; with three children' do
       it 'sets M->C3 demand' do
         expect(mc3_edge).to have_demand.of(100.0)
       end
+
+      it { expect(graph).to_not validate }
     end # when a child and parent are missing demand
   end # with the same carriers
 
@@ -126,5 +132,7 @@ describe 'Graph calculations; with three children' do
       expect(mc2_edge).to have_demand.of(75.0)
       expect(mc3_edge).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # when the child is connected with a different carrier
 end # Graph calculations; with three children

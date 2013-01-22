@@ -33,6 +33,8 @@ describe 'Graph calculations; two children and two spouses' do
     it 'sets demand for the third parent' do
       expect(spouse_b).to have_demand.of(15.0)
     end
+
+    it { expect(graph).to validate }
   end # when spouses have no demand defined
 
   context 'when one child has no demand defined' do
@@ -53,6 +55,8 @@ describe 'Graph calculations; two children and two spouses' do
       expect(mother).to_not have_demand
       expect(spouse_b).to_not have_demand
     end
+
+    it { expect(graph).to_not validate }
   end # when one spouse has no demand defined
 
   context 'when all the parents have demand' do
@@ -76,6 +80,8 @@ describe 'Graph calculations; two children and two spouses' do
     it 'does not set demand for the second child' do
       expect(child_z).to_not have_demand
     end
+
+    it { expect(graph).to_not validate }
   end # when all the parents have demand
 
   context 'when spouses have demand' do
@@ -95,6 +101,8 @@ describe 'Graph calculations; two children and two spouses' do
       it 'sets demand' do
         expect(mother).to have_demand.of(50.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'and edges do not have shares' do
@@ -115,6 +123,8 @@ describe 'Graph calculations; two children and two spouses' do
         expect(my_edge).to have_share.of(0.5)
         expect(mz_edge).to have_share.of(40.0 / 55)
       end
+
+      it { expect(graph).to validate }
     end
   end # when spouses have demand
 end # Graph calculations; two children and two spouses

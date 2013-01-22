@@ -119,4 +119,6 @@ describe 'ETsource #179 stub graph' do
     expect(node(:space_heating_elec).get(:expected_demand)).to eql(100.0)
     expect(node(:electric_heater).get(:expected_demand)).to eql(100.0)
   end
+
+  it { expect(graph).to validate }
 end # ETsource #179 stub graph

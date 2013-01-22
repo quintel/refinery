@@ -54,4 +54,6 @@ describe 'Graph calculations; with a sibling which is also a parent' do
   it 'sets S->C share' do
     expect(sc_edge).to have_share.of(130.0 / 150)
   end
+
+  it { expect(graph).to validate }
 end # Graph calculations; with a sibling which is also a parent

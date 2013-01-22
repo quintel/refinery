@@ -23,6 +23,8 @@ describe 'Graph calculations; with two parents' do
       it 'sets demand' do
         expect(child).to have_demand.of(50.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'and neither edge has a demand' do
@@ -39,6 +41,8 @@ describe 'Graph calculations; with two parents' do
         expect(mc_edge).to have_demand.of(30.0)
         expect(fc_edge).to have_demand.of(20.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'and demand is missing on one' do
@@ -64,6 +68,8 @@ describe 'Graph calculations; with two parents' do
       it 'does not set the F->C demand' do
         expect(fc_edge).to_not have_demand
       end
+
+      it { expect(graph).to_not validate }
     end
   end # the parents have demand
 
@@ -88,6 +94,8 @@ describe 'Graph calculations; with two parents' do
       it "does sets the child's demand" do
         expect(child).to have_demand.of(300.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'as does the child' do
@@ -114,6 +122,8 @@ describe 'Graph calculations; with two parents' do
       it "sets the other parent's demand" do
         expect(father).to have_demand.of(180.0)
       end
+
+      it { expect(graph).to validate }
     end
   end # one parent has demand
 
@@ -141,6 +151,8 @@ describe 'Graph calculations; with two parents' do
       it "sets the second parent's demand" do
         expect(father).to have_demand.of(25.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'and one link has a share' do
@@ -169,6 +181,8 @@ describe 'Graph calculations; with two parents' do
       it 'sets F->C demand' do
         expect(fc_edge).to have_demand.of(25.0)
       end
+
+      it { expect(graph).to validate }
     end
   end # the child has demand
 end # Graph calcualtions; with two parents

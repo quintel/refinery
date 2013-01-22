@@ -39,6 +39,8 @@ describe 'Graph calculations; three parents' do
       it 'sets C->X share' do
         expect(cx_edge).to have_share.of(0.15)
       end
+
+      it { expect(graph).to validate }
     end # but all parents do
 
     context 'and neither does one parent' do
@@ -72,8 +74,10 @@ describe 'Graph calculations; three parents' do
         end
 
         it 'does not set C->X demand' do
-          expect(cx_edge.demand).to be_nil
+          expect(cx_edge).to_not have_demand
         end
+
+        it { expect(graph).to_not validate }
       end
 
       context 'and there are edge shares' do
@@ -96,6 +100,8 @@ describe 'Graph calculations; three parents' do
         it 'sets demand of the missing parent' do
           expect(c).to have_demand.of(15.0)
         end
+
+        it { expect(graph).to validate }
       end
     end # and neither does one parent
   end # when the child has no demand
@@ -128,6 +134,8 @@ describe 'Graph calculations; three parents' do
       it 'sets demand of the third parent' do
         expect(c).to have_demand.of(30.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     describe 'and no edges have shares' do
@@ -144,6 +152,8 @@ describe 'Graph calculations; three parents' do
         expect(b).to_not have_demand
         expect(c).to_not have_demand
       end
+
+      it { expect(graph).to_not validate }
     end
   end # when the child has demand
 end # Graph calculations; three parents

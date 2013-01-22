@@ -135,4 +135,6 @@ describe 'ETsource #168 stub graph' do
 
     expect(edge).to have_share.of(0.0)
   end
+
+  it { expect(graph).to validate }
 end # ETsource #168 stub graph

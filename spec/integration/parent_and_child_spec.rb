@@ -20,6 +20,8 @@ describe 'Graph calculations; a parent and child' do
       it 'sets demand' do
         expect(child).to have_demand.of(45)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'and the edge has no demand' do
@@ -34,6 +36,8 @@ describe 'Graph calculations; a parent and child' do
       it 'sets the edge share' do
         expect(edge).to have_share.of(1.0)
       end
+
+      it { expect(graph).to validate }
     end
   end # demand set on parent
 
@@ -53,6 +57,8 @@ describe 'Graph calculations; a parent and child' do
       it 'sets parent demand' do
         expect(mother).to have_demand.of(45.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'and the edge has no demand' do
@@ -67,6 +73,8 @@ describe 'Graph calculations; a parent and child' do
       it 'sets the edge share' do
         expect(edge).to have_share.of(1.0)
       end
+
+      it { expect(graph).to validate }
     end
 
     context 'and the child demand exceeds parent supply' do
@@ -81,6 +89,8 @@ describe 'Graph calculations; a parent and child' do
       it 'sets the edge share, not exceeding 1.0' do
         expect(edge).to have_share.of(1.0)
       end
+
+      it { expect(graph).to_not validate }
     end
   end # demand set on child
 
@@ -102,6 +112,8 @@ describe 'Graph calculations; a parent and child' do
     it 'does not set parent demand' do
       expect(mother).to_not have_demand
     end
+
+    it { expect(graph).to_not validate }
   end # no demand set
 
   context 'with parallel edges using different carriers' do
@@ -141,6 +153,8 @@ describe 'Graph calculations; a parent and child' do
         expect(mc_gas_edge).to have_demand.of(140.0)
         expect(mc_elec_edge).to have_demand.of(60.0)
       end
+
+      it { expect(graph).to validate }
     end # with demand defined on the child
 
     context 'with demand defined on the parent' do
@@ -165,6 +179,8 @@ describe 'Graph calculations; a parent and child' do
         expect(mc_gas_edge).to have_demand.of(70.0)
         expect(mc_elec_edge).to have_demand.of(30.0)
       end
+
+      it { expect(graph).to validate }
     end # with demand defined on the parent
   end # with parallel edges using different carriers
 

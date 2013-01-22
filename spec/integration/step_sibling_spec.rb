@@ -38,6 +38,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     it 'calculates F->C demand' do
       expect(fc_edge).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # and all nodes have demand
 
   context 'and the parent has no demand' do
@@ -65,6 +67,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     it 'calculates F->C demand' do
       expect(fc_edge).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # and the parent has no demand
 
   context 'and the sibling has no demand' do
@@ -93,6 +97,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     it 'calculates F->C demand' do
       expect(fc_edge).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # and the sibling has no demand
 
   context 'and the sibling has multiple carriers and no demand' do
@@ -131,12 +137,14 @@ describe 'Graph calculations; with two parents and a step sibling' do
     end
 
     it 'calculates M->C demand, accounting for supply from F' do
-      expect(mc_edge.demand).to be_within(1e-9).of(25.0)
+      expect(mc_edge).to have_demand.of(25.0)
     end
 
     it 'calculates F->C demand' do
       expect(fc_edge).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # and the sibling has no demand
 
   context 'and the parent and sibling have no demand' do
@@ -167,6 +175,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
       expect(mother).to_not have_demand
       expect(sibling).to_not have_demand
     end
+
+    it { expect(graph).to_not validate }
   end # and the parent and sibling have no demand
 
   context 'and the second parent has no demand' do
@@ -189,6 +199,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     it "sets the parent's demand" do
       expect(father).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # and the second parent has no demand
 
   context 'and the second parent is a partial supplier by demand' do
@@ -212,6 +224,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
       expect(mc_edge).to have_demand.of(50.0)
       expect(fc_edge).to have_demand.of(75.0)
     end
+
+    it { expect(graph).to validate }
   end # and the second parent is a partial supplier by demand
 
   context 'and the second parent is a partial supplier' do
@@ -234,6 +248,10 @@ describe 'Graph calculations; with two parents and a step sibling' do
       expect(ms_edge).to have_demand.of(25.0)
       expect(mc_edge).to have_demand.of(75.0)
     end
+
+    # Fails because F->C doesn't take all of [F]'s output, nor supply all of
+    # the demand for [C].
+    it { expect(graph).to_not validate }
   end # and the second parent is a partial supplier
 
   context 'and the child and second parent have no demand' do
@@ -255,6 +273,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     it 'does not set demand for the second parent' do
       expect(father).to_not have_demand
     end
+
+    it { expect(graph).to_not validate }
   end # and the child and second parent have no demand
 
   context 'and the child and sibling have no demand' do
@@ -285,5 +305,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
       expect(sibling).to_not have_demand
       expect(child).to_not have_demand
     end
+
+    it { expect(graph).to_not validate }
   end # and the child and sibling have no demand
 end # Graph calculations; with two parents and a step-sibling

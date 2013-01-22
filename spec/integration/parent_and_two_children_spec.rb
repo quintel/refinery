@@ -23,6 +23,13 @@ describe 'Graph calculations; parent and two children' do
       it 'sets parent demand' do
         expect(mother).to have_demand.of(21.0)
       end
+
+      # This graph does not validate because the edge demands are insufficient
+      # to fulfil the demand of the "to" nodes. Doesn't matter, since what
+      # we're testing in this context is that the [M] node calculates its
+      # demand using the edges, and doesn't care about the status of its
+      # children.
+      it { expect(graph).to_not validate }
     end
 
     context 'with only one edge demand' do
@@ -41,6 +48,10 @@ describe 'Graph calculations; parent and two children' do
       it 'sets the sibling edge share' do
         expect(ms_edge).to have_share.of(1.0)
       end
+
+      # Like the previous context, this graph will also fail validation since
+      # the M->C edge doesn't satisfy demand of [C].
+      it { expect(graph).to_not validate }
     end
 
     context 'without edge demands' do
@@ -60,6 +71,8 @@ describe 'Graph calculations; parent and two children' do
         expect(mc_edge).to have_share.of(1.0)
         expect(ms_edge).to have_share.of(1.0)
       end
+
+      it { expect(graph).to validate }
     end
   end # and the children have demand
 
@@ -83,6 +96,9 @@ describe 'Graph calculations; parent and two children' do
       it 'sets sibling demand' do
         expect(sibling).to have_demand.of(20.0)
       end
+
+      # Ditto, ditto, ditto...
+      it { expect(graph).to_not validate }
     end
 
     context 'with only one edge shares' do
@@ -108,6 +124,8 @@ describe 'Graph calculations; parent and two children' do
       it 'does not set sibling demand' do
         expect(sibling).to_not have_demand
       end
+
+      it { expect(graph).to_not validate }
     end
 
     context 'and no edge demands' do
@@ -126,6 +144,8 @@ describe 'Graph calculations; parent and two children' do
       it 'does not set sibling demand' do
         expect(sibling).to_not have_demand
       end
+
+      it { expect(graph).to_not validate }
     end
   end # and only one child has demand
 
@@ -152,6 +172,8 @@ describe 'Graph calculations; parent and two children' do
     it 'sets demand of the sibling' do
       expect(sibling).to have_demand.of(10.0)
     end
+
+    it { expect(graph).to validate }
   end
 
   context 'and the parent has demand' do
@@ -173,6 +195,8 @@ describe 'Graph calculations; parent and two children' do
     it 'sets demand of the sibling' do
       expect(sibling).to have_demand.of(30.0)
     end
+
+    it { expect(graph).to validate }
   end # and the parent has demand
 
   context 'and the edges use different carriers' do
@@ -210,6 +234,8 @@ describe 'Graph calculations; parent and two children' do
       it 'sets sibling demand' do
         expect(sibling).to have_demand.of(20.0)
       end
+
+      it { expect(graph).to validate }
     end # and the parent defines demand
 
     context 'and one of the children defines demand' do
@@ -236,6 +262,8 @@ describe 'Graph calculations; parent and two children' do
       it 'does not set sibling demand' do
         expect(sibling).to_not have_demand
       end
+
+      it { expect(graph).to_not validate }
     end # and one of the children defines demand
 
     context 'and both children define demand' do
@@ -257,6 +285,8 @@ describe 'Graph calculations; parent and two children' do
       it 'sets parent demand' do
         expect(mother).to have_demand.of(200.0)
       end
+
+      it { expect(graph).to validate }
     end # and both children define demand
 
     context 'and one of the children has parallel edges' do
@@ -307,6 +337,8 @@ describe 'Graph calculations; parent and two children' do
         it 'sets sibling demand' do
           expect(sibling).to have_demand.of(100.0)
         end
+
+        it { expect(graph).to validate }
       end # with demand
 
       context 'without demand' do
@@ -338,6 +370,8 @@ describe 'Graph calculations; parent and two children' do
         it 'does not set sibling demand' do
           expect(sibling).to_not have_demand
         end
+
+        it { expect(graph).to_not validate }
       end # without demand
 
       context 'without parent demand' do
@@ -369,6 +403,8 @@ describe 'Graph calculations; parent and two children' do
         it 'does not set parent' do
           expect(mother).to_not have_demand
         end
+
+        it { expect(graph).to_not validate }
       end # without parent demand
 
       context 'without parent demand and a grandparent' do
@@ -406,6 +442,8 @@ describe 'Graph calculations; parent and two children' do
         it 'sets child demand' do
           expect(child).to have_demand.of(100.0)
         end
+
+        it { expect(graph).to validate }
       end # without parent demand and a grandparent
     end # and one of the children has parallel edges
   end # and the edges use different carriers
