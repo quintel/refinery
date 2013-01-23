@@ -32,55 +32,105 @@ module Refinery::Strategies
         # Parent and child demand?
         edge.to.demand && edge.from.demand &&
           # We already know how the parent node supplies its other children?
-          parental_siblings(edge).all?(&:demand)
+          (edge.from.out_edges(edge.label).to_a - [edge]).all?(&:demand)
       end
 
       def self.calculate(edge)
-        available_supply =
-          # Output of the parent for the edge's carrier.
-          edge.from.output_of(edge.label) -
-          # Minus energy already being supplied to the parent's other
-          # children.
-          parental_siblings(edge).sum(&:demand)
-
-        if child_siblings = child_siblings(edge)
-          # If the child element has other parents, and we already know their
-          # demand, we will reduce the output of this link to compensate for
-          # that.
-          existing_supply =
-            if child_siblings.all?(&:demand)
-              child_siblings.sum(&:demand)
-            else
-              0.0
-            end
-        else
-          existing_supply = 0.0
-        end
-
-        unfulfilled_demand =
-          # Demand from the child for the edge's carrier.
-          edge.to.demand_for(edge.label) -
-          # Minus energy already supplied by other parents to the child.
-          existing_supply
-
-        if available_supply < unfulfilled_demand
-          available_supply
-        else
-          unfulfilled_demand
-        end
+        new(edge).calculate
       end
 
-      # Internal: The "in" edges on the "to" node, excluding the given +edge+.
+      # Public: Creates a new FromDemand strategy which seeks to intelligently
+      # infer the demand of an edge by looking at the demands of the parent
+      # and child nodes, and their relatives.
       #
-      # edge - The edge whose siblings are to be retrieved.
+      # edge - The edge whose demand is to be calculated.
+      #
+      # Returns a FromDemand.
+      def initialize(edge)
+        @edge = edge
+      end
+
+      # Public: Runs the calculation, returning the demand value for the edge.
+      #
+      # Returns a float.
+      def calculate
+        available   = available_supply
+        unfulfilled = unfulfilled_demand
+
+        available < unfulfilled ? available : unfulfilled
+      end
+
+      #######
+      private
+      #######
+
+      # Internal: Calculates how much of the parent's energy supply is
+      # available to this edge.
+      #
+      # This is the total amount of carrier energy output by the node, minus
+      # that which is already allocated to other related edges.
+      #
+      # For example:
+      #
+      #       [A] (4)
+      #   (2) / \
+      #     [X] [Y]
+      #
+      # In this simple example where we want to calculate A->Y, [A] is
+      # outputting 4 gas energy, of which 2 is already allocated to A->X.
+      # Therefore available supply is 2.
+      #
+      # Returns a float.
+      def available_supply
+        @edge.from.output_of(@edge.label) - related_parent_edges.sum(&:demand)
+      end
+
+      # Internal: Calculates how much energy is needs to be supplied to the
+      # child in order to meet its demand.
+      #
+      # This is the total amount of carrier energy demanded by the node, minus
+      # that which is already supplied by related edges.
+      #
+      # For example:
+      #
+      #    [A]   [B]   [C]
+      #      \   /_____/
+      #   (2) \ //
+      #       [X] (10)
+      #
+      # If we are calculating a value for B->X, we know that [X] demands 10
+      # energy, and that 2 of that is already supplied by A->X. We don't know
+      # how much energy is supplied by B->X or C->X, therefore 8 demand is
+      # unfulfilled.
+      #
+      # Returns a float.
+      def unfulfilled_demand
+        existing_supply = 0.0
+
+        if related_child_edges && related_child_edges.all?(&:demand)
+          # If the child element has other parents, and we already know their
+          # demand, we will reduce the unfulfilled demand to compensate for
+          # that.
+          existing_supply = related_child_edges.sum(&:demand)
+        end
+
+        @edge.to.demand_for(@edge.label) - existing_supply
+      end
+
+      # Internal: The "out" edges on the parent node, excluding the edge being
+      # calculated.
       #
       # Returns an array of edges.
-      def self.parental_siblings(edge)
-        edge.from.out_edges(edge.label).to_a - [edge]
+      def related_parent_edges
+        @rpe ||= @edge.from.out_edges(@edge.label).to_a - [@edge]
       end
 
-      def self.child_siblings(edge)
-        edge.to.in_edges(edge.label).to_a - [edge]
+      # Internal: The "in" edges on the child node, excluding the edge being
+      # calculated.
+      #
+      # Returns an array of edges.
+      def related_child_edges
+        @rce ||= @edge.to.in_edges(@edge.label).to_a - [@edge]
       end
     end # FromDemand
   end # EdgeDemand
