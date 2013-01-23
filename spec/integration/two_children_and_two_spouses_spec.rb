@@ -7,10 +7,10 @@ describe 'Graph calculations; two children and two spouses' do
   let!(:child_y)  { graph.add Refinery::Node.new(:child_y, preset_demand: 20.0) }
   let!(:child_z)  { graph.add Refinery::Node.new(:child_z, preset_demand: 55.0) }
 
-  let!(:ay_edge)  { spouse_a.connect_to(child_y, :gas, share: 0.5) }
-  let!(:my_edge)  { mother.connect_to(child_y, :gas, share: 0.5) }
-  let!(:mz_edge)  { mother.connect_to(child_z, :gas, share: 40.0 / 55) }
-  let!(:bz_edge)  { spouse_b.connect_to(child_z, :gas, share: 15.0 / 55) }
+  let!(:ay_edge)  { spouse_a.connect_to(child_y, :gas, child_share: 0.5) }
+  let!(:my_edge)  { mother.connect_to(child_y, :gas, child_share: 0.5) }
+  let!(:mz_edge)  { mother.connect_to(child_z, :gas, child_share: 40.0 / 55) }
+  let!(:bz_edge)  { spouse_b.connect_to(child_z, :gas, child_share: 15.0 / 55) }
 
   context 'when spouses have no demand defined' do
     #    [A]     [M]     [B]
@@ -95,7 +95,7 @@ describe 'Graph calculations; two children and two spouses' do
       spouse_b.set(:expected_demand, 15.0)
     end
 
-    context 'and edges have shares' do
+    context 'and edges have child shares' do
       before { calculate! }
 
       it 'sets demand' do
@@ -105,12 +105,12 @@ describe 'Graph calculations; two children and two spouses' do
       it { expect(graph).to validate }
     end
 
-    context 'and edges do not have shares' do
+    context 'and edges do not have child shares' do
       before do
-        my_edge.set(:share, nil)
-        mz_edge.set(:share, nil)
-        ay_edge.set(:share, nil)
-        bz_edge.set(:share, nil)
+        my_edge.set(:child_share, nil)
+        mz_edge.set(:child_share, nil)
+        ay_edge.set(:child_share, nil)
+        bz_edge.set(:child_share, nil)
 
         calculate!
       end
@@ -119,9 +119,9 @@ describe 'Graph calculations; two children and two spouses' do
         expect(mother).to have_demand.of(50.0)
       end
 
-      it 'sets the edge shares' do
-        expect(my_edge).to have_share.of(0.5)
-        expect(mz_edge).to have_share.of(40.0 / 55)
+      it 'sets the edge child shares' do
+        expect(my_edge).to have_child_share.of(0.5)
+        expect(mz_edge).to have_child_share.of(40.0 / 55)
       end
 
       it { expect(graph).to validate }

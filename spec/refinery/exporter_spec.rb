@@ -9,8 +9,8 @@ describe Refinery::Exporter do
       middle = graph.add(Refinery::Node.new(:middle, name: 'Mid'))
       bottom = graph.add(Refinery::Node.new(:bottom, name: 'Tail'))
 
-      top.connect_to(middle, :gas, share: 1.0)
-      middle.connect_to(bottom, :electricity, share: 0.3)
+      top.connect_to(middle, :gas, child_share: 1.0)
+      middle.connect_to(bottom, :electricity, child_share: 0.3)
 
       graph
     end

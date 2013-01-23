@@ -92,7 +92,7 @@ describe 'ETsource #168 stub graph' do
       select { |edge| edge.to.key == :fd_hh_gas }.first
 
     # total demand of 628.4, households demand is 361.8
-    expect(edge).to have_share.of(1.0)
+    expect(edge).to have_child_share.of(1.0)
   end
 
   it 'calculates the edge shares for the main gas node to industry' do
@@ -100,7 +100,7 @@ describe 'ETsource #168 stub graph' do
       select { |edge| edge.to.key == :fd_ind_gas }.first
 
     # total demand of 628.4, industry demand is 266.6
-    expect(edge).to have_share.of(1.0)
+    expect(edge).to have_child_share.of(1.0)
   end
 
   it 'calculates the expected demand for the main gas node gas' do
@@ -112,28 +112,28 @@ describe 'ETsource #168 stub graph' do
     edge = node(:gas_heater).out_edges.
       select { |edge| edge.to.key == :ud_heating_hh }.first
 
-    expect(edge).to have_share.of(0.1)
+    expect(edge).to have_child_share.of(0.1)
   end
 
   it 'calcualtes the output edge share of combi heaters' do
     edge = node(:combi_heater).out_edges.
       select { |edge| edge.to.key == :ud_heating_hh }.first
 
-    expect(edge).to have_share.of(0.9)
+    expect(edge).to have_child_share.of(0.9)
   end
 
   it 'calcualtes the output edge share of gas heat pumps' do
     edge = node(:gas_heat_pump).out_edges.
       select { |edge| edge.to.key == :ud_heating_hh }.first
 
-    expect(edge).to have_share.of(0.0)
+    expect(edge).to have_child_share.of(0.0)
   end
 
   it 'calcualtes the output edge share of gas CHPs' do
     edge = node(:gas_chp).out_edges.
       select { |edge| edge.to.key == :ud_heating_hh }.first
 
-    expect(edge).to have_share.of(0.0)
+    expect(edge).to have_child_share.of(0.0)
   end
 
   it { expect(graph).to validate }

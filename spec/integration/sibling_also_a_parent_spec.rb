@@ -44,15 +44,15 @@ describe 'Graph calculations; with a sibling which is also a parent' do
   end
 
   it 'sets M->S share' do
-    expect(ms_edge).to have_share.of(80.0 / 130)
+    expect(ms_edge).to have_child_share.of(80.0 / 130)
   end
 
   it 'sets F->S share' do
-    expect(fs_edge).to have_share.of(50.0 / 130)
+    expect(fs_edge).to have_child_share.of(50.0 / 130)
   end
 
   it 'sets S->C share' do
-    expect(sc_edge).to have_share.of(130.0 / 150)
+    expect(sc_edge).to have_child_share.of(130.0 / 150)
   end
 
   it { expect(graph).to validate }

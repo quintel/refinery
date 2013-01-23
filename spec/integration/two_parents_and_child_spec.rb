@@ -133,13 +133,13 @@ describe 'Graph calculations; with two parents' do
 
     before { child.set(:preset_demand, 100.0) }
 
-    context 'and the links have shares' do
+    context 'and the links have child shares' do
       #       [M]  [F]
       #   (75%) \ / (25%)
       #         [C] (100)
       before do
-        mc_edge.set(:share, 0.75)
-        fc_edge.set(:share, 0.25)
+        mc_edge.set(:child_share, 0.75)
+        fc_edge.set(:child_share, 0.25)
 
         calculate!
       end
@@ -155,13 +155,13 @@ describe 'Graph calculations; with two parents' do
       it { expect(graph).to validate }
     end
 
-    context 'and one link has a share' do
+    context 'and one link has a child share' do
       #       [M]  [F]
       #   (75%) \ /
       #         [C] (100)
       before do
         child.set(:preset_demand, 100.0)
-        mc_edge.set(:share, 0.75)
+        mc_edge.set(:child_share, 0.75)
 
         calculate!
       end

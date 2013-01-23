@@ -19,18 +19,32 @@ module Refinery
     # "Carrier" energy means that share only accounts for other edges which
     # supply the same type of energy. So if this edge supplies 50 gas energy
     # to a node which demands 100 gas energy and 500 electricity, the edge has
-    # a share of 0.5 since it supplies half the gas.
+    # a child share of 0.5 since it supplies half the gas.
     #
     # Returns a float, or nil if no share can be calculated.
-    def share
-      if get(:share)
-        get(:share)
+    def child_share
+      if get(:child_share)
+        get(:child_share)
       elsif to.slots.in(label).edges.one?
-        set(:share, 1.0)
+        set(:child_share, 1.0)
       elsif demand && demand.zero?
-        set(:share, 0.0)
+        set(:child_share, 0.0)
       elsif demand && to.demand
-        set(:share, demand / to.demand_for(label))
+        set(:child_share, demand / to.demand_for(label))
+      end
+    end
+
+    def share
+      puts "DEPRECATED: Edge#share is deprecated. Called by #{ caller[0]} "
+      child_share
+    end
+
+    def set(key, value)
+      if key == :share
+        puts "DEPRECATED: Setting :share is deprecated. Called by #{ caller[0] }"
+        set(:child_share, value)
+      else
+        super
       end
     end
 
@@ -49,7 +63,7 @@ module Refinery
       elsif from.slots.out(label).edges.one?
         set(:parent_share, 1.0)
       elsif demand && demand.zero?
-        set(:share, 0.0)
+        set(:parent_share, 0.0)
       elsif demand && from.demand
         set(:parent_share, demand / from.output_of(label))
       end

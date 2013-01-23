@@ -1,7 +1,7 @@
 module Refinery::Strategies
   module EdgeDemand
-    # A strategy for calculating edge shares when all of the node's other
-    # outbound edges of the same carrier already have a share.
+    # A strategy for calculating edge demand when all of the node's other
+    # outbound edges of the same carrier already have a demand.
     #
     # For example, in this simple case:
     #

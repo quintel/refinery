@@ -34,7 +34,7 @@ describe 'Graph calculations; a parent and child' do
       end
 
       it 'sets the edge share' do
-        expect(edge).to have_share.of(1.0)
+        expect(edge).to have_child_share.of(1.0)
       end
 
       it { expect(graph).to validate }
@@ -71,7 +71,7 @@ describe 'Graph calculations; a parent and child' do
       end
 
       it 'sets the edge share' do
-        expect(edge).to have_share.of(1.0)
+        expect(edge).to have_child_share.of(1.0)
       end
 
       it { expect(graph).to validate }
@@ -87,7 +87,7 @@ describe 'Graph calculations; a parent and child' do
       end
 
       it 'sets the edge share, not exceeding 1.0' do
-        expect(edge).to have_share.of(1.0)
+        expect(edge).to have_child_share.of(1.0)
       end
 
       it { expect(graph).to_not validate }
@@ -138,11 +138,11 @@ describe 'Graph calculations; a parent and child' do
       end
 
       it 'sets the gas share to 1.0' do
-        expect(mc_gas_edge).to have_share.of(1.0)
+        expect(mc_gas_edge).to have_child_share.of(1.0)
       end
 
       it 'sets the electricity share to 1.0' do
-        expect(mc_elec_edge).to have_share.of(1.0)
+        expect(mc_elec_edge).to have_child_share.of(1.0)
       end
 
       it 'sets parent demand' do
@@ -164,11 +164,11 @@ describe 'Graph calculations; a parent and child' do
       end
 
       it 'sets the gas share to 1.0' do
-        expect(mc_gas_edge).to have_share.of(1.0)
+        expect(mc_gas_edge).to have_child_share.of(1.0)
       end
 
       it 'sets the electricity share to 1.0' do
-        expect(mc_elec_edge).to have_share.of(1.0)
+        expect(mc_elec_edge).to have_child_share.of(1.0)
       end
 
       it 'sets child demand' do

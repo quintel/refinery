@@ -1,16 +1,16 @@
 module Refinery::Strategies
   module EdgeDemand
-    # A strategy for calculating edge shares when all of the node's other
-    # outbound edges of the same carrier already have a share.
+    # A strategy for calculating edge demand when all of the node's other
+    # outbound edges of the same carrier already have a demand calculated.
     #
     # For example, in this simple case:
     #
     #    [A] [B]
-    #      \ / (0.2)
-    #      [X]
+    #      \ / (5)
+    #      [X] (20)
     #
-    # ... we know that B->X has a share of 0.2, therefore A->X must have a
-    # share of 0.8 (so that that all shares combined sum to 1.0).
+    # ... we know that B->X has a demand of 5, therefore A->X must have a
+    # demand of 20 (so that that all edges meet the demand of [X]).
     class FillRemaining
       def self.calculable?(edge)
         edge.to.demand && edge.to.in_edges(edge.label).all? do |other|

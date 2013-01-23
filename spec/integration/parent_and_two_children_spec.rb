@@ -46,7 +46,7 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets the sibling edge share' do
-        expect(ms_edge).to have_share.of(1.0)
+        expect(ms_edge).to have_child_share.of(1.0)
       end
 
       # Like the previous context, this graph will also fail validation since
@@ -68,8 +68,8 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets the edge shares' do
-        expect(mc_edge).to have_share.of(1.0)
-        expect(ms_edge).to have_share.of(1.0)
+        expect(mc_edge).to have_child_share.of(1.0)
+        expect(ms_edge).to have_child_share.of(1.0)
       end
 
       it { expect(graph).to validate }
@@ -199,7 +199,7 @@ describe 'Graph calculations; parent and two children' do
     it { expect(graph).to validate }
   end # and the parent has demand
 
-  context 'and one edge has a parent share', :focus do
+  context 'and one edge has a parent share' do
     #           [M]
     #  (ps:0.6) / \
     #         [C] [S]
@@ -277,8 +277,8 @@ describe 'Graph calculations; parent and two children' do
       end
 
       it 'sets the edge shares' do
-        expect(mc_gas_edge).to have_share.of(1.0)
-        expect(ms_elec_edge).to have_share.of(1.0)
+        expect(mc_gas_edge).to have_child_share.of(1.0)
+        expect(ms_elec_edge).to have_child_share.of(1.0)
       end
 
       it 'sets the edge demands' do
@@ -370,7 +370,7 @@ describe 'Graph calculations; parent and two children' do
         end
 
         it 'sets the M->S electricity edge share' do
-          expect(ms_elec_edge).to have_share.of(1.0)
+          expect(ms_elec_edge).to have_child_share.of(1.0)
         end
 
         it 'sets the M->S electricity edge demand' do
@@ -378,7 +378,7 @@ describe 'Graph calculations; parent and two children' do
         end
 
         it 'sets the M->C gas edge share' do
-          expect(mc_gas_edge).to have_share.of(1.0)
+          expect(mc_gas_edge).to have_child_share.of(1.0)
         end
 
         it 'sets the M->C gas edge demand' do
@@ -386,7 +386,7 @@ describe 'Graph calculations; parent and two children' do
         end
 
         it 'sets the M->S gas edge share' do
-          expect(ms_gas_edge).to have_share.of(1.0)
+          expect(ms_gas_edge).to have_child_share.of(1.0)
         end
 
         it 'sets the M->S gas edge demand' do

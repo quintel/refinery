@@ -28,16 +28,16 @@ describe 'Graph calculations; three parents' do
         expect(x).to have_demand.of(100.0)
       end
 
-      it 'sets A->X share' do
-        expect(ax_edge).to have_share.of(0.1)
+      it 'sets A->X child share' do
+        expect(ax_edge).to have_child_share.of(0.1)
       end
 
-      it 'sets B->X share' do
-        expect(bx_edge).to have_share.of(0.75)
+      it 'sets B->X child share' do
+        expect(bx_edge).to have_child_share.of(0.75)
       end
 
-      it 'sets C->X share' do
-        expect(cx_edge).to have_share.of(0.15)
+      it 'sets C->X child share' do
+        expect(cx_edge).to have_child_share.of(0.15)
       end
 
       it { expect(graph).to validate }
@@ -80,11 +80,11 @@ describe 'Graph calculations; three parents' do
         it { expect(graph).to_not validate }
       end
 
-      context 'and there are edge shares' do
+      context 'and there are edge child shares' do
         before do
-          ax_edge.set(:share, 0.10)
-          bx_edge.set(:share, 0.75)
-          cx_edge.set(:share, 0.15)
+          ax_edge.set(:child_share, 0.10)
+          bx_edge.set(:child_share, 0.75)
+          cx_edge.set(:child_share, 0.15)
 
           calculate!
         end
@@ -114,11 +114,11 @@ describe 'Graph calculations; three parents' do
     #      [X] (200)
     before { x.set(:preset_demand, 200.0) }
 
-    describe 'and edges have shares' do
+    describe 'and edges have child shares' do
       before do
-        ax_edge.set(:share, 0.10)
-        bx_edge.set(:share, 0.75)
-        cx_edge.set(:share, 0.15)
+        ax_edge.set(:child_share, 0.10)
+        bx_edge.set(:child_share, 0.75)
+        cx_edge.set(:child_share, 0.15)
 
         calculate!
       end
@@ -138,13 +138,13 @@ describe 'Graph calculations; three parents' do
       it { expect(graph).to validate }
     end
 
-    describe 'and no edges have shares' do
+    describe 'and no edges have child shares' do
       before { calculate! }
 
-      it 'does not set edge shares' do
-        expect(ax_edge).to_not have_share
-        expect(bx_edge).to_not have_share
-        expect(cx_edge).to_not have_share
+      it 'does not set edge child shares' do
+        expect(ax_edge).to_not have_child_share
+        expect(bx_edge).to_not have_child_share
+        expect(cx_edge).to_not have_child_share
       end
 
       it 'does not set parent demands' do

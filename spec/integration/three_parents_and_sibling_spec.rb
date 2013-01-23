@@ -29,19 +29,19 @@ describe 'Graph calculations; three parents and a sibling' do
       before { calculate! }
 
       it 'sets A->X edge share' do
-        expect(ax_edge).to have_share.of(1.0)
+        expect(ax_edge).to have_child_share.of(1.0)
       end
 
       it 'sets A->Y edge share' do
-        expect(ay_edge).to have_share.of(0.05)
+        expect(ay_edge).to have_child_share.of(0.05)
       end
 
       it 'sets B->Y edge share' do
-        expect(by_edge).to have_share.of(0.75)
+        expect(by_edge).to have_child_share.of(0.75)
       end
 
       it 'sets C->Y edge share' do
-        expect(cy_edge).to have_share.of(0.2)
+        expect(cy_edge).to have_child_share.of(0.2)
       end
 
       it { expect(graph).to validate }
@@ -54,19 +54,19 @@ describe 'Graph calculations; three parents and a sibling' do
       end
 
       it 'sets A->X edge share' do
-        expect(ax_edge).to have_share.of(1.0)
+        expect(ax_edge).to have_child_share.of(1.0)
       end
 
       it 'sets A->Y edge share' do
-        expect(ay_edge).to have_share.of(0.05)
+        expect(ay_edge).to have_child_share.of(0.05)
       end
 
       it 'sets B->Y edge share' do
-        expect(by_edge).to have_share.of(0.75)
+        expect(by_edge).to have_child_share.of(0.75)
       end
 
       it 'sets C->Y edge share' do
-        expect(cy_edge).to have_share.of(0.2)
+        expect(cy_edge).to have_child_share.of(0.2)
       end
 
       it 'sets demand of the remaining parent' do
@@ -106,27 +106,27 @@ describe 'Graph calculations; three parents and a sibling' do
     end
 
     it 'sets the A->X elec edge demand' do
-      expect(ax_elec_edge).to have_share.of(0.875)
+      expect(ax_elec_edge).to have_child_share.of(0.875)
       expect(ax_elec_edge).to have_demand.of(175.0)
     end
 
     it 'sets the B->X elec edge demand' do
-      expect(bx_elec_edge).to have_share.of(0.125)
+      expect(bx_elec_edge).to have_child_share.of(0.125)
       expect(bx_elec_edge).to have_demand.of(25.0)
     end
 
     it 'sets the B->X gas edge demand' do
-      expect(bx_gas_edge).to have_share.of(1.0)
+      expect(bx_gas_edge).to have_child_share.of(1.0)
       expect(bx_gas_edge).to have_demand.of(50.0)
     end
 
     it 'sets the B->Y gas edge demand' do
-      expect(by_gas_edge).to have_share.of(25.0 / 125)
+      expect(by_gas_edge).to have_child_share.of(25.0 / 125)
       expect(by_gas_edge).to have_demand.of(25.0)
     end
 
     it 'sets the C->Y gas edge demand' do
-      expect(cy_gas_edge).to have_share.of(100.0 / 125)
+      expect(cy_gas_edge).to have_child_share.of(100.0 / 125)
       expect(cy_gas_edge).to have_demand.of(100.0)
     end
 

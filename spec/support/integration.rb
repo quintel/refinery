@@ -26,20 +26,20 @@ module Refinery::Spec
       have_calculated_value(:demand)
     end
 
-    # Public: Literate helper for testing edge shares using the
+    # Public: Literate helper for testing edge child shares using the
     # "have_calculated_value" matcher.
     #
     # For example:
     #
     #   # Assert that a demand was calculated. It can be any numeric value.
-    #   expect(node).to have_share
+    #   expect(node).to have_child_share
     #
     #   # Assert that no demand figure was calculated.
-    #   expect(node).to_not have_share.of(0.5)
+    #   expect(node).to_not have_child_share.of(0.5)
     #
     # Returns an RSpec matcher.
-    def have_share
-      have_calculated_value(:share)
+    def have_child_share
+      have_calculated_value(:child_share)
     end
 
     # Public: Calculates demand and edge shares for the graph. If the graph
