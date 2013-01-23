@@ -108,20 +108,20 @@ describe 'Graph calculations; with three children' do
     #        :electricity  / / \  :gas
     #           __________/ /   \
     #          /           /     \
-    #   (50) [C1]  (75) [C2]   [C3] (100)
+    #   (50) [C1]  (50) [C2]   [C3] (100)
     before do
       child.set(:preset_demand, 50.0)
-      child_2.set(:preset_demand, 75.0)
+      child_2.set(:preset_demand, 50.0)
       child_3.set(:preset_demand, 100.0)
 
-      mother.slots.out(:electricity).set(:share, 50.0 / 225.0)
-      mother.slots.out(:gas).set(:share, 175.0 / 225.0)
+      mother.slots.out(:electricity).set(:share, 0.25)
+      mother.slots.out(:gas).set(:share, 0.75)
 
       calculate!
     end
 
     it 'sets demand for the parent' do
-      expect(mother).to have_demand.of(225.0)
+      expect(mother).to have_demand.of(200.0)
     end
 
     it 'sets electricity edge demand' do
@@ -129,7 +129,7 @@ describe 'Graph calculations; with three children' do
     end
 
     it 'sets gas edge demand' do
-      expect(mc2_edge).to have_demand.of(75.0)
+      expect(mc2_edge).to have_demand.of(50.0)
       expect(mc3_edge).to have_demand.of(100.0)
     end
 

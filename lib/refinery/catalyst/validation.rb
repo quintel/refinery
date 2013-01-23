@@ -27,7 +27,7 @@ module Refinery
       # Strings for the various error messages.
       MESSAGES = {
         object_missing_demand: 'has no demand value set',
-        non_matching_demand:   'demand (%d) does not match %s the node (%d)'
+        non_matching_demand:   'demand (%s) does not match %s the node (%s)'
       }.freeze
 
       # Public: Returns the errors. This will be an empty hash if no errors

@@ -29,7 +29,7 @@ describe 'ETsource #179 stub graph' do
     expect(node(:cooling).get(:preset_demand)).to eql(0.0)
 
     # preset edge share = 0.24
-    expect(node(:hot_water).get(:preset_demand)).to eql(86.832)
+    expect(node(:hot_water).get(:preset_demand).to_f).to eql(86.832)
 
     # preset edge share = 0.03
     expect(node(:cooking).get(:preset_demand)).to eql(10.854)

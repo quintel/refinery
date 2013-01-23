@@ -102,7 +102,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
   end # and the sibling has no demand
 
   context 'and the sibling has multiple carriers and no demand' do
-    #     (100) [M]     [F] (100)
+    #     (125) [M]     [F] (100)
     #          // \     /
     #         //   \   /
     #        //     \ /
@@ -114,26 +114,27 @@ describe 'Graph calculations; with two parents and a step sibling' do
 
     before do
       sibling.set(:preset_demand, nil)
+      mother.set(:expected_demand, 125.0)
 
-      mother.slots.out(:electricity).set(:share, 0.05)
-      mother.slots.out(:gas).set(:share, 0.95)
+      mother.slots.out(:electricity).set(:share, 0.1)
+      mother.slots.out(:gas).set(:share, 0.9)
 
-      sibling.slots.in(:electricity).set(:share, 5.0 / 75)
-      sibling.slots.in(:gas).set(:share, 70.0 / 75)
+      sibling.slots.in(:electricity).set(:share, 0.125)
+      sibling.slots.in(:gas).set(:share, 0.875)
 
       calculate!
     end
 
     it 'calculates sibling demand' do
-      expect(sibling).to have_demand.of(75.0)
+      expect(sibling).to have_demand.of(100.0)
     end
 
     it 'calculates M->S (gas) demand' do
-      expect(ms_edge).to have_demand.of(70.0)
+      expect(ms_edge).to have_demand.of(87.5)
     end
 
     it 'calculates M->S (electricity) demand' do
-      expect(ms_elec_edge).to have_demand.of(5.0)
+      expect(ms_elec_edge).to have_demand.of(12.5)
     end
 
     it 'calculates M->C demand, accounting for supply from F' do

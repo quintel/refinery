@@ -5,19 +5,19 @@ describe 'Graph calculations; two children and two spouses' do
   let!(:spouse_a) { graph.add Refinery::Node.new(:spouse_a) }
   let!(:spouse_b) { graph.add Refinery::Node.new(:spouse_b) }
   let!(:child_y)  { graph.add Refinery::Node.new(:child_y, preset_demand: 20.0) }
-  let!(:child_z)  { graph.add Refinery::Node.new(:child_z, preset_demand: 55.0) }
+  let!(:child_z)  { graph.add Refinery::Node.new(:child_z, preset_demand: 50.0) }
 
   let!(:ay_edge)  { spouse_a.connect_to(child_y, :gas, child_share: 0.5) }
   let!(:my_edge)  { mother.connect_to(child_y, :gas, child_share: 0.5) }
-  let!(:mz_edge)  { mother.connect_to(child_z, :gas, child_share: 40.0 / 55) }
-  let!(:bz_edge)  { spouse_b.connect_to(child_z, :gas, child_share: 15.0 / 55) }
+  let!(:mz_edge)  { mother.connect_to(child_z, :gas, child_share: 0.8) }
+  let!(:bz_edge)  { spouse_b.connect_to(child_z, :gas, child_share: 0.2) }
 
   context 'when spouses have no demand defined' do
     #    [A]     [M]     [B]
     #      \     / \     /
     #       \   /   \   /
     #        \ /     \ /
-    #   (20) [Y]     [Z] (55)
+    #   (20) [Y]     [Z] (50)
     before do
       calculate!
     end
@@ -31,7 +31,7 @@ describe 'Graph calculations; two children and two spouses' do
     end
 
     it 'sets demand for the third parent' do
-      expect(spouse_b).to have_demand.of(15.0)
+      expect(spouse_b).to have_demand.of(10.0)
     end
 
     it { expect(graph).to validate }
@@ -85,14 +85,14 @@ describe 'Graph calculations; two children and two spouses' do
   end # when all the parents have demand
 
   context 'when spouses have demand' do
-    #  (10) [A]     [M]     [B] (15)
+    #  (10) [A]     [M]     [B] (10)
     #         \     / \     /
     #          \   /   \   /
     #           \ /     \ /
     #      (20) [Y]     [Z] (55)
     before do
       spouse_a.set(:expected_demand, 10.0)
-      spouse_b.set(:expected_demand, 15.0)
+      spouse_b.set(:expected_demand, 10.0)
     end
 
     context 'and edges have child shares' do
@@ -121,7 +121,7 @@ describe 'Graph calculations; two children and two spouses' do
 
       it 'sets the edge child shares' do
         expect(my_edge).to have_child_share.of(0.5)
-        expect(mz_edge).to have_child_share.of(40.0 / 55)
+        expect(mz_edge).to have_child_share.of(0.8)
       end
 
       it { expect(graph).to validate }

@@ -1,5 +1,9 @@
 module Refinery
   class Edge < Turbine::Edge
+    include UseBigDecimal
+
+    use_big_decimal :demand, :child_share, :parent_share
+
     # Public: The share calculator for the edge.
     #
     # Returns an Calculators::EdgeDemand.

@@ -15,6 +15,9 @@ module Refinery
       end
     end
 
+    include UseBigDecimal
+    use_big_decimal :expected_demand, :preset_demand
+
     # Public: The demand calculator for this node.
     #
     # Returns a Calculators::NodeDemand.

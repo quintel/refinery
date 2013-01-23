@@ -20,6 +20,10 @@ RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
   @fetcher   = fetcher
   @attribute = attribute
 
+  def format(number)
+    number.kind_of?(BigDecimal) ? number.to_s('F') : number
+  end
+
   def actual(model)
     @fetcher.nil? ? model.public_send(@attribute) : @fetcher.call(model)
   end
@@ -42,8 +46,9 @@ RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
 
   failure_message_for_should do |model|
     if @expectation
-      "expected #{ model } to have #{ attribute } #{ @expectation }, but " \
-      "it was #{ actual(model).inspect }"
+      "expected #{ model } to have #{ attribute } " \
+      "#{ format(@expectation) }, but it was " \
+      "#{ format(actual(model)) }"
     else
       "expected #{ model } to have #{ attribute } calculated"
     end
@@ -51,10 +56,11 @@ RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
 
   failure_message_for_should_not do |model|
     if @expectation
-      "expected #{ model } to not have #{ attribute } of #{ @expectation }"
+      "expected #{ model } to not have #{ attribute } of " \
+      "#{ format(@expectation) }"
     else
       "expected #{ model } to not have #{ attribute } calculated, but it " \
-      "was #{ actual(model).inspect }"
+      "was #{ format(actual(model)) }"
     end
   end
 end
