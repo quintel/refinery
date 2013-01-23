@@ -33,5 +33,26 @@ module Refinery
         set(:share, demand / to.demand_for(label))
       end
     end
+
+    # Public: The proportion of "carrier" energy supplied by the parent node.
+    #
+    # "Carrier" energy means that the share only accounts for other edges
+    # which take away the same type of energy from the parent. So if this edge
+    # takes 50 gas energy from a node which outputs 100 gas energy and 200
+    # electricity, the edge has a parent share of 0.5 since it only receives
+    # half of the gas.
+    #
+    # Returns a float, or nil if no share can be calculated.
+    def parent_share
+      if get(:parent_share)
+        get(:parent_share)
+      elsif from.slots.out(label).edges.one?
+        set(:parent_share, 1.0)
+      elsif demand && demand.zero?
+        set(:share, 0.0)
+      elsif demand && from.demand
+        set(:parent_share, demand / from.output_of(label))
+      end
+    end
   end # Edge
 end # Refinery

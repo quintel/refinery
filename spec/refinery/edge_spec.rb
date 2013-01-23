@@ -87,5 +87,56 @@ module Refinery
       end
     end # share
 
+    describe '#parent_share' do
+      let(:other) { Node.new(:other) }
+      before      { parent.connect_to(other, :gas) }
+
+      context 'when an parent share has been set' do
+        before { edge.set(:parent_share, 0.5) }
+
+        it { expect(edge.parent_share).to eql(0.5) }
+      end
+
+      context 'when the edge and parent have demand' do
+        before do
+          edge.set(:demand, 200.0)
+          parent.set(:expected_demand, 800.0)
+        end
+
+        it { expect(edge.parent_share).to eql(0.25) }
+      end
+
+      context 'when the edge has demand but parent does not' do
+        before { edge.set(:demand, 200.0) }
+
+        it { expect(edge.parent_share).to be_nil }
+      end
+
+      context 'when the parent has demand but the edge does not' do
+        before { parent.set(:expected_demand, 800.0) }
+
+        it { expect(edge.parent_share).to be_nil }
+      end
+
+      context 'and the edge is the only carrier receiver from the parent' do
+        before do
+          parent.disconnect_from(other, :gas)
+          parent.connect_to(other, :electricity)
+        end
+
+        it { expect(edge.parent_share).to eql(1.0) }
+      end
+
+      context 'and the edge is one of many carrier receivers form the parent' do
+        it { expect(edge.parent_share).to be_nil }
+      end
+
+      context 'and the edge has demand of zero' do
+        before { edge.set(:demand, 0.0) }
+
+        it { expect(edge.parent_share).to be_zero }
+      end
+    end # parent_share
+
   end # Edge
 end # Refinery
