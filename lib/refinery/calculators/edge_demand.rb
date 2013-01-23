@@ -9,7 +9,7 @@ module Refinery
         Strategies::EdgeDemand::FillRemaining,
         Strategies::EdgeDemand::FillRemainingFromParent,
         Strategies::EdgeDemand::OnlyChild,
-        Strategies::EdgeDemand::OutputShare,
+        Strategies::EdgeDemand::ParentShare,
         Strategies::EdgeDemand::Share
       ]
 

@@ -199,6 +199,65 @@ describe 'Graph calculations; parent and two children' do
     it { expect(graph).to validate }
   end # and the parent has demand
 
+  context 'and one edge has a parent share', :focus do
+    #           [M]
+    #  (ps:0.6) / \
+    #         [C] [S]
+    let!(:mc_edge) { mother.connect_to(child, :gas) }
+    let!(:ms_edge) { mother.connect_to(sibling, :gas) }
+
+    context 'but no parent demand' do
+      before do
+        mc_edge.set(:parent_share, 0.6)
+        calculate!
+      end
+
+      it 'does not set M->C demand' do
+        expect(mc_edge).to_not have_demand
+      end
+
+      it 'does not set M->S demand' do
+        expect(ms_edge).to_not have_demand
+      end
+
+      it 'does not set child demand' do
+        expect(child).to_not have_demand
+      end
+
+      it 'does not set sibling demand' do
+        expect(sibling).to_not have_demand
+      end
+
+      it { expect(graph).to_not validate }
+    end
+
+    context 'and the parent has demand' do
+      before do
+        mother.set(:expected_demand, 200.0)
+        mc_edge.set(:parent_share, 0.6)
+        calculate!
+      end
+
+      it 'sets M->C demand' do
+        expect(mc_edge).to have_demand.of(120.0)
+      end
+
+      it 'sets M->S demand' do
+        expect(ms_edge).to have_demand.of(80.0)
+      end
+
+      it 'sets child demand' do
+        expect(child).to have_demand.of(120.0)
+      end
+
+      it 'sets sibling demand' do
+        expect(sibling).to have_demand.of(80.0)
+      end
+
+      it { expect(graph).to validate }
+    end
+  end # and one edge has a parent share
+
   context 'and the edges use different carriers' do
     let!(:mc_gas_edge) { mother.connect_to(child, :gas) }
     let!(:ms_elec_edge) { mother.connect_to(sibling, :electricity) }

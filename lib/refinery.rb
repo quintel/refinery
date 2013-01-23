@@ -12,7 +12,7 @@ require 'refinery/strategies/edge_demand/fill_remaining'
 require 'refinery/strategies/edge_demand/fill_remaining_from_parent'
 require 'refinery/strategies/edge_demand/from_demand'
 require 'refinery/strategies/edge_demand/only_child'
-require 'refinery/strategies/edge_demand/output_share'
+require 'refinery/strategies/edge_demand/parent_share'
 require 'refinery/strategies/edge_demand/share'
 require 'refinery/strategies/edge_demand/single_parent'
 
