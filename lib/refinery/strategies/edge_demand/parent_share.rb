@@ -1,7 +1,7 @@
 module Refinery::Strategies
   module EdgeDemand
-    # A strategy which calculates the demand of an edge when the child has
-    # only one parent for the edge's carrier.
+    # A strategy which calcualtes the demand of an edge when we know the
+    # output of the parent, and also have a parent share defined on the edge.
     class ParentShare
       def self.calculable?(edge)
         edge.from.demand && edge.parent_share

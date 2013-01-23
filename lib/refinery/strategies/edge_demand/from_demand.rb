@@ -1,12 +1,12 @@
 module Refinery::Strategies
   module EdgeDemand
-    # A strategy for calculating the share of an edge by looking at the demand
-    # of the parent and child nodes.
+    # An advanced strategy which calculates the demand of an edge by looking
+    # at the demand of the parent and child nodes.
     #
-    # To calculate the share of the edge, we need to know how much energy is
-    # supplied by the parent node to each of the children. Since the parent
-    # node may have multiple outgoing edges with shares, we have to figure
-    # this out by computing how much demand of its children is not supplied by
+    # To calculate the demand of the edge, we need to know how much energy is
+    # supplied by the parent node to each of its children. Since the parent
+    # node may have multiple outgoing edges, we have to figure this out by
+    # computing how much demand of its children is not supplied by
     # other nodes.
     #
     # Take the following example:
@@ -17,19 +17,22 @@ module Refinery::Strategies
     #         /     \ / /
     #   (5) [X]     [Y] (100)
     #
-    # Here we know the demand of four nodes, while one parent [C] remains
-    # unknown. Share::Solo will tell us that A->X carries 5 energy (to supply
-    # the demand from [X]). Share::FillDemand will then be able to compute
-    # values for A->X, B->Y, and finally Share::FromDemand will be able to
-    # determine a value for C->Y.
+    # Here we know the demand of four nodes, while one supplier, [C], remains
+    # unknown. EdgeDemand::SingleParent will tell us that A->X carries 5
+    # energy (to supply the demand from [X]).
+    #
+    # EdgeDemand::FromDemand will then be able to compute a value for A->Y
+    # since it can determine that 5 energy from [A] remains unallocated. B->Y
+    # is next since we can easily infer that it supplies all of its output to
+    # [Y], and finally EdgeDemand::FromDemand will be able to determine a
+    # value for C->Y by understanding that [Y] still requires a further 20
+    # energy to meet its demand.
     class FromDemand
       def self.calculable?(edge)
         # Parent and child demand?
         edge.to.demand && edge.from.demand &&
           # We already know how the parent node supplies its other children?
-          parental_siblings(edge).all?(&:demand) #&&
-          # We already know how the child is supplied by its other parents?
-          #child_siblings(edge).all?(&:demand)
+          parental_siblings(edge).all?(&:demand)
       end
 
       def self.calculate(edge)
@@ -59,20 +62,6 @@ module Refinery::Strategies
           edge.to.demand_for(edge.label) -
           # Minus energy already supplied by other parents to the child.
           existing_supply
-          # child_siblings(edge).sum(&:demand)
-
-        # if edge.from.key == :b && edge.to.key == :y
-          # puts
-          # puts ">>> #{ edge.inspect }"
-          # puts "    " + ('-' * edge.inspect.length)
-          # puts "    available_supply:   #{ available_supply.inspect }"
-          # puts "      from_output:        #{ edge.from.output_of(edge.label).inspect }"
-          # puts "      parental_sib_out:   #{ parental_siblings(edge).sum(&:demand).inspect }"
-          # puts "    unfulfilled_demand: #{ unfulfilled_demand.inspect }"
-          # puts "      edge_to_demand:     #{ edge.to.demand_for(edge.label).inspect }"
-          # puts "      existing_supply:    #{ existing_supply.inspect }"
-          # puts
-        # end
 
         if available_supply < unfulfilled_demand
           available_supply

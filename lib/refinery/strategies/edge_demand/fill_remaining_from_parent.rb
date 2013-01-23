@@ -5,12 +5,12 @@ module Refinery::Strategies
     #
     # For example, in this simple case:
     #
-    #    [A] [B]
-    #      \ / (0.2)
-    #      [X]
+    #      [A] (20)
+    #      / \ (5)
+    #    [X] [Y]
     #
-    # ... we know that B->X has a share of 0.2, therefore A->X must have a
-    # share of 0.8 (so that that all shares combined sum to 1.0).
+    # ... we know that A->Y has a demand of 5, therefore A->X must have a
+    # demand of 15 in order to use up all of the energy output by [A].
     class FillRemainingFromParent
       def self.calculable?(edge)
         edge.from.demand && edge.from.out_edges(edge.label).all? do |other|
