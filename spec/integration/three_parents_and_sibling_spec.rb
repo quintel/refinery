@@ -77,7 +77,7 @@ describe 'Graph calculations; three parents and a sibling' do
     end
 
     context 'and a grandparent supplying the [C] parent' do
-      #                              [G] (15)
+      #                              [G] (20)
       #                               |
       #      (10) [A]     [B]        [C]
       #           / \     /          /
