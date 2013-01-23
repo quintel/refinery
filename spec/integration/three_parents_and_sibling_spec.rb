@@ -75,6 +75,38 @@ describe 'Graph calculations; three parents and a sibling' do
 
       it { expect(graph).to validate }
     end
+
+    context 'and a grandparent supplying the [C] parent' do
+      #                              [G] (15)
+      #                               |
+      #      (10) [A]     [B]        [C]
+      #           / \     /          /
+      #          /   \   / _________/
+      #         /     \ / /
+      #   (5) [X]     [Y] (100)
+      let!(:g) { graph.add Refinery::Node.new(:g, expected_demand: 20.0) }
+      let!(:gc_edge) { g.connect_to(c, :gas) }
+
+      before do
+        # b.set(:expected_demand, nil)
+        c.set(:expected_demand, nil)
+        calculate!
+      end
+
+      it 'sets the value of [B]' do
+        expect(b).to have_demand.of(75.0)
+      end
+
+      it 'sets the value of [C]' do
+        expect(c).to have_demand.of(20.0)
+      end
+
+      it 'sets the value of G->C' do
+        expect(gc_edge).to have_demand.of(20.0)
+      end
+
+      it { expect(graph).to validate }
+    end
   end # with a single carrier
 
   context 'with parallel edges using different carriers' do
