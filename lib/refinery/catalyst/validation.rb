@@ -112,6 +112,10 @@ module Refinery
       #
       # Returns nothing.
       def add_error(object, key, *details)
+        details = details.map do |detail|
+          detail.is_a?(BigDecimal) ? detail.to_s('F') : detail
+        end
+
         @errors[object] ||= []
         @errors[object].push(MESSAGES[key] % details)
 
