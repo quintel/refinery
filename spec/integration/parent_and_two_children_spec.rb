@@ -310,19 +310,19 @@ describe 'Graph calculations; parent and two children' do
         expect(mc_gas_edge).to have_demand.of(120.0)
       end
 
-      it 'does not set M->S edge demand' do
-        expect(ms_elec_edge).to_not have_demand
+      it 'does sets M->S edge demand' do
+        expect(ms_elec_edge).to have_demand.of(80.0)
       end
 
-      it 'does not set parent demand' do
-        expect(mother).to_not have_demand
+      it 'sets parent demand' do
+        expect(mother).to have_demand.of(200.0)
       end
 
-      it 'does not set sibling demand' do
-        expect(sibling).to_not have_demand
+      it 'sets sibling demand' do
+        expect(sibling).to have_demand.of(80.0)
       end
 
-      it { expect(graph).to_not validate }
+      it { expect(graph).to validate }
     end # and one of the children defines demand
 
     context 'and both children define demand' do
@@ -443,8 +443,8 @@ describe 'Graph calculations; parent and two children' do
           calculate!
         end
 
-        it 'does not set M->C gas edge demand' do
-          expect(mc_gas_edge).to_not have_demand
+        it 'sets M->C gas edge demand' do
+          expect(mc_gas_edge).to have_demand.of(100.0)
         end
 
         it 'sets M->S gas demand' do
@@ -455,15 +455,15 @@ describe 'Graph calculations; parent and two children' do
           expect(ms_elec_edge).to have_demand.of(80.0)
         end
 
-        it 'does not set child demand' do
-          expect(child).to_not have_demand
+        it 'sets child demand' do
+          expect(child).to have_demand.of(100.0)
         end
 
-        it 'does not set parent' do
-          expect(mother).to_not have_demand
+        it 'sets parent demand' do
+          expect(mother).to have_demand.of(200.0)
         end
 
-        it { expect(graph).to_not validate }
+        it { expect(graph).to validate }
       end # without parent demand
 
       context 'without parent demand and a grandparent' do

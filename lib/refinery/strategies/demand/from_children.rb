@@ -4,11 +4,18 @@ module Refinery::Strategies
     # of all the outgoing edges, and the demands of the child nodes.
     class FromChildren
       def self.calculable?(node)
-        node.out.any? && node.out_edges.all?(&:demand)
+        ! complete_slot(node).nil?
       end
 
       def self.calculate(node)
-        node.out_edges.sum(&:demand)
+        slot = complete_slot(node)
+        slot.edges.sum(&:demand) / slot.get(:share)
+      end
+
+      def self.complete_slot(node)
+        node.slots.out.detect do |slot|
+          slot.edges.any? && slot.edges.all?(&:demand)
+        end
       end
     end # FromChildren
   end # Demand
