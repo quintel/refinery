@@ -66,7 +66,7 @@ module Refinery
     #
     # Returns a string.
     def element_value(element)
-      element.demand.to_s('F')
+      '%.10g' % element.demand
     end
   end # GraphDebugger
 end # Refinery
