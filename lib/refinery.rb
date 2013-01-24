@@ -2,6 +2,7 @@ require 'bigdecimal'
 require 'bigdecimal/util'
 
 require 'bundler' ; Bundler.setup
+require 'terminal-table'
 require 'graphviz'
 require 'turbine'
 
@@ -31,6 +32,7 @@ require 'refinery/diagram'
 require 'refinery/edge'
 require 'refinery/errors'
 require 'refinery/exporter'
+require 'refinery/graph_debugger'
 require 'refinery/node'
 require 'refinery/reactor'
 require 'refinery/slot'

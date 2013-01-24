@@ -12,6 +12,9 @@ module Refinery
       # calculators were evalulated.
       attr_reader :order
 
+      # Public: The object which the calculator calculates.
+      attr_reader :model
+
       # Public: Creates a new calculator responsible for figuring out the
       # unknown attributes for the given +model+. Calculator is a base class
       # and should be extended with the logic needed to compute the values.
