@@ -31,15 +31,31 @@ module Refinery::Spec
     #
     # For example:
     #
-    #   # Assert that a demand was calculated. It can be any numeric value.
+    #   # Assert that a child share can be calculated.
     #   expect(node).to have_child_share
     #
-    #   # Assert that no demand figure was calculated.
-    #   expect(node).to_not have_child_share.of(0.5)
+    #   # Assert that a specific share was calculated.
+    #   expect(node).to have_child_share.of(0.5)
     #
     # Returns an RSpec matcher.
     def have_child_share
       have_calculated_value(:child_share)
+    end
+
+    # Public: Literate helper for testing edge parent shares using the
+    # "have_calculated_value" matcher.
+    #
+    # For example:
+    #
+    #   # Assert that a parent share can be calculated.
+    #   expect(node).to have_parent_share
+    #
+    #   # Assert that a specific share was calculated.
+    #   expect(node).to have_parent_share.of(0.5)
+    #
+    # Returns an RSpec matcher.
+    def have_parent_share
+      have_calculated_value(:parent_share)
     end
 
     # Public: Calculates demand and edge shares for the graph. If the graph
