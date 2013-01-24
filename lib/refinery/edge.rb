@@ -39,20 +39,6 @@ module Refinery
       end
     end
 
-    def share
-      puts "DEPRECATED: Edge#share is deprecated. Called by #{ caller[0]} "
-      child_share
-    end
-
-    def set(key, value)
-      if key == :share
-        puts "DEPRECATED: Setting :share is deprecated. Called by #{ caller[0] }"
-        set(:child_share, value)
-      else
-        super
-      end
-    end
-
     # Public: The proportion of "carrier" energy supplied by the parent node.
     #
     # "Carrier" energy means that the share only accounts for other edges
