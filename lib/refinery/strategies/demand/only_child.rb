@@ -14,7 +14,7 @@ module Refinery::Strategies
       def self.calculate(node)
         edge = exclusive_edge(node)
 
-        edge.from.demand / edge.child_share / #
+        edge.from.output_of(edge.label) / edge.child_share / #
           node.slots.in(edge.label).get(:share)
       end
 
