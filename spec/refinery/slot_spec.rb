@@ -20,12 +20,12 @@ module Refinery
     context 'when initialized' do
       it 'defaults "share" to 1.0' do
         slot = Slot.new(parent, :out, :gas)
-        expect(slot.get(:share)).to eql(1.0)
+        expect(slot.get(:share)).to eq(1.0)
       end
 
       it 'accepts a custom "share" when provided' do
         slot = Slot.new(parent, :out, :gas, share: 0.3)
-        expect(slot.get(:share)).to eql(0.3)
+        expect(slot.get(:share)).to eq(0.3)
       end
     end
 
@@ -33,15 +33,15 @@ module Refinery
       let(:slot) { Slot.new(parent, :out, :gas) }
 
       it 'is an :out slot' do
-        expect(slot.direction).to eql(:out)
+        expect(slot.direction).to eq(:out)
       end
 
       it 'sets the carrier' do
-        expect(slot.carrier).to eql(:gas)
+        expect(slot.carrier).to eq(:gas)
       end
 
       it 'sums the demand of each link' do
-        expect(slot.demand).to eql(60.0)
+        expect(slot.demand).to eq(60.0)
       end
     end # on a node with outgoing edges
 
@@ -49,15 +49,15 @@ module Refinery
       let(:slot) { Slot.new(child, :in, :gas) }
 
       it 'is an :in slot' do
-        expect(slot.direction).to eql(:in)
+        expect(slot.direction).to eq(:in)
       end
 
       it 'sets the carrier' do
-        expect(slot.carrier).to eql(:gas)
+        expect(slot.carrier).to eq(:gas)
       end
 
       it 'sums the demand of each link' do
-        expect(slot.demand).to eql(40.0)
+        expect(slot.demand).to eq(40.0)
       end
     end # on a node with incoming edges
 
@@ -65,11 +65,11 @@ module Refinery
       let(:slot) { Slot.new(parent, :out, :electricity) }
 
       it 'is an :out slot' do
-        expect(slot.direction).to eql(:out)
+        expect(slot.direction).to eq(:out)
       end
 
       it 'sets the carrier' do
-        expect(slot.carrier).to eql(:electricity)
+        expect(slot.carrier).to eq(:electricity)
       end
 
       it 'has no demand' do
@@ -81,11 +81,11 @@ module Refinery
       let(:slot) { Slot.new(parent, :in, :gas) }
 
       it 'is an :in slot' do
-        expect(slot.direction).to eql(:in)
+        expect(slot.direction).to eq(:in)
       end
 
       it 'sets the carrier' do
-        expect(slot.carrier).to eql(:gas)
+        expect(slot.carrier).to eq(:gas)
       end
 
       it 'has no demand' do

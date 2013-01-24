@@ -32,7 +32,7 @@ module Refinery
       end
 
       it 'sets the given properties' do
-        expect(result.properties).to eql(share: 0.5)
+        expect(result.properties).to eq(share: 0.5)
       end
 
       context 'when a duplicate slot is already present' do

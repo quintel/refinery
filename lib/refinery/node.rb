@@ -1,5 +1,7 @@
 module Refinery
   class Node < Turbine::Node
+    include PreciseProperties
+
     # Internal: Used in Node#slots to provide a nice API for accessing slots.
     SlotsFacade = Struct.new(:in_collection, :out_collection) do
       # Public: Returns the nodes incoming slots. If a +carrier+ is supplied
@@ -15,8 +17,8 @@ module Refinery
       end
     end
 
-    include UseBigDecimal
-    use_big_decimal :expected_demand, :preset_demand
+    # Demands need to be precise.
+    precise_property :expected_demand, :preset_demand
 
     # Public: The demand calculator for this node.
     #

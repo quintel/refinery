@@ -34,8 +34,8 @@ module Refinery
         it 'does not create an additional slot' do
           node.connect_to(other, :gas)
 
-          expect(node.slots.out.length).to eql(1)
-          expect(other.slots.in.length).to eql(1)
+          expect(node.slots.out.length).to eq(1)
+          expect(other.slots.in.length).to eq(1)
         end
       end
     end # Connecting two nodes
@@ -45,12 +45,12 @@ module Refinery
       before     { node.slots.in.add(:gas) }
 
       it "is derrived from the node's demand" do
-        expect(node.demand_for(:gas)).to eql(50.0)
+        expect(node.demand_for(:gas)).to eq(50.0)
       end
 
       it 'accounts for the slot share' do
         node.slots.in(:gas).set(:share, 0.4)
-        expect(node.demand_for(:gas)).to eql(20.0)
+        expect(node.demand_for(:gas)).to eq(20.0)
       end
 
       it 'is nil if the node has no demand defined' do
@@ -69,12 +69,12 @@ module Refinery
       before     { node.slots.out.add(:gas) }
 
       it "is derrived from the node's demand" do
-        expect(node.output_of(:gas)).to eql(50.0)
+        expect(node.output_of(:gas)).to eq(50.0)
       end
 
       it 'accounts for the slot share' do
         node.slots.out(:gas).set(:share, 0.4)
-        expect(node.output_of(:gas)).to eql(20.0)
+        expect(node.output_of(:gas)).to eq(20.0)
       end
 
       it 'is nil if the node has no demand defined' do

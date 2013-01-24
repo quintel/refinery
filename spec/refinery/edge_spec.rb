@@ -10,7 +10,7 @@ module Refinery
       context 'when a demand has been set' do
         before { edge.set(:demand, 50.0) }
 
-        it { expect(edge.demand).to eql(50.0) }
+        it { expect(edge.demand).to eq(50.0) }
       end
 
       context 'when no demand is set' do
@@ -26,7 +26,7 @@ module Refinery
         before { edge.set(:child_share, 0.5) }
 
         it 'returns the share' do
-          expect(edge.child_share).to eql(0.5)
+          expect(edge.child_share).to eq(0.5)
         end
       end
 
@@ -37,7 +37,7 @@ module Refinery
         end
 
         it 'calculates the share' do
-          expect(edge.child_share).to eql(0.4)
+          expect(edge.child_share).to eq(0.4)
         end
       end
 
@@ -68,7 +68,7 @@ module Refinery
         end
 
         it 'returns 1.0' do
-          expect(edge.child_share).to eql(1.0)
+          expect(edge.child_share).to eq(1.0)
         end
       end
 
@@ -76,7 +76,7 @@ module Refinery
         before { edge.set(:demand, 0.0) }
 
         it 'returns 0.0' do
-          expect(edge.child_share).to eql(0.0)
+          expect(edge.child_share).to eq(0.0)
         end
       end
 
@@ -94,7 +94,7 @@ module Refinery
       context 'when an parent share has been set' do
         before { edge.set(:parent_share, 0.5) }
 
-        it { expect(edge.parent_share).to eql(0.5) }
+        it { expect(edge.parent_share).to eq(0.5) }
       end
 
       context 'when the edge and parent have demand' do
@@ -103,7 +103,7 @@ module Refinery
           parent.set(:expected_demand, 800.0)
         end
 
-        it { expect(edge.parent_share).to eql(0.25) }
+        it { expect(edge.parent_share).to eq(0.25) }
       end
 
       context 'when the edge has demand but parent does not' do
@@ -124,7 +124,7 @@ module Refinery
           parent.connect_to(other, :electricity)
         end
 
-        it { expect(edge.parent_share).to eql(1.0) }
+        it { expect(edge.parent_share).to eq(1.0) }
       end
 
       context 'and the edge is one of many carrier receivers form the parent' do

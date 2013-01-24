@@ -113,7 +113,7 @@ module Refinery
       # Returns nothing.
       def add_error(object, key, *details)
         details = details.map do |detail|
-          detail.is_a?(BigDecimal) ? detail.to_s('F') : detail
+          detail.is_a?(Rational) ? '%f' % detail : detail
         end
 
         @errors[object] ||= []

@@ -3,7 +3,7 @@ module Refinery
   # carrier. Each node has separate "incoming" and "outgoing" slots.
   class Slot
     include Turbine::Properties
-    include UseBigDecimal
+    include PreciseProperties
 
     # Assigned to all slots by default. Individual properties can be
     # overridden when initializing the slot.
@@ -15,8 +15,8 @@ module Refinery
     # Public: The edges aggregated by the node.
     attr_reader :edges
 
-    # Shares should be cast to BigDecimal.
-    use_big_decimal :share
+    # Shares should be cast to Rational.
+    precise_property :share
 
     # Public: The direction of the slot indicates which "side" of the node is
     # represented. Each node has separate "in" and "out" slots, representing

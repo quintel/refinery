@@ -52,8 +52,14 @@ module Refinery
     # Returns an array of strings.
     def links_for(node)
       node.out_edges.map do |edge|
+        share = '%.10g' % edge.child_share
+
+        # Using the "g" format above will omit the decimal place if the share
+        # was a round number. For compatibility with ETengine, add it back.
+        share += '.0' unless share.match(/\./)
+
         "#{ edge.from.key }-(#{ edge.label }) -- " \
-        "#{ edge.child_share.to_s('F') } --> " \
+        "#{ share } --> " \
         "(#{ edge.label })-#{ edge.to.key }"
       end.to_a
     end

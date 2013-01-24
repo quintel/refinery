@@ -5,10 +5,10 @@ module Refinery
     class EdgeDemand < Base
       STRATEGIES = [
         Strategies::EdgeDemand::SingleParent,
+        Strategies::EdgeDemand::OnlyChild,
         Strategies::EdgeDemand::FromDemand,
         Strategies::EdgeDemand::FillRemaining,
         Strategies::EdgeDemand::FillRemainingFromParent,
-        Strategies::EdgeDemand::OnlyChild,
         Strategies::EdgeDemand::ParentShare,
         Strategies::EdgeDemand::ChildShare
       ]

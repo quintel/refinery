@@ -1,25 +1,30 @@
 require 'spec_helper'
 
-describe Refinery::UseBigDecimal do
+describe Refinery::PreciseProperties do
   let(:model) do
     Class.new do
       include Turbine::Properties
-      include Refinery::UseBigDecimal
+      include Refinery::PreciseProperties
 
-      use_big_decimal :share
+      precise_property :share
     end.new
   end
 
   context 'when mass-assigning properties' do
-    context 'on "use_big_decimal" properties' do
-      it 'casts Integers to BigDecimal' do
+    context 'on "precise_property" properties' do
+      it 'casts Integers to Rational' do
         model.properties = { share: 1 }
-        expect(model.get(:share)).to eql(BigDecimal.new('1.0'))
+        expect(model.get(:share)).to eq(Rational('1'))
       end
 
-      it 'casts Floats to BigDecimal' do
+      it 'casts Floats to Rational' do
         model.properties = { share: 1.0 }
-        expect(model.get(:share)).to eql(BigDecimal.new('1.0'))
+        expect(model.get(:share)).to eq(Rational('1'))
+      end
+
+      it 'casts Strings to Rational' do
+        model.properties = { share: '1/5' }
+        expect(model.get(:share)).to eq(Rational('1/5'))
       end
 
       it 'does not cast nil' do
@@ -28,18 +33,18 @@ describe Refinery::UseBigDecimal do
       end
     end
 
-    context 'on non-"use_big_decimal" properties' do
-      it 'does not cast Integers to BigDecimal' do
+    context 'on non-"precise_property" properties' do
+      it 'does not cast Integers to Rational' do
         model.properties = { lifetime: 1 }
 
-        expect(model.get(:lifetime)).to eql(1)
+        expect(model.get(:lifetime)).to eq(1)
         expect(model.get(:lifetime)).to be_kind_of(Integer)
       end
 
-      it 'does not cast Floats to BigDecimal' do
+      it 'does not cast Floats to Rational' do
         model.properties = { lifetime: 1.0 }
 
-        expect(model.get(:lifetime)).to eql(1.0)
+        expect(model.get(:lifetime)).to eq(1.0)
         expect(model.get(:lifetime)).to be_kind_of(Float)
       end
     end
@@ -53,15 +58,15 @@ describe Refinery::UseBigDecimal do
   end
 
   context 'setting properties individually' do
-    context 'on "use_big_decimal" properties' do
-      it 'casts Integers to BigDecimal' do
+    context 'on "precise_property" properties' do
+      it 'casts Integers to Rational' do
         model.set(:share, 1)
-        expect(model.get(:share)).to eql(BigDecimal.new('1.0'))
+        expect(model.get(:share)).to eq(Rational('1'))
       end
 
-      it 'casts Floats to BigDecimal' do
+      it 'casts Floats to Rational' do
         model.set(:share, 1.0)
-        expect(model.get(:share)).to eql(BigDecimal.new('1.0'))
+        expect(model.get(:share)).to eq(Rational('1'))
       end
 
       it 'does not cast nil' do
@@ -70,20 +75,20 @@ describe Refinery::UseBigDecimal do
       end
     end
 
-    context 'on non-"use_big_decimal" properties' do
-      it 'does not cast Integers to BigDecimal' do
+    context 'on non-"precise_property" properties' do
+      it 'does not cast Integers to Rational' do
         model.set(:lifetime, 1)
 
-        expect(model.get(:lifetime)).to eql(1)
+        expect(model.get(:lifetime)).to eq(1)
         expect(model.get(:lifetime)).to be_kind_of(Integer)
       end
 
-      it 'does not cast Floats to BigDecimal' do
+      it 'does not cast Floats to Rational' do
         model.set(:lifetime, 1.0)
 
-        expect(model.get(:lifetime)).to eql(1.0)
+        expect(model.get(:lifetime)).to eq(1.0)
         expect(model.get(:lifetime)).to be_kind_of(Float)
       end
     end
   end
-end # Refinery::UseBigDecimal
+end # Refinery::PreciseProperties

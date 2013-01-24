@@ -18,10 +18,10 @@ describe 'ETsource #168 stub graph' do
 
   it 'sets expected demand on the final demand nodes' do
     expect(node(:fd_hh_gas).get(:expected_demand)).
-      to eql(node(:fd_hh_gas).get(:final_demand))
+      to eq(node(:fd_hh_gas).get(:final_demand))
 
     expect(node(:fd_hh_gas).get(:expected_demand)).
-      to eql(node(:fd_hh_gas).get(:final_demand))
+      to eq(node(:fd_hh_gas).get(:final_demand))
   end
 
   it 'calculates the preset demand for household gas descendants' do
@@ -66,7 +66,7 @@ describe 'ETsource #168 stub graph' do
 
   it 'calculates the edge shares for industrial gas descendants' do
     # calculated edge share = 1.0
-    expect(node(:burner).get(:expected_demand)).to eql(266.6)
+    expect(node(:burner).get(:expected_demand)).to eq(266.6)
 
   end
 
@@ -81,7 +81,7 @@ describe 'ETsource #168 stub graph' do
 
   it 'calculates the preset demand of industrial heating' do
     # calculated edge share = 1.0
-    expect(node(:ud_heating_ind).get(:preset_demand)).to eql(266.6)
+    expect(node(:ud_heating_ind).get(:preset_demand)).to eq(266.6)
 
     # expected demand is not set on leaf nodes.
     expect(node(:ud_heating_ind).get(:expected_demand)).to be_nil

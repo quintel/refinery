@@ -25,7 +25,13 @@ RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
   end
 
   def actual(model)
-    @fetcher.nil? ? model.public_send(@attribute) : @fetcher.call(model)
+    value = if @fetcher.nil?
+      model.public_send(@attribute)
+    else
+      @fetcher.call(model)
+    end
+
+    value.nil? ? nil : value.to_f
   end
 
   match do |model|

@@ -1,6 +1,3 @@
-require 'bigdecimal'
-require 'bigdecimal/util'
-
 require 'bundler' ; Bundler.setup
 require 'terminal-table'
 require 'graphviz'
@@ -20,7 +17,7 @@ require 'refinery/strategies/edge_demand/parent_share'
 require 'refinery/strategies/edge_demand/child_share'
 require 'refinery/strategies/edge_demand/single_parent'
 
-require 'refinery/use_big_decimal'
+require 'refinery/precise_properties'
 require 'refinery/calculators/base'
 require 'refinery/calculators/edge_demand'
 require 'refinery/calculators/node_demand'

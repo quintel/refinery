@@ -1,8 +1,9 @@
 module Refinery
   class Edge < Turbine::Edge
-    include UseBigDecimal
+    include PreciseProperties
 
-    use_big_decimal :demand, :child_share, :parent_share
+    # Calculated demands, and shares both need to have arbitrary precision.
+    precise_property :demand, :child_share, :parent_share
 
     # Public: The share calculator for the edge.
     #

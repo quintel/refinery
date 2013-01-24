@@ -102,39 +102,39 @@ describe 'Graph calculations; with two parents and a step sibling' do
   end # and the sibling has no demand
 
   context 'and the sibling has multiple carriers and no demand' do
-    #     (125) [M]     [F] (100)
+    #     (105) [M]     [F] (100)
     #          // \     /
     #         //   \   /
     #        //     \ /
     #       [S]     [C] (125)
     #
-    # [M] generates 95 gas energy and 5 electricity. [C] requires 25 gas from
-    # [M], leaving 70 gas to be assigned to [S].
+    # [M] generates 100 gas energy and 5 electricity. [C] requires 25 gas from
+    # [M], leaving 75 gas to be assigned to [S].
     let!(:ms_elec_edge) { mother.connect_to(sibling, :electricity) }
 
     before do
       sibling.set(:preset_demand, nil)
-      mother.set(:expected_demand, 125.0)
+      mother.set(:expected_demand, 105.0)
 
-      mother.slots.out(:electricity).set(:share, 0.1)
-      mother.slots.out(:gas).set(:share, 0.9)
+      mother.slots.out(:electricity).set(:share, '5/105')
+      mother.slots.out(:gas).set(:share, '100/105')
 
-      sibling.slots.in(:electricity).set(:share, 0.125)
-      sibling.slots.in(:gas).set(:share, 0.875)
+      sibling.slots.in(:electricity).set(:share, '5/80')
+      sibling.slots.in(:gas).set(:share, '75/80')
 
       calculate!
     end
 
     it 'calculates sibling demand' do
-      expect(sibling).to have_demand.of(100.0)
+      expect(sibling).to have_demand.of(80.0)
     end
 
     it 'calculates M->S (gas) demand' do
-      expect(ms_edge).to have_demand.of(87.5)
+      expect(ms_edge).to have_demand.of(75.0)
     end
 
     it 'calculates M->S (electricity) demand' do
-      expect(ms_elec_edge).to have_demand.of(12.5)
+      expect(ms_elec_edge).to have_demand.of(5.0)
     end
 
     it 'calculates M->C demand, accounting for supply from F' do
