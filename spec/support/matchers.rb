@@ -21,7 +21,7 @@ RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
   @attribute = attribute
 
   def format(number)
-    number.kind_of?(BigDecimal) ? number.to_s('F') : number
+    number.kind_of?(Rational) ? '%.10g' % number : number.inspect
   end
 
   def actual(model)
