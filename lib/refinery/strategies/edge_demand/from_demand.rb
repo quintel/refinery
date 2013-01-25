@@ -57,8 +57,6 @@ module Refinery::Strategies
         available   = available_supply
         unfulfilled = unfulfilled_demand
 
-        # binding.pry
-
         available < unfulfilled ? available : unfulfilled
       end
 
