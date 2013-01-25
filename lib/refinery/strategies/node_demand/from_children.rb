@@ -1,5 +1,5 @@
 module Refinery::Strategies
-  module Demand
+  module NodeDemand
     # A strategy for calculating the demand of a node when we know the shares
     # of all the outgoing edges, and the demands of the child nodes.
     class FromChildren
@@ -18,5 +18,5 @@ module Refinery::Strategies
         end
       end
     end # FromChildren
-  end # Demand
+  end # NodeDemand
 end # Refinery::Strategies

@@ -1,5 +1,5 @@
 module Refinery::Strategies
-  module Demand
+  module NodeDemand
     # A strategy for calculating the demand of a node when we know the demand
     # of all its parents, and the shares of all incoming edges.
     class FromParents
@@ -11,5 +11,5 @@ module Refinery::Strategies
         node.in_edges.sum(&:demand)
       end
     end # FromParents
-  end # Demand
+  end # NodeDemand
 end # Refinery::Strategies

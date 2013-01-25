@@ -1,5 +1,5 @@
 module Refinery::Strategies
-  module Demand
+  module NodeDemand
     # When the node is an only child (it has a parent which does not supply
     # energy to any other node), and we know what share of the node's energy
     # is supplied by the parent, we can extrapolate the demand of this node.
@@ -31,5 +31,5 @@ module Refinery::Strategies
         end
       end
     end # Only
-  end # Demand
+  end # NodeDemand
 end # Refinery::Strategies

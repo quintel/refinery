@@ -4,10 +4,10 @@ module Refinery
     # either to the child nodes, or to a parent node.
     class NodeDemand < Base
       STRATEGIES = [
-        Strategies::Demand::FromChildren,
-        Strategies::Demand::OnlyChild,
-        Strategies::Demand::FromParents,
-        Strategies::Demand::FillRemaining
+        Strategies::NodeDemand::FromChildren,
+        Strategies::NodeDemand::OnlyChild,
+        Strategies::NodeDemand::FromParents,
+        Strategies::NodeDemand::FillRemaining
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the

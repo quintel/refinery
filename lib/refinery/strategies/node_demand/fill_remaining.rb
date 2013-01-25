@@ -1,5 +1,5 @@
 module Refinery::Strategies
-  module Demand
+  module NodeDemand
     # FillRemaining is a strategy for calculating demand which looks at a
     # node's children in order to determine how much demand is unaccounted
     # for, and assigns that demand to the node. For example:
@@ -54,5 +54,5 @@ module Refinery::Strategies
         node.in.all?(&:demand)
       end
     end # FillRemaining
-  end # Demand
+  end # NodeDemand
 end # Refinery::Strategies
