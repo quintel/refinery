@@ -72,8 +72,8 @@ module Refinery
     def edge_options(edge)
       EDGE_OPTIONS.merge(
         label:     edge_label(edge),
-        fontcolor: edge.share ? :gray55 : :red,
-        color:     edge.share ? EDGE_COLORS[edge.label] : :red)
+        fontcolor: edge.child_share ? :gray55 : :red,
+        color:     edge.child_share ? EDGE_COLORS[edge.label] : :red)
     end
 
     # Internal: The label to be shown next to an edge. Includes the share
@@ -81,12 +81,12 @@ module Refinery
     #
     # Returns a string.
     def edge_label(edge)
-      if edge.share
+      if edge.child_share
         flow = if edge.demand
-          " <font color='#bbbbbb'>(#{ edge.demand.round(1) })</font>"
+          " <font color='#bbbbbb'>(#{ edge.demand.to_f.round(1) })</font>"
         end
 
-        "<<font> #{ edge.share.round(5) }#{ flow }</font>>"
+        "<<font> #{ edge.child_share.to_f.round(5) }#{ flow }</font>>"
       else
         '?!'
       end
@@ -104,7 +104,8 @@ module Refinery
       base + if node.demand.nil?
         %(<font #{ attrs } color="red">?!</font>>)
       else
-        %(<font #{ attrs } color="#8c8c8c">#{ node.demand.round(5) }</font>>)
+        %(<font #{ attrs } color="#8c8c8c">) +
+          %(#{ node.demand.to_f.round(5) }</font>>)
       end
     end
   end # Diagram
