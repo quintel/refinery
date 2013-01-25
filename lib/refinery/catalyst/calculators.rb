@@ -50,14 +50,8 @@ module Refinery
           previous_length = calculators.length
 
           calculators.reject! do |calculator|
-            # calculator.calculable? && (calculator.calculate! || true)
-            if calculator.calculated?
-              # Some calculators are used just to create a temporary value
-              # used to assist in calculating something else (e.g. output
-              # share is used to assist in calculating "input" share).
-              true
-            elsif calculator.calculable?
-              (calculator.calculate!(order += 1) || true)
+            if calculator.calculable?
+              calculator.calculate!(order += 1) || true
             end
           end
 
