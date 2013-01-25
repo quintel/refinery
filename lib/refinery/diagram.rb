@@ -83,10 +83,10 @@ module Refinery
     def edge_label(edge)
       if edge.child_share
         flow = if edge.demand
-          " <font color='#bbbbbb'>(#{ edge.demand.to_f.round(1) })</font>"
+          " <font color='#bbbbbb'>(#{ format_number(edge.demand) })</font>"
         end
 
-        "<<font> #{ edge.child_share.to_f.round(5) }#{ flow }</font>>"
+        "<<font> #{ format_number(edge.child_share) }#{ flow }</font>>"
       else
         '?!'
       end
@@ -105,8 +105,17 @@ module Refinery
         %(<font #{ attrs } color="red">?!</font>>)
       else
         %(<font #{ attrs } color="#8c8c8c">) +
-          %(#{ node.demand.to_f.round(5) }</font>>)
+          %(#{ format_number(node.demand) }</font>>)
       end
+    end
+
+    # Internal: Given a number (typically a Rational) formats it nicely for
+    # the diagram.
+    #
+    # Returns a string.
+    def format_number(number)
+      formatted = '%.6g' % number
+      formatted.match(/\./) ? formatted : "#{ formatted }.0"
     end
   end # Diagram
 end # Refinery
