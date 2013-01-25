@@ -17,61 +17,56 @@ describe 'ETsource #168 stub graph' do
   end
 
   it 'sets expected demand on the final demand nodes' do
-    expect(node(:fd_hh_gas).get(:demand)).
-      to eq(node(:fd_hh_gas).get(:final_demand))
+    expect(node(:fd_hh_gas)).
+      to have_demand.of(node(:fd_hh_gas).get(:final_demand))
 
-    expect(node(:fd_hh_gas).get(:demand)).
-      to eq(node(:fd_hh_gas).get(:final_demand))
+    expect(node(:fd_hh_gas)).
+      to have_demand.of(node(:fd_hh_gas).get(:final_demand))
   end
 
   it 'calculates the preset demand for household gas descendants' do
     # preset edge share = 0.0
-    expect(node(:cooling).get(:demand)).to be_within(1e-9).of(0.0)
+    expect(node(:cooling)).to have_demand.of(0.0)
 
     # preset edge share = 0.24
-    expect(node(:hot_water).get(:demand)).to be_within(1e-9).of(86.832)
+    expect(node(:hot_water)).to have_demand.of(86.832)
 
     # preset edge share = 0.03
-    expect(node(:cooking).get(:demand)).to be_within(1e-9).of(10.854)
+    expect(node(:cooking)).to have_demand.of(10.854)
 
     # preset edge share = 0.73
-    expect(node(:space_heating_gas).get(:demand)).
-      to be_within(1e-9).of(264.114)
+    expect(node(:space_heating_gas)).
+      to have_demand.of(264.114)
   end
 
   it 'calculates demand for space heating descendants' do
     # preset edge share = 0.1
-    expect(node(:gas_heater).get(:demand)).
-      to be_within(1e-9).of(26.4114)
+    expect(node(:gas_heater)).to have_demand.of(26.4114)
 
     # preset edge share = 0.9
-    expect(node(:combi_heater).get(:demand)).
-      to be_within(1e-9).of(237.7026)
+    expect(node(:combi_heater)).to have_demand.of(237.7026)
 
     # preset edge share = 0.0
-    expect(node(:gas_heat_pump).get(:demand)).
-      to be_within(1e-9).of(0.0)
+    expect(node(:gas_heat_pump)).to have_demand.of(0.0)
 
     # preset edge share = 0.0
-    expect(node(:gas_chp).get(:demand)).
-      to be_within(1e-9).of(0.0)
+    expect(node(:gas_chp)).to have_demand.of(0.0)
   end
 
   it 'calculates the edge shares for industrial gas descendants' do
     # calculated edge share = 1.0
-    expect(node(:burner).get(:demand)).to eq(266.6)
+    expect(node(:burner)).to have_demand.of(266.6)
 
   end
 
   it 'calculates the preset demand of household heating' do
     # feeds from all of the outputs of space heating.
-    expect(node(:ud_heating_hh).get(:demand)).
-      to be_within(1e-9).of(264.114)
+    expect(node(:ud_heating_hh)).to have_demand.of(264.114)
   end
 
   it 'calculates the preset demand of industrial heating' do
     # calculated edge share = 1.0
-    expect(node(:ud_heating_ind).get(:demand)).to eq(266.6)
+    expect(node(:ud_heating_ind)).to have_demand.of(266.6)
   end
 
   it 'calculates the edge shares for the main gas node to households' do
@@ -92,7 +87,7 @@ describe 'ETsource #168 stub graph' do
 
   it 'calculates the expected demand for the main gas node gas' do
     # combines the demand of the two descendants: 361.8 and 266.6
-    expect(node(:fd_gas).get(:demand)).to be_within(0.001).of(628.4)
+    expect(node(:fd_gas)).to have_demand.of(628.4)
   end
 
   it 'calcualtes the output edge share of gas heating' do
