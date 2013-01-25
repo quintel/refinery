@@ -47,6 +47,36 @@ describe 'Graph calculations; three parents and a sibling' do
       it { expect(graph).to validate }
     end
 
+    context 'with child-sibling edge demands available' do
+      # Explicitly tests related child edge demands are subtracted in
+      # EdgeDemand::FromDemand#unfulfilled_demand.
+
+      #      (10) [A]     [B] (75)   [C]
+      #           / \     / (75)     /
+      #          /   \   / _________/ (20)
+      #         /     \ / /
+      #   (5) [X]     [Y] (100)
+      before do
+        a.set(:demand,  15.0)
+
+        by_edge.set(:demand, 75.0)
+        cy_edge.set(:demand, 20.0)
+
+        calculate!
+      end
+
+      it 'sets A->X edge share' do
+        expect(ax_edge).to have_demand.of(5.0)
+      end
+
+      it 'sets A->Y edge share' do
+        expect(ay_edge).to have_demand.of(5.0)
+      end
+
+      # [A] has oversupply.
+      it { expect(graph).to_not validate }
+    end
+
     context 'and a missing supplier demand' do
       before do
         c.set(:demand, nil)

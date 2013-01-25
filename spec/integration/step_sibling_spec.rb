@@ -101,6 +101,45 @@ describe 'Graph calculations; with two parents and a step sibling' do
     it { expect(graph).to validate }
   end # and the sibling has no demand
 
+  context 'and one parent edge has demand' do
+    #            (110) [M]     [F]
+    #                / / \     /
+    #      _________/ /   \   / (100)
+    #     /          /     \ /
+    #   [X]   (75) [S]     [C] (125)
+    let!(:x) { graph.add(Refinery::Node.new(:x)) }
+    let!(:mx_edge) { mother.connect_to(x, :gas) }
+
+    before do
+      fc_edge.set(:demand, 100.0)
+      mother.set(:demand, 110.0)
+
+      calculate!
+    end
+
+    it 'calculates M->S demand' do
+      expect(ms_edge).to have_demand.of(75.0)
+    end
+
+    it 'calculates M->C demand, accounting for supply from F' do
+      expect(mc_edge).to have_demand.of(25.0)
+    end
+
+    it 'calculates [F] demand' do
+      expect(father).to have_demand.of(100.0)
+    end
+
+    it 'calculates M->X demand' do
+      expect(mx_edge).to have_demand.of(10.0)
+    end
+
+    it 'calculates [X]' do
+      expect(x).to have_demand.of(10.0)
+    end
+
+    it { expect(graph).to validate }
+  end
+
   context 'and the sibling has multiple carriers and no demand' do
     #     (105) [M]     [F] (100)
     #          // \     /

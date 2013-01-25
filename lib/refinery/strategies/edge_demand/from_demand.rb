@@ -57,6 +57,8 @@ module Refinery::Strategies
         available   = available_supply
         unfulfilled = unfulfilled_demand
 
+        # binding.pry
+
         available < unfulfilled ? available : unfulfilled
       end
 
@@ -107,11 +109,11 @@ module Refinery::Strategies
       def unfulfilled_demand
         existing_supply = 0.0
 
-        if related_child_edges && related_child_edges.all?(&:demand)
+        if related_child_edges
           # If the child element has other parents, and we already know their
           # demand, we will reduce the unfulfilled demand to compensate for
           # that.
-          existing_supply = related_child_edges.sum(&:demand)
+          existing_supply = related_child_edges.map(&:demand).compact.sum
         end
 
         @edge.to.demand_for(@edge.label) - existing_supply
