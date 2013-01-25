@@ -91,4 +91,12 @@ describe Refinery::PreciseProperties do
       end
     end
   end
+
+  context 'using on a non Turbine::Properties class' do
+    it 'raises an error' do
+      expect do
+        Class.new { include Refinery::PreciseProperties }
+      end.to raise_error
+    end
+  end
 end # Refinery::PreciseProperties
