@@ -41,7 +41,7 @@ module Refinery
     end # Connecting two nodes
 
     context 'demand_for' do
-      let(:node) { Node.new(:node, preset_demand: 50.0) }
+      let(:node) { Node.new(:node, demand: 50.0) }
       before     { node.slots.in.add(:gas) }
 
       it "is derrived from the node's demand" do
@@ -54,7 +54,7 @@ module Refinery
       end
 
       it 'is nil if the node has no demand defined' do
-        node.set(:preset_demand, nil)
+        node.set(:demand, nil)
         expect(node.demand_for(:gas)).to be_nil
       end
 
@@ -65,7 +65,7 @@ module Refinery
     end # demand_for
 
     context 'output_of' do
-      let(:node) { Node.new(:node, preset_demand: 50.0) }
+      let(:node) { Node.new(:node, demand: 50.0) }
       before     { node.slots.out.add(:gas) }
 
       it "is derrived from the node's demand" do
@@ -78,7 +78,7 @@ module Refinery
       end
 
       it 'is nil if the node has no demand defined' do
-        node.set(:preset_demand, nil)
+        node.set(:demand, nil)
         expect(node.output_of(:gas)).to be_nil
       end
 

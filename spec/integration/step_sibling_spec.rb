@@ -11,10 +11,10 @@ describe 'Graph calculations; with two parents and a step sibling' do
   let!(:fc_edge) { father.connect_to(child, :gas) }
 
   before do
-    sibling.set(:preset_demand, 75.0)
-    mother.set(:expected_demand, 100.0)
-    child.set(:preset_demand, 125.0)
-    father.set(:expected_demand, 100.0)
+    sibling.set(:demand, 75.0)
+    mother.set(:demand, 100.0)
+    child.set(:demand, 125.0)
+    father.set(:demand, 100.0)
   end
 
   context 'and all nodes have demand' do
@@ -78,7 +78,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     #         /     \ /
     #       [S]     [C] (125)
     before do
-      sibling.set(:preset_demand, nil)
+      sibling.set(:demand, nil)
       calculate!
     end
 
@@ -113,8 +113,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     let!(:ms_elec_edge) { mother.connect_to(sibling, :electricity) }
 
     before do
-      sibling.set(:preset_demand, nil)
-      mother.set(:expected_demand, 105.0)
+      sibling.set(:demand, nil)
+      mother.set(:demand, 105.0)
 
       mother.slots.out(:electricity).set(:share, '5/105')
       mother.slots.out(:gas).set(:share, '100/105')
@@ -155,8 +155,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     #         /     \ /
     #       [S]     [C] (125)
     before do
-      sibling.set(:preset_demand, nil)
-      mother.set(:expected_demand, nil)
+      sibling.set(:demand, nil)
+      mother.set(:demand, nil)
       calculate!
     end
 
@@ -187,7 +187,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     #         /     \ /
     #  (75) [S]     [C] (125)
     before do
-      father.set(:expected_demand, nil)
+      father.set(:demand, nil)
       calculate!
     end
 
@@ -211,8 +211,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     #         /     \ /
     #       [S]     [C] (125)
     before do
-      father.set(:expected_demand, 75.0)
-      sibling.set(:preset_demand, nil)
+      father.set(:demand, 75.0)
+      sibling.set(:demand, nil)
       calculate!
     end
 
@@ -237,7 +237,7 @@ describe 'Graph calculations; with two parents and a step sibling' do
     #       [S]     [C] (125)
     before do
       fc_edge.set(:demand, 50.0)
-      sibling.set(:preset_demand, nil)
+      sibling.set(:demand, nil)
       calculate!
     end
 
@@ -262,8 +262,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     #         /     \ /
     #  (75) [S]     [C]
     before do
-      child.set(:preset_demand, nil)
-      father.set(:expected_demand, nil)
+      child.set(:demand, nil)
+      father.set(:demand, nil)
       calculate!
     end
 
@@ -285,8 +285,8 @@ describe 'Graph calculations; with two parents and a step sibling' do
     #         /     \ /
     #       [S]     [C]
     before do
-      sibling.set(:preset_demand, nil)
-      child.set(:preset_demand, nil)
+      sibling.set(:demand, nil)
+      child.set(:demand, nil)
       calculate!
     end
 

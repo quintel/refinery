@@ -18,9 +18,9 @@ describe 'Graph calculations; with three children' do
       #          /           /     \
       #   (50) [C1]   (75) [C2]   [C3] (100)
       before do
-        child.set(:preset_demand, 50.0)
-        child_2.set(:preset_demand, 75.0)
-        child_3.set(:preset_demand, 100.0)
+        child.set(:demand, 50.0)
+        child_2.set(:demand, 75.0)
+        child_3.set(:demand, 100.0)
         calculate!
       end
 
@@ -44,9 +44,9 @@ describe 'Graph calculations; with three children' do
       #     /           /     \
       #   [C1]   (75) [C2]   [C3] (100)
       before do
-        mother.set(:expected_demand, 225.0)
-        child_2.set(:preset_demand, 75.0)
-        child_3.set(:preset_demand, 100.0)
+        mother.set(:demand, 225.0)
+        child_2.set(:demand, 75.0)
+        child_3.set(:demand, 100.0)
         calculate!
       end
 
@@ -70,8 +70,8 @@ describe 'Graph calculations; with three children' do
       #     /           /     \
       #   [C1]   (75) [C2]   [C3] (100)
       before do
-        child_2.set(:preset_demand, 75.0)
-        child_3.set(:preset_demand, 100.0)
+        child_2.set(:demand, 75.0)
+        child_3.set(:demand, 100.0)
         calculate!
       end
 
@@ -110,9 +110,9 @@ describe 'Graph calculations; with three children' do
     #          /           /     \
     #   (50) [C1]  (75) [C2]   [C3] (75)
     before do
-      child.set(:preset_demand, 50.0)
-      child_2.set(:preset_demand, 75.0)
-      child_3.set(:preset_demand, 75.0)
+      child.set(:demand, 50.0)
+      child_2.set(:demand, 75.0)
+      child_3.set(:demand, 75.0)
 
       mother.slots.out(:electricity).set(:share, 0.25)
       mother.slots.out(:gas).set(:share, 0.75)

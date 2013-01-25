@@ -20,7 +20,7 @@ describe 'Graph calculations; efficiency' do
       #         |
       #        [B]
       before do
-        top.set(:expected_demand, 50.0)
+        top.set(:demand, 50.0)
         calculate!
       end
 
@@ -50,7 +50,7 @@ describe 'Graph calculations; efficiency' do
       #         |
       #   (50) [B]
       before do
-        bottom.set(:preset_demand, 30.0)
+        bottom.set(:demand, 30.0)
         calculate!
       end
 
@@ -89,8 +89,8 @@ describe 'Graph calculations; efficiency' do
       before do
         a.slots.out(:gas).set(:share, 0.5)
 
-        x.set(:preset_demand, 10.0)
-        y.set(:preset_demand, 20.0)
+        x.set(:demand, 10.0)
+        y.set(:demand, 20.0)
 
         calculate!
       end
@@ -121,8 +121,8 @@ describe 'Graph calculations; efficiency' do
         a.slots.out(:gas).set(:share, 0.5)
         a.slots.out(:electricity).set(:share, 0.1)
 
-        x.set(:preset_demand, 200.0)
-        y.set(:preset_demand, 1000.0)
+        x.set(:demand, 200.0)
+        y.set(:demand, 1000.0)
 
         calculate!
       end
@@ -166,10 +166,10 @@ describe 'Graph calculations; efficiency' do
       c.slots.out(:gas).set(:share, 0.5)
       g.slots.out(:gas).set(:share, 0.2)
 
-      a.set(:expected_demand,  10.0)
-      b.set(:expected_demand,  75.0)
-      x.set(:preset_demand,     5.0)
-      y.set(:preset_demand,   100.0)
+      a.set(:demand,  10.0)
+      b.set(:demand,  75.0)
+      x.set(:demand,   5.0)
+      y.set(:demand, 100.0)
 
       calculate!
     end

@@ -7,8 +7,8 @@ describe 'Graph calculations; parent and two children' do
 
   context 'and the children have demand' do
     before do
-      child.set(:preset_demand, 30.0)
-      sibling.set(:preset_demand, 20.0)
+      child.set(:demand, 30.0)
+      sibling.set(:demand, 20.0)
     end
 
     context 'with edge demands' do
@@ -85,7 +85,7 @@ describe 'Graph calculations; parent and two children' do
       let!(:ms_edge) { mother.connect_to(sibling, :gas, demand: 20.0) }
 
       before do
-        child.set(:preset_demand, 30.0)
+        child.set(:demand, 30.0)
         calculate!
       end
 
@@ -109,7 +109,7 @@ describe 'Graph calculations; parent and two children' do
       let!(:ms_edge) { mother.connect_to(sibling, :gas) }
 
       before do
-        child.set(:preset_demand, 30.0)
+        child.set(:demand, 30.0)
         calculate!
       end
 
@@ -157,7 +157,7 @@ describe 'Graph calculations; parent and two children' do
     let!(:ms_edge) { mother.connect_to(sibling, :gas) }
 
     before do
-      mother.set(:expected_demand, 20.0)
+      mother.set(:demand, 20.0)
       calculate!
     end
 
@@ -184,7 +184,7 @@ describe 'Graph calculations; parent and two children' do
     let!(:ms_edge) { mother.connect_to(sibling, :gas, demand: 30.0) }
 
     before do
-      mother.set(:expected_demand, 50.0)
+      mother.set(:demand, 50.0)
       calculate!
     end
 
@@ -233,7 +233,7 @@ describe 'Graph calculations; parent and two children' do
 
     context 'and the parent has demand' do
       before do
-        mother.set(:expected_demand, 200.0)
+        mother.set(:demand, 200.0)
         mc_edge.set(:parent_share, 0.6)
         calculate!
       end
@@ -272,7 +272,7 @@ describe 'Graph calculations; parent and two children' do
       #    :gas / \ :electricity
       #       [C] [S]
       before do
-        mother.set(:expected_demand, 50.0)
+        mother.set(:demand, 50.0)
         calculate!
       end
 
@@ -302,7 +302,7 @@ describe 'Graph calculations; parent and two children' do
       #      :gas / \ :electricity
       #   (120) [C] [S]
       before do
-        child.set(:preset_demand, 120.0)
+        child.set(:demand, 120.0)
         calculate!
       end
 
@@ -330,8 +330,8 @@ describe 'Graph calculations; parent and two children' do
       #      :gas / \ :electricity
       #   (120) [C] [S] (80)
       before do
-        child.set(:preset_demand, 120.0)
-        sibling.set(:preset_demand, 80.0)
+        child.set(:demand, 120.0)
+        sibling.set(:demand, 80.0)
 
         calculate!
       end
@@ -364,8 +364,8 @@ describe 'Graph calculations; parent and two children' do
         #      :gas / \\ :electricity, :gas
         #   (100) [C]  [S]
         before do
-          mother.set(:expected_demand, 200.0)
-          child.set(:preset_demand, 100.0)
+          mother.set(:demand, 200.0)
+          child.set(:demand, 100.0)
           calculate!
         end
 
@@ -405,8 +405,8 @@ describe 'Graph calculations; parent and two children' do
         #   :gas / \\ :electricity, :gas
         #      [C]  [S]
         before do
-          mother.set(:expected_demand, 200.0)
-          sibling.set(:preset_demand, nil)
+          mother.set(:demand, 200.0)
+          sibling.set(:demand, nil)
           calculate!
         end
 
@@ -438,8 +438,8 @@ describe 'Graph calculations; parent and two children' do
         #   :gas / \\ :electricity, :gas
         #      [C]  [S] (100)
         before do
-          mother.set(:expected_demand, nil)
-          sibling.set(:preset_demand, 100.0)
+          mother.set(:demand, nil)
+          sibling.set(:demand, 100.0)
           calculate!
         end
 
@@ -476,9 +476,9 @@ describe 'Graph calculations; parent and two children' do
         let!(:gm_edge)     { grandparent.connect_to(mother, :gas) }
 
         before do
-          grandparent.set(:expected_demand, 200.0)
-          mother.set(:expected_demand, nil)
-          sibling.set(:preset_demand, 100.0)
+          grandparent.set(:demand, 200.0)
+          mother.set(:demand, nil)
+          sibling.set(:demand, 100.0)
           calculate!
         end
 

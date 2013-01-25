@@ -16,32 +16,14 @@ module Refinery::Catalyst
     # ------------------------------------------------------------------------
 
     context 'nodes with no :final_demand' do
-      it 'does not set :expected_demand' do
-        expect(no_demand.get(:expected_demand)).to be_nil
-      end
-
-      it 'does not set :preset_demand' do
-        expect(no_demand.get(:preset_demand)).to be_nil
+      it 'does not set :demand' do
+        expect(no_demand.get(:demand)).to be_nil
       end
     end
 
-    context 'non-leaf nodes with :final_demand' do
-      it 'sets :expected_demand to equal :final_demand' do
-        expect(non_leaf.get(:expected_demand)).to eql(50.0)
-      end
-
-      it 'does not set :preset_demand' do
-        expect(non_leaf.get(:preset_demand)).to be_nil
-      end
-    end
-
-    context 'leaf nodes with :final_demand' do
-      it 'does not set :expected_demand' do
-        expect(leaf.get(:expected_demand)).to be_nil
-      end
-
-      it 'sets :preset_demand to equal :final_demand' do
-        expect(leaf.get(:preset_demand)).to eql(25.0)
+    context 'nodes with :final_demand' do
+      it 'sets :demand to equal :final_demand' do
+        expect(non_leaf.get(:demand)).to eql(50.0)
       end
     end
 

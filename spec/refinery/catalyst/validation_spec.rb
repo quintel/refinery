@@ -9,9 +9,9 @@ module Refinery
       #   (50) [A] [B] (50)
       #     (50) \ / (0)
       #          [X] (50)
-      let!(:a)       { graph.add(Node.new(:a, expected_demand: 50.0)) }
-      let!(:b)       { graph.add(Node.new(:b, expected_demand: 50.0)) }
-      let!(:x)       { graph.add(Node.new(:x, preset_demand:   50.0)) }
+      let!(:a)       { graph.add(Node.new(:a, demand: 50.0)) }
+      let!(:b)       { graph.add(Node.new(:b, demand: 50.0)) }
+      let!(:x)       { graph.add(Node.new(:x, demand: 50.0)) }
       let!(:ax_edge) { a.connect_to(x, :gas, demand: 50.0) }
       let!(:bx_edge) { b.connect_to(x, :gas, demand: 0.0) }
 
@@ -36,8 +36,8 @@ module Refinery
       #   [A] (10)
       #    |  (10)
       #   [X] (20)
-      let!(:a)       { graph.add(Node.new(:a, expected_demand: 10.0)) }
-      let!(:x)       { graph.add(Node.new(:x, preset_demand:   20.0)) }
+      let!(:a)       { graph.add(Node.new(:a, demand: 10.0)) }
+      let!(:x)       { graph.add(Node.new(:x, demand: 20.0)) }
       let!(:ax_edge) { a.connect_to(x, :gas, demand: 10.0) }
 
       it 'has one invalid object' do
@@ -57,8 +57,8 @@ module Refinery
       #   [A] (20)
       #    |  (20)
       #   [X] (20)
-      let!(:a)       { graph.add(Node.new(:a, expected_demand: 20.0)) }
-      let!(:x)       { graph.add(Node.new(:x, preset_demand:   20.0)) }
+      let!(:a)       { graph.add(Node.new(:a, demand: 20.0)) }
+      let!(:x)       { graph.add(Node.new(:x, demand: 20.0)) }
       let!(:ax_edge) { a.connect_to(x, :gas, demand: 20.0) }
 
       before do
@@ -86,8 +86,8 @@ module Refinery
       #   [A] (50)
       #    |
       #   [X] (50)
-      let!(:a)       { graph.add(Node.new(:a, expected_demand: 20.0)) }
-      let!(:x)       { graph.add(Node.new(:x, preset_demand:   20.0)) }
+      let!(:a)       { graph.add(Node.new(:a, demand: 20.0)) }
+      let!(:x)       { graph.add(Node.new(:x, demand: 20.0)) }
       let!(:ax_edge) { a.connect_to(x, :gas) }
 
       it 'has one invalid object' do
@@ -112,7 +112,7 @@ module Refinery
       #    |  (50)
       #   [X] (50)
       let!(:a)       { graph.add(Node.new(:a)) }
-      let!(:x)       { graph.add(Node.new(:x, preset_demand: 50.0)) }
+      let!(:x)       { graph.add(Node.new(:x, demand: 50.0)) }
       let!(:ax_edge) { a.connect_to(x, :gas, demand: 50.0) }
 
       it 'has one invalid object' do

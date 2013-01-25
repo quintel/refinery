@@ -17,8 +17,8 @@ module Refinery
       end
     end
 
-    # Demands need to be precise.
-    precise_property :expected_demand, :preset_demand
+    # Demand calculations need to be exact.
+    precise_property :demand
 
     # Public: The demand calculator for this node.
     #
@@ -31,7 +31,7 @@ module Refinery
     #
     # Returns a float, or nil if no demand is yet assigned.
     def demand
-      get(calculator.demand_attribute)
+      get(:demand)
     end
 
     # Public: The demand of the node for a given +carrier+.

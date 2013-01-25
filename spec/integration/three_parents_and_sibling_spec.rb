@@ -18,11 +18,11 @@ describe 'Graph calculations; three parents and a sibling' do
     let!(:cy_edge) { c.connect_to(y, :gas) }
 
     before do
-      a.set(:expected_demand, 10.0)
-      b.set(:expected_demand, 75.0)
-      c.set(:expected_demand, 20.0)
-      x.set(:preset_demand,    5.0)
-      y.set(:preset_demand,  100.0)
+      a.set(:demand,  10.0)
+      b.set(:demand,  75.0)
+      c.set(:demand,  20.0)
+      x.set(:demand,   5.0)
+      y.set(:demand, 100.0)
     end
 
     context 'with no edge shares' do
@@ -49,7 +49,7 @@ describe 'Graph calculations; three parents and a sibling' do
 
     context 'and a missing supplier demand' do
       before do
-        c.set(:expected_demand, nil)
+        c.set(:demand, nil)
         calculate!
       end
 
@@ -84,12 +84,12 @@ describe 'Graph calculations; three parents and a sibling' do
       #          /   \   / _________/
       #         /     \ / /
       #   (5) [X]     [Y] (100)
-      let!(:g) { graph.add Refinery::Node.new(:g, expected_demand: 20.0) }
+      let!(:g) { graph.add Refinery::Node.new(:g, demand: 20.0) }
       let!(:gc_edge) { g.connect_to(c, :gas) }
 
       before do
-        # b.set(:expected_demand, nil)
-        c.set(:expected_demand, nil)
+        # b.set(:demand, nil)
+        c.set(:demand, nil)
         calculate!
       end
 
@@ -123,10 +123,10 @@ describe 'Graph calculations; three parents and a sibling' do
     let!(:cy_gas_edge)  { c.connect_to(y, :gas) }
 
     before do
-      a.set(:expected_demand, 175.0)
-      b.set(:expected_demand, 100.0)
-      x.set(:preset_demand,   250.0)
-      y.set(:preset_demand,   125.0)
+      a.set(:demand, 175.0)
+      b.set(:demand, 100.0)
+      x.set(:demand, 250.0)
+      y.set(:demand, 125.0)
 
       b.slots.out(:gas).set(:share, 0.75)
       b.slots.out(:electricity).set(:share, 0.25)

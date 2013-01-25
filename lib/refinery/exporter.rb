@@ -2,7 +2,7 @@ module Refinery
   class Exporter
     # Properties which are commonly present on Node instances, which are only
     # for internal use in Refinery, and should not be included in exports.
-    OMITTED_NODE_KEYS = []
+    OMITTED_NODE_KEYS = [ :demand ]
 
     # Public: Creates a new Exporter which takes a Turbine graph and creates
     # ETsource YAML.
@@ -32,6 +32,16 @@ module Refinery
       @graph.nodes.each_with_object({}) do |node, data|
         properties = node.properties.reject do |key, value|
           OMITTED_NODE_KEYS.include?(key)
+        end
+
+
+        # Using demand#to_f means we potentially lose precision when exporting
+        # the demand values. Since ETengine uses floats anyway, this is
+        # presently a non-issue.
+        if node.out_edges.any?
+          properties[:expected_demand] = node.demand.to_f
+        else
+          properties[:preset_demand] = node.demand.to_f
         end
 
         properties[:links] = links_for(node)

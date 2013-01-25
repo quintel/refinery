@@ -17,9 +17,9 @@ describe 'Graph calculations; with a sibling which is also a parent' do
   let!(:fs_edge) { father.connect_to(sibling, :gas) }
 
   before do
-    mother.set(:expected_demand, 100.0)
-    father.set(:expected_demand, 50.0)
-    child.set(:preset_demand, 150.0)
+    mother.set(:demand, 100.0)
+    father.set(:demand, 50.0)
+    child.set(:demand, 150.0)
     calculate!
   end
 

@@ -4,8 +4,8 @@ describe 'Graph calculations; two children and two spouses' do
   let!(:mother)   { graph.add Refinery::Node.new(:mother) }
   let!(:spouse_a) { graph.add Refinery::Node.new(:spouse_a) }
   let!(:spouse_b) { graph.add Refinery::Node.new(:spouse_b) }
-  let!(:child_y)  { graph.add Refinery::Node.new(:child_y, preset_demand: 20.0) }
-  let!(:child_z)  { graph.add Refinery::Node.new(:child_z, preset_demand: 50.0) }
+  let!(:child_y)  { graph.add Refinery::Node.new(:child_y, demand: 20.0) }
+  let!(:child_z)  { graph.add Refinery::Node.new(:child_z, demand: 50.0) }
 
   let!(:ay_edge)  { spouse_a.connect_to(child_y, :gas, child_share: 0.5) }
   let!(:my_edge)  { mother.connect_to(child_y, :gas, child_share: 0.5) }
@@ -44,8 +44,8 @@ describe 'Graph calculations; two children and two spouses' do
     #           \ /     \ /
     #      (20) [Y]     [Z]
     before do
-      spouse_a.set(:expected_demand, 10.0)
-      child_z.set(:preset_demand, nil)
+      spouse_a.set(:demand, 10.0)
+      child_z.set(:demand, nil)
       calculate!
     end
 
@@ -66,11 +66,11 @@ describe 'Graph calculations; two children and two spouses' do
     #           \ /     \ /
     #           [Y]     [Z]
     before do
-      spouse_a.set(:expected_demand, 10.0)
-      mother.set(:expected_demand, 40.0)
-      spouse_b.set(:expected_demand, 15.0)
-      child_y.set(:preset_demand, nil)
-      child_z.set(:preset_demand, nil)
+      spouse_a.set(:demand, 10.0)
+      mother.set(:demand, 40.0)
+      spouse_b.set(:demand, 15.0)
+      child_y.set(:demand, nil)
+      child_z.set(:demand, nil)
     end
 
     it 'does not set demand for the first child' do
@@ -91,8 +91,8 @@ describe 'Graph calculations; two children and two spouses' do
     #           \ /     \ /
     #      (20) [Y]     [Z] (55)
     before do
-      spouse_a.set(:expected_demand, 10.0)
-      spouse_b.set(:expected_demand, 10.0)
+      spouse_a.set(:demand, 10.0)
+      spouse_b.set(:demand, 10.0)
     end
 
     context 'and edges have child shares' do

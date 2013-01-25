@@ -9,7 +9,7 @@ describe 'Graph calculations; a parent and child' do
     #         |
     #        [C]
     before do
-      mother.set(:expected_demand, 45.0)
+      mother.set(:demand, 45.0)
     end
 
     context 'and the edge has demand' do
@@ -46,7 +46,7 @@ describe 'Graph calculations; a parent and child' do
     #         |
     #   (45) [C]
     before do
-      child.set(:preset_demand, 45.0)
+      child.set(:demand, 45.0)
     end
 
     context 'and the edge has demand' do
@@ -81,8 +81,8 @@ describe 'Graph calculations; a parent and child' do
       let!(:edge) { mother.connect_to(child, :gas) }
 
       before do
-        mother.set(:expected_demand, 1.0)
-        child.set(:preset_demand, 2.0)
+        mother.set(:demand, 1.0)
+        child.set(:demand, 2.0)
         calculate!
       end
 
@@ -133,7 +133,7 @@ describe 'Graph calculations; a parent and child' do
 
     context 'with demand defined on the child' do
       before do
-        child.set(:preset_demand, 200.0)
+        child.set(:demand, 200.0)
         calculate!
       end
 
@@ -159,7 +159,7 @@ describe 'Graph calculations; a parent and child' do
 
     context 'with demand defined on the parent' do
       before do
-        mother.set(:expected_demand, 100.0)
+        mother.set(:demand, 100.0)
         calculate!
       end
 

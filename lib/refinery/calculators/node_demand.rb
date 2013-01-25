@@ -15,7 +15,7 @@ module Refinery
       #
       # Returns nothing.
       def calculate!(order)
-        @model.set(demand_attribute, strategy.calculate(@model))
+        @model.set(:demand, strategy.calculate(@model))
         super
       end
 
@@ -23,16 +23,7 @@ module Refinery
       #
       # Returns true or false.
       def calculated?
-        super || @model.get(demand_attribute)
-      end
-
-      # Public: Determines on which attribute to store the node's demand.
-      # Nodes with no descendants use :preset_demand, while others have their
-      # demand set to :expected_demand.
-      #
-      # Returns a symbol.
-      def demand_attribute
-        @attr ||= @model.out_edges.none? ? :preset_demand : :expected_demand
+        super || @model.get(:demand)
       end
     end # NodeDemand
   end # Calculators

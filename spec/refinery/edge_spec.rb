@@ -33,7 +33,7 @@ module Refinery
       context 'when the edge and child have demand' do
         before do
           edge.set(:demand, 200.0)
-          child.set(:preset_demand, 500.0)
+          child.set(:demand, 500.0)
         end
 
         it 'calculates the share' do
@@ -53,7 +53,7 @@ module Refinery
 
       context 'when the child has demand but the edge does not' do
         before do
-          child.set(:preset_demand, 500.0)
+          child.set(:demand, 500.0)
         end
 
         it 'does not calculate a share' do
@@ -100,7 +100,7 @@ module Refinery
       context 'when the edge and parent have demand' do
         before do
           edge.set(:demand, 200.0)
-          parent.set(:expected_demand, 800.0)
+          parent.set(:demand, 800.0)
         end
 
         it { expect(edge.parent_share).to eq(0.25) }
@@ -113,7 +113,7 @@ module Refinery
       end
 
       context 'when the parent has demand but the edge does not' do
-        before { parent.set(:expected_demand, 800.0) }
+        before { parent.set(:demand, 800.0) }
 
         it { expect(edge.parent_share).to be_nil }
       end

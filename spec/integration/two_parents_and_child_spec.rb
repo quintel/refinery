@@ -10,8 +10,8 @@ describe 'Graph calculations; with two parents' do
     #          \ /
     #          [C]
     before do
-      mother.set(:expected_demand, 30.0)
-      father.set(:expected_demand, 20.0)
+      mother.set(:demand, 30.0)
+      father.set(:demand, 20.0)
     end
 
     context 'and the edges both have demands' do
@@ -53,7 +53,7 @@ describe 'Graph calculations; with two parents' do
       let!(:fc_edge) { father.connect_to(child, :gas) }
 
       before do
-        father.set(:expected_demand, nil)
+        father.set(:demand, nil)
         calculate!
       end
 
@@ -82,7 +82,7 @@ describe 'Graph calculations; with two parents' do
       #    (60)  \ / (240)
       #          [C]
       before do
-        mother.set(:expected_demand, 60.0)
+        mother.set(:demand, 60.0)
         fc_edge.set(:demand, 240.0)
         calculate!
       end
@@ -103,8 +103,8 @@ describe 'Graph calculations; with two parents' do
       #          \ /
       #          [C] (240)
       before do
-        mother.set(:expected_demand, 60)
-        child.set(:preset_demand, 240.0)
+        mother.set(:demand, 60)
+        child.set(:demand, 240.0)
 
         mc_edge.set(:demand, nil)
 
@@ -131,7 +131,7 @@ describe 'Graph calculations; with two parents' do
     let!(:mc_edge) { mother.connect_to(child, :gas) }
     let!(:fc_edge) { father.connect_to(child, :gas) }
 
-    before { child.set(:preset_demand, 100.0) }
+    before { child.set(:demand, 100.0) }
 
     context 'and the links have child shares' do
       #       [M]  [F]
@@ -160,7 +160,7 @@ describe 'Graph calculations; with two parents' do
       #   (75%) \ /
       #         [C] (100)
       before do
-        child.set(:preset_demand, 100.0)
+        child.set(:demand, 100.0)
         mc_edge.set(:child_share, 0.75)
 
         calculate!

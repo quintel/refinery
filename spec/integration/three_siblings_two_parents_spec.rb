@@ -16,10 +16,10 @@ describe 'Graph calculations; three siblings and two parents' do
   let!(:bz_edge) { b.connect_to(z, :gas) }
 
   before do
-    a.set(:expected_demand, 100.0)
-    b.set(:expected_demand,  50.0)
-    x.set(:preset_demand,    10.0)
-    y.set(:preset_demand,    75.0)
+    a.set(:demand, 100.0)
+    b.set(:demand,  50.0)
+    x.set(:demand,  10.0)
+    y.set(:demand,  75.0)
 
     calculate!
   end

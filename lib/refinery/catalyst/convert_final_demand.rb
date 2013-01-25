@@ -1,8 +1,7 @@
 module Refinery
   module Catalyst
     # Public: Given a graph, finds any nodes which have a :final_demand
-    # attribute, and duplicates it's value as :expected_demand or
-    # :preset_demand.
+    # attribute, and duplicates it's value as :demand.
     #
     # graph - The graph.
     #
@@ -10,8 +9,7 @@ module Refinery
     ConvertFinalDemand = ->(graph) do
       graph.nodes.each do |node|
         if demand = node.get(:final_demand)
-          attribute = node.out_edges.any? ? :expected_demand : :preset_demand
-          node.set(attribute, demand)
+          node.set(:demand, demand)
         end
       end
     end # ConvertFinalDemand

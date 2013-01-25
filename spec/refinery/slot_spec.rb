@@ -3,10 +3,10 @@ require 'spec_helper'
 module Refinery
   describe Slot do
     let(:graph)   { Turbine::Graph.new }
-    let(:parent)  { graph.add Node.new(:parent,  expected_demand: 100.0) }
-    let(:spouse)  { graph.add Node.new(:spouse,  expected_demand: 20.0) }
-    let(:child)   { graph.add Node.new(:child,   preset_demand:   40.0) }
-    let(:sibling) { graph.add Node.new(:sibling, preset_demand:   80.0) }
+    let(:parent)  { graph.add Node.new(:parent,  demand: 100.0) }
+    let(:spouse)  { graph.add Node.new(:spouse,  demand:  20.0) }
+    let(:child)   { graph.add Node.new(:child,   demand:  40.0) }
+    let(:sibling) { graph.add Node.new(:sibling, demand:  80.0) }
 
     before do
       [ parent, spouse ].each do |person|

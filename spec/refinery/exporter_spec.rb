@@ -5,9 +5,9 @@ describe Refinery::Exporter do
     let(:graph) do
       graph  = Turbine::Graph.new
 
-      top    = graph.add(Refinery::Node.new(:top, name: 'Head'))
-      middle = graph.add(Refinery::Node.new(:middle, name: 'Mid'))
-      bottom = graph.add(Refinery::Node.new(:bottom, name: 'Tail'))
+      top    = graph.add(Refinery::Node.new(:top, name: 'Head', demand: 10.0))
+      middle = graph.add(Refinery::Node.new(:middle, name: 'Mid', demand: 15.0))
+      bottom = graph.add(Refinery::Node.new(:bottom, name: 'Tail', demand: 20.0))
 
       top.connect_to(middle, :gas, child_share: 1.0)
       middle.connect_to(bottom, :electricity, child_share: 0.3)
@@ -22,6 +22,18 @@ describe Refinery::Exporter do
 
       it 'is exported' do
         expect(node).to_not be_nil
+      end
+
+      it 'does not set demand' do
+        expect(node).to_not have_key('demand')
+      end
+
+      it 'sets expected_demand' do
+        expect(node['expected_demand']).to eql(10.0)
+      end
+
+      it 'does not set preset_demand' do
+        expect(node).to_not have_key('preset_demand')
       end
 
       it 'includes the node attributes' do
@@ -48,6 +60,18 @@ describe Refinery::Exporter do
         expect(node).to_not be_nil
       end
 
+      it 'does not set demand' do
+        expect(node).to_not have_key('demand')
+      end
+
+      it 'sets expected_demand' do
+        expect(node['expected_demand']).to eql(15.0)
+      end
+
+      it 'does not set preset_demand' do
+        expect(node).to_not have_key('preset_demand')
+      end
+
       it 'includes the node attributes' do
         expect(node['name']).to eql('Mid')
       end
@@ -72,6 +96,18 @@ describe Refinery::Exporter do
 
       it 'is exported' do
         expect(node).to_not be_nil
+      end
+
+      it 'does not set demand' do
+        expect(node).to_not have_key('demand')
+      end
+
+      it 'does not set expected_demand' do
+        expect(node).to_not have_key('expected_demand')
+      end
+
+      it 'sets preset_demand' do
+        expect(node['preset_demand']).to eql(20.0)
       end
 
       it 'includes the node attributes' do

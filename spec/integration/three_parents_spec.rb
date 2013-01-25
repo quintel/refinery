@@ -17,9 +17,9 @@ describe 'Graph calculations; three parents' do
       #           \ / /
       #           [X]
       before do
-        a.set(:expected_demand, 10.0)
-        b.set(:expected_demand, 75.0)
-        c.set(:expected_demand, 15.0)
+        a.set(:demand, 10.0)
+        b.set(:demand, 75.0)
+        c.set(:demand, 15.0)
 
         calculate!
       end
@@ -50,8 +50,8 @@ describe 'Graph calculations; three parents' do
       #           \ / /
       #           [X]
       before do
-        a.set(:expected_demand, 10.0)
-        b.set(:expected_demand, 75.0)
+        a.set(:demand, 10.0)
+        b.set(:demand, 75.0)
 
         calculate!
       end
@@ -112,7 +112,7 @@ describe 'Graph calculations; three parents' do
     #     \   / _________/
     #      \ / /
     #      [X] (200)
-    before { x.set(:preset_demand, 200.0) }
+    before { x.set(:demand, 200.0) }
 
     describe 'and edges have child shares' do
       before do
