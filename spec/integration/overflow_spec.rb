@@ -64,6 +64,8 @@ describe 'Graph calculations; overflowing energy' do
     it 'sets HVN->EXPORT to 100.0' do
       expect(he_edge).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # when the secondary supplier undersupplies
 
   context 'when the secondary supplier fulfils demand exactly' do
@@ -100,6 +102,8 @@ describe 'Graph calculations; overflowing energy' do
     it 'sets HVN->EXPORT to 50.0' do
       expect(he_edge).to have_demand.of(50.0)
     end
+
+    it { expect(graph).to validate }
   end # when the secondary supplier fulfils demand exactly
 
   context 'when the secondary supplier exceeds consumer demand' do
@@ -137,6 +141,8 @@ describe 'Graph calculations; overflowing energy' do
     it 'sets HVN->EXPORT to 100.0' do
       expect(he_edge).to have_demand.of(100.0)
     end
+
+    it { expect(graph).to validate }
   end # when the secondary supplier exceeds consumer demand
 
   context 'when the secondary supplier has a long chain' do
@@ -211,5 +217,7 @@ describe 'Graph calculations; overflowing energy' do
     it 'sets HVN->EXPORT to 50.0' do
       expect(he_edge).to have_demand.of(50.0)
     end
+
+    it { expect(graph).to validate }
   end # when the secondary supplier has a long chain
 end # Graph calculations; overflowing energy
