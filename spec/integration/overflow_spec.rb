@@ -220,4 +220,50 @@ describe 'Graph calculations; overflowing energy' do
 
     it { expect(graph).to validate }
   end # when the secondary supplier has a long chain
+
+  context 'when HVN has a third child' do
+    #   ┌──────┐    ┌─────┐    ┌────────┐
+    #   │ SINK │ <─ │ HVN │ ─> │ EXPORT │
+    #   └──────┘    └─────┘    └────────┘
+    #                  |
+    #                  v
+    #               ┌─────┐
+    #               | MVN |
+    #               └─────┘
+    #                  |
+    #                  v
+    #               ┌─────┐    ┌─────┐
+    #               | LVN |    | SOL |
+    #               └─────┘    └─────┘
+    #                   |        |
+    #                   v        v
+    #                  ┌──────────┐
+    #                  | CONSUMER |
+    #                  └──────────┘
+    #
+    # This edge has a parent share of 0.3 -- the edge gets 30% of the demand
+    # of HVN which is 50 -- the remaining amount *plus* the overflow from
+    # SOLAR is assigned to EXPORT.
+    #
+    let!(:sink) { graph.add(Refinery::Node.new(:sink)) }
+    let!(:sink_edge) { hvn.connect_to(sink, :electricity) }
+
+    before do
+      consumer.set(:demand, 100.0)
+      solar.set(:demand, 150.0)
+      hvn.set(:demand, 50.0)
+
+      sink_edge.set(:parent_share, 0.3)
+
+      calculate!
+    end
+
+    it 'sets HVN->EXPORT demand' do
+      expect(he_edge).to have_demand.of(85.0)
+    end
+
+    it 'sets HVN->SINK demand' do
+      expect(sink_edge).to have_demand.of(15.0)
+    end
+  end # when HVN has a third child
 end # Graph calculations; overflowing energy
