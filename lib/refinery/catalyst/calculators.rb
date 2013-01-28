@@ -67,13 +67,9 @@ module Refinery
       #
       # Returns an array of calculators.
       def uncalculated
-        calculators = @graph.nodes.map(&:calculator)
-
-        @graph.nodes.each do |node|
-          calculators.concat(node.out_edges.map(&:calculator).to_a)
-        end
-
-        calculators.reject(&:calculated?)
+        @graph.tsort.map do |node|
+          [ node.calculator, *node.out_edges.map(&:calculator).to_a ]
+        end.flatten.reject(&:calculated?).reverse
       end
 
       # Internal: Asserts that the in and out slots for each node sum up to
