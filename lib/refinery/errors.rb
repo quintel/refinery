@@ -29,8 +29,8 @@ module Refinery
       "  * #{ model.to_s }"
     end.join("\n")
 
-    "The following graph elements had insufficient data to be " \
-    "calculated: \n\n#{ elements }"
+    "Insufficient data to calculate calculate #{ remaining_models.length } " \
+    "items: \n\n#{ elements }"
   end
 
   # Raised when the sum of the slot shares on one side of a node do not add up
