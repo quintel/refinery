@@ -6,8 +6,79 @@ module Refinery
     # Default options used for all edges.
     EDGE_OPTIONS = { fontname: 'Helvetica Bold', fontsize: 9 }
 
+    # General colors.
+    COLORS = {
+      black:     '#404040',
+      blue:      '#4169e1',
+      brown:     '#8b4513',
+      darkpink:  '#cd6090',
+      grey:      '#888888',
+      lightgrey: '#bbbbbb',
+      olive:     '#6b8e23',
+      orange:    '#cd8500',
+      purple:    '#9370db',
+      pink:      '#ffc0cb',
+      red:       '#ee4000'
+    }
+
     # Colors assigned to edges depending on their label.
-    EDGE_COLORS = { gas: :gray55, electricity: :orange3, heat: :purple }
+    EDGE_COLORS = {
+      algae_diesel:              :olive,
+      ambient_cold:              :orange,
+      ambient_heat:              :orange,
+      biodiesel:                 :olive,
+      biogas:                    :olive,
+      biogenic_waste:            :olive,
+      bio_ethanol:               :olive,
+      bio_oil:                   :olive,
+      bio_residues_for_firing:   :olive,
+      car_kms:                   :purple,
+      coal:                      :black,
+      coal_gas:                  :black,
+      cokes:                     :black,
+      compressed_network_gas:    :grey,
+      cooling:                   :purple,
+      coupling_carrier:          :pink,
+      corn:                      :olive,
+      crude_oil:                 :brown,
+      diesel:                    :brown,
+      diesel_mix:                :brown,
+      electricity:               :blue,
+      gas:                       :grey,
+      gasoline:                  :brown,
+      gasoline_mix:              :brown,
+      gas_power_fuelmix:         :grey,
+      greengas:                  :olive,
+      heat:                      :purple,
+      heavy_fuel_oil:            :brown,
+      hot_water:                 :purple,
+      imported_electricity:      :blue,
+      imported_steam_hot_water:  :darkpink,
+      kerosene:                  :brown,
+      light:                     :purple,
+      lignite:                   :black,
+      lng:                       :brown,
+      loss:                      :orange,
+      lpg:                       :brown,
+      manure:                    :olive,
+      natural_gas:               :grey,
+      non_biogenic_waste:        :black,
+      not_defined:               :orange,
+      solar_radiation:           :orange,
+      solar_thermal:             :olive,
+      steam_hot_water:           :darkpink,
+      torrified_biomass_pellets: :olive,
+      truck_kms:                 :purple,
+      uranium_oxide:             :orange,
+      useable_heat:              :purple,
+      waste_mix:                 :black,
+      water:                     :orange,
+      wind:                      :orange,
+      wood:                      :olive,
+      wood_pellets:              :olive
+    }
+
+    EDGE_COLORS.default = :black
 
     # Public: Creates a new Diagrap which creates a PNG showing the nodes and
     # their edges. On the graph is also the share assigned to each edge, and
@@ -62,8 +133,8 @@ module Refinery
 
       NODE_OPTIONS.merge(
         label:     label,
-        color:     label.match(/\?!/) ? :red : :black,
-        fontcolor: label.match(/\?!/) ? :red : :black)
+        color:     color(:black),
+        fontcolor: color(:black))
     end
 
     # Internal: The hash of options for formatting an edge.
@@ -72,8 +143,8 @@ module Refinery
     def edge_options(edge)
       EDGE_OPTIONS.merge(
         label:     edge_label(edge),
-        fontcolor: edge.child_share ? :gray55 : :red,
-        color:     edge.child_share ? EDGE_COLORS[edge.label] : :red)
+        fontcolor: color(:grey),
+        color:     color(EDGE_COLORS[edge.label]))
     end
 
     # Internal: The label to be shown next to an edge. Includes the share
@@ -81,12 +152,12 @@ module Refinery
     #
     # Returns a string.
     def edge_label(edge)
-      if edge.child_share
-        flow = if edge.demand
-          " <font color='#bbbbbb'>(#{ format_number(edge.demand) })</font>"
-        end
-
-        "<<font> #{ format_number(edge.child_share) }#{ flow }</font>>"
+      if edge.demand
+        "<<font face='Helvetica' color='#{ color(:lightgrey) }'> " \
+          "#{ format_number(edge.parent_share) }</font><br/>" \
+          "#{ format_number(edge.demand) }<br/>" \
+          "<font face='Helvetica' color='#{ color(:lightgrey) }'> " \
+            "#{ format_number(edge.child_share) }</font>>"
       else
         '?!'
       end
@@ -109,13 +180,80 @@ module Refinery
       end
     end
 
+    # Internal: The color string for the given color name. Optionally with
+    # semi-transparency.
+    #
+    # Returns a string.
+    def color(name, transparent = false)
+      transparent && "#{ COLORS[name] }5f" || COLORS[name]
+    end
+
     # Internal: Given a number (typically a Rational) formats it nicely for
     # the diagram.
     #
     # Returns a string.
     def format_number(number)
+      return '' if number.nil?
+
       formatted = '%.6g' % number
-      formatted.match(/\./) ? formatted : "#{ formatted }.0"
+      formatted = formatted.match(/\./) ? formatted : "#{ formatted }.0"
+
+      # Add comma delimiters.
+      parts = formatted.to_s.split('.')
+      parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1,")
+      parts.join('.')
     end
+
+    # A diagram which shows the incalculable nodes and edges normally, and all
+    # other elements mostly transparent.
+    class Incalculable < Diagram
+      #######
+      private
+      #######
+
+      def edge_options(edge)
+        recolor_options(super, edge.demand)
+      end
+
+      def node_options(node)
+        recolor_options(super, node.demand)
+      end
+
+      def edge_label(edge)
+        recolor_label(super, edge.demand)
+      end
+
+      def node_label(node)
+        recolor_label(super, node.demand)
+      end
+
+      def recolor_label(label, transparent)
+        transparent && label.gsub(/(color=['"]#.{6})/, '\120') || label
+      end
+
+      def recolor_options(options, transparent)
+        return options unless transparent
+
+        options[:fontcolor] = "#{ options[:fontcolor] }20"
+        options[:color]     = "#{ options[:color] }20"
+        options
+      end
+    end # Incalculable
+
+    # A diagram which shows the calculable nodes normally, fading the
+    # incalculable elements into the background.
+    class Calculable < Incalculable
+      #######
+      private
+      #######
+
+      def recolor_label(label, transparent)
+        super(label, ! transparent)
+      end
+
+      def recolor_options(label, transparent)
+        super(label, ! transparent)
+      end
+    end # Calculable
   end # Diagram
 end # Refinery
