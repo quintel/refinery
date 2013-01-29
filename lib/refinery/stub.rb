@@ -117,5 +117,189 @@ module Refinery
 
     private_class_method :N
 
+    # A class which builds a stub from the ETsource topology, using skeleton
+    # data (final demand, slot conversion) extracted from a dataset.
+    class ETsource
+      LINK = /(?<type>\w) -->? \((?<carrier>[a-z_]+)\)-(?<source>[a-z0-9_]+)$/.freeze
+
+      # Creates a new ETsource stub.
+      #
+      # path   - Path to the ETsource directory.
+      # region - The region code to be used to load skeleton data.
+      #
+      # Returns an ETsource.
+      def initialize(path, region)
+        @path   = Pathname.new(path)
+        @region = region
+      end
+
+      # Public: Creates the Turbine graph using data from ETsource.
+      #
+      # Return a Turbine::Graph.
+      def graph
+        Turbine::Graph.new.tap do |graph|
+          create_nodes(graph)
+          create_edges(graph)
+          configure_nodes(graph)
+          configure_slots(graph)
+        end
+      end
+
+      #######
+      private
+      #######
+
+      # Internal: The topology data defining the graph structure.
+      #
+      # Returns a hash of hashes, each value is a node.
+      def topology
+        @topology ||= begin
+          raw = yaml(@path.join('topology/export.graph'))
+          symbolize_keys(raw) { |value| symbolize_keys(value) }
+        end
+      end
+
+      # Internal: The dataset data added to the graph structure.
+      #
+      # Returns a hash of hashes, each value information about a node or slot.
+      def dataset
+        @dataset ||= begin
+          raw = {}
+
+          @path.join("datasets/#{ @region }/graph").each_child do |filename|
+            raw.merge!(yaml(filename))
+          end
+
+          raw
+        end
+      end
+
+      # Internal: Given a graph, adds nodes from the topology.
+      #
+      # Returns nothing.
+      def create_nodes(graph)
+        topology.each do |key, data|
+          graph.add(Node.new(key.to_sym, {
+            use:                  data[:use],
+            sector:               data[:sector],
+            energy_balance_group: data[:energy_balance_group]
+          }))
+        end
+      end
+
+      # Internal: Given a graph, creates the edges between each node.
+      #
+      # Returns nothing.
+      def create_edges(graph)
+        topology.each do |key, data|
+          data[:links] && data[:links].each do |link|
+            info = link.match(LINK)
+
+            # I'm temporarily ignoring coupling carrier since the slot
+            # shares are completely FUBAR for Refinery's purposes.
+            next if info[:carrier].to_sym == :coupling_carrier
+
+            edge = graph.node(info[:source].to_sym).
+              connect_to(graph.node(key), info[:carrier].to_sym)
+
+            edge.set(:type, case info[:type]
+              when 's' then :share
+              when 'f' then :flexible
+              when 'i' then :overflow
+              when 'c' then :constant
+              when 'd' then :dependent
+            end)
+
+            edge.set(:reversed, link.include?('<'))
+          end
+        end
+      end
+
+      # Internal: Uses region data to set up nodes with the data required to
+      # perform a calculation.
+      #
+      # Returns nothing.
+      def configure_nodes(graph)
+        graph.nodes.each do |node|
+          # Presently, final_demand is not actually stored in the ETsource
+          # YAML files, so this is a temporary alternative:
+          if node.key.to_s.include?('final_demand')
+            node.set(
+              :final_demand,
+              dataset[node.key.to_s][:demand_expected_value])
+          end
+        end
+      end
+
+      # Internal: Uses region data to set slot conversions ("share").
+      #
+      # Returns nothing.
+      def configure_slots(graph)
+        graph.nodes.each do |node|
+          node.slots.out.each do |slot|
+            configure_slot(slot, dataset["(#{ slot.carrier })-#{ node.key }"])
+          end
+
+          node.slots.in.each do |slot|
+            configure_slot(slot, dataset["#{ node.key }-(#{ slot.carrier })"])
+          end
+
+          configure_loss_slot(node, :out) if dataset["(loss)-#{ node.key }"]
+          configure_loss_slot(node, :in)  if dataset["#{ node.key }-(loss)"]
+        end
+      end
+
+      # Internal: Given a slot and the relevant data from the dataset, sets
+      # the slots share. Does nothing if the dataset has no information for
+      # this slot.
+      #
+      # Returns nothing.
+      def configure_slot(slot, data)
+        if data && data['conversion']
+          slot.set(:share, data['conversion'])
+        end
+      end
+
+      # Internal: If a node is expected to have a loss slot, this sets the
+      # share of the slot by filling the whatever slot share is not fulfilled
+      # by the siblings. For example, if the node has a single other slot with
+      # a share of 0.8, the loss slot will be assigned 0.2.
+      #
+      # Returns nothing.
+      def configure_loss_slot(node, direction)
+        slots = node.slots.public_send(direction)
+        loss  = slots.include?(:loss) ? slots.get(:loss) : slots.add(:loss)
+
+        share = 1.0 - slots.sum do |slot|
+          slot.carrier == :loss ? 0.0 : slot.get(:share)
+        end
+
+        loss.set(:share, share < 0 ? 0.0 : share)
+      end
+
+      # Internal: Given a hash, returns a new hash with each of its keys
+      # changed to be a symbol. An optional block can be provided which can
+      # be used to further manipulate each value.
+      #
+      # Returns a hash.
+      def symbolize_keys(hash)
+        hash.each_with_object({}) do |(key, value), symbolized|
+          symbolized[key.to_sym] = block_given? ? yield(value) : value
+        end
+      end
+
+      # Internal: Loads a YAML file from ETsource.
+      #
+      # path - The absolute path to the file.
+      #
+      # Returns the parsed data.
+      def yaml(path)
+        old_yamler, YAML::ENGINE.yamler = YAML::ENGINE.yamler, 'syck'
+        YAML.load_file(@path.join('topology/export.graph'))
+      ensure
+        YAML::ENGINE.yamler = old_yamler
+      end
+    end # ETsource
+
   end # Stub
 end # Refinery
