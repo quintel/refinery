@@ -198,6 +198,7 @@ module Refinery
             # I'm temporarily ignoring coupling carrier since the slot
             # shares are completely FUBAR for Refinery's purposes.
             next if info[:carrier].to_sym == :coupling_carrier
+            next if info[:type] == 'i'
 
             edge = graph.node(info[:source].to_sym).
               connect_to(graph.node(key), info[:carrier].to_sym)
