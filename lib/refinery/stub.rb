@@ -225,8 +225,7 @@ module Refinery
           # YAML files, so this is a temporary alternative:
           if node.key.to_s.include?('final_demand')
             node.set(
-              :final_demand,
-              dataset[node.key.to_s][:demand_expected_value])
+              :final_demand, dataset[node.key][:demand_expected_value])
           end
         end
       end
@@ -295,7 +294,7 @@ module Refinery
       # Returns the parsed data.
       def yaml(path)
         old_yamler, YAML::ENGINE.yamler = YAML::ENGINE.yamler, 'syck'
-        YAML.load_file(@path.join('topology/export.graph'))
+        YAML.load_file(@path.join(path))
       ensure
         YAML::ENGINE.yamler = old_yamler
       end
