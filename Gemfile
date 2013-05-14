@@ -1,9 +1,5 @@
 source 'https://rubygems.org'
-
-gem 'rake',          '>= 0.9.0'
-gem 'turbine',                   github: 'quintel/turbine'
-gem 'ruby-graphviz'
-gem 'terminal-table'
+gemspec
 
 group :test do
   gem 'rspec',       '>= 2.11.0'
