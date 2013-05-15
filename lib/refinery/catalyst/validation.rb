@@ -22,6 +22,8 @@ module Refinery
         if validator.errors.any?
           raise Refinery::FailedValidationError.new(validator.errors)
         end
+
+        graph
       end
 
       # Strings for the various error messages.

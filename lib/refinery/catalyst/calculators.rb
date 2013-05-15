@@ -28,6 +28,8 @@ module Refinery
       def run!
         validate_slot_shares!
         run_calculators!
+
+        @graph
       end
 
       #######

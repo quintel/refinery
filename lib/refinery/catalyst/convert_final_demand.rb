@@ -12,6 +12,8 @@ module Refinery
           node.set(:demand, demand)
         end
       end
+
+      graph
     end # ConvertFinalDemand
   end # Catalyst
 end # Refinery
