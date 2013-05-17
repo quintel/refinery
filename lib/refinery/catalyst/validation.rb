@@ -101,7 +101,7 @@ module Refinery
           end
         elsif slot.demand.nil?
           add_error(slot, :object_missing_demand)
-        elsif slot.demand != expected
+        elsif ! ((expected - 1e-20)..(expected + 1e-20)).include?(slot.demand)
           noun = slot.direction == :in ? 'demand from' : 'output of'
           add_error(slot, :non_matching_demand, slot.demand, noun, expected)
         end
