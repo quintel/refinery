@@ -101,7 +101,7 @@ module Refinery
     # Returns nothing.
     def draw_to(path)
       # Create a new graph
-      diagram = GraphViz.new(:G, type: :digraph)
+      diagram = GraphViz.new(:G, type: :digraph, rankdir: :RL)
 
       # Create two nodes
       @graph.nodes.each do |node|
