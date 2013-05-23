@@ -5,10 +5,6 @@ module Refinery
     include Turbine::Properties
     include PreciseProperties
 
-    # Assigned to all slots by default. Individual properties can be
-    # overridden when initializing the slot.
-    DEFAULT_PROPERTIES = { share: 1.0 }.freeze
-
     # Public: The node to which the slot belongs.
     attr_reader :node
 
@@ -46,7 +42,7 @@ module Refinery
       @direction = direction
       @carrier   = carrier
 
-      self.properties = DEFAULT_PROPERTIES.merge(properties)
+      self.properties = properties
     end
 
     # Public: The edges which are aggregated by the slot. Cached after the
@@ -55,6 +51,34 @@ module Refinery
     # Returns an array of Edges.
     def edges
       @edges ||= node.edges(direction, carrier).dup.freeze
+    end
+
+    # Public: The share of the slot.
+    #
+    # If a share has been explicitly set, it will always be the value
+    # returned. Otherwise, the slot will attempt to figure out the share for
+    # itself:
+    #
+    #   * If the node has a single carrier in the direction (in or out), then
+    #     the share returned will be 1.0.
+    #
+    #   * If the demand of the slot is known, and the either the demand of
+    #     the node, *or* all of the other slots, is known, then the share is
+    #     calculated.
+    #
+    #   * Otherwise, the share cannot be determined automatically.
+    #
+    # Returns a Rational or nil.
+    def share
+      if (explicit = get(:share)) then return explicit end
+
+      slots = @node.slots.public_send(@direction)
+
+      if slots.one?
+        set(:share, 1)
+      elsif demand && (@node.demand || slots.all?(&:demand))
+        set(:share, demand / (@node.demand || slots.sum(&:demand)))
+      end
     end
 
     # Public: The sum of all demand supplied through the edges in the slot.

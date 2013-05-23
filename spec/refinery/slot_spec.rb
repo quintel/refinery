@@ -3,8 +3,8 @@ require 'spec_helper'
 module Refinery
   describe Slot do
     let(:graph)   { Turbine::Graph.new }
-    let(:parent)  { graph.add Node.new(:parent,  demand: 100.0) }
-    let(:spouse)  { graph.add Node.new(:spouse,  demand:  20.0) }
+    let(:parent)  { graph.add Node.new(:parent,  demand:  60.0) }
+    let(:spouse)  { graph.add Node.new(:spouse,  demand:  60.0) }
     let(:child)   { graph.add Node.new(:child,   demand:  40.0) }
     let(:sibling) { graph.add Node.new(:sibling, demand:  80.0) }
 
@@ -16,18 +16,6 @@ module Refinery
     end
 
     # ------------------------------------------------------------------------
-
-    context 'when initialized' do
-      it 'defaults "share" to 1.0' do
-        slot = Slot.new(parent, :out, :gas)
-        expect(slot.get(:share)).to eq(1.0)
-      end
-
-      it 'accepts a custom "share" when provided' do
-        slot = Slot.new(parent, :out, :gas, share: 0.3)
-        expect(slot.get(:share)).to eq(0.3)
-      end
-    end
 
     context 'on a node with outgoing edges' do
       let(:slot) { Slot.new(parent, :out, :gas) }
@@ -101,5 +89,55 @@ module Refinery
         expect(slot.demand).to be_nil
       end
     end # when an edge does not have demand
+
+    describe 'share' do
+      let(:slot) { parent.slots.out(:gas) }
+
+      context 'as the only carrier on the node' do
+        it 'is 1.0 when no explicit value is set' do
+          expect(slot.share).to eq(1)
+        end
+
+        it 'uses the explicit value when provided' do
+          slot.set(:share, 0.5)
+          expect(slot.share).to eq(0.5)
+        end
+      end # as the only carrier on the node
+
+      context 'as one of many carriers on the node' do
+        let!(:elec_edge) { parent.connect_to(child, :electricity) }
+
+        before do
+          slot.edges.each { |e| e.set(:demand, e.get(:demand) - 10) }
+        end
+
+        context 'and demand of one slot is missing' do
+          context 'and demand of the node is unknown' do
+            before { parent.set(:demand, nil) }
+
+            it 'returns nil' do
+              expect(slot.share).to be_nil
+            end
+          end # and demand of the node is unknown
+
+          context 'but the node has a demand set' do
+            it 'calculates the slot share' do
+              expect(slot.share).to eq(2.0 / 3.0)
+            end
+          end # but the node has a demand set
+        end # and demand is one slot is missing
+
+        context 'and demands are known for all slots' do
+          before do
+            parent.set(:demand, nil)
+            elec_edge.set(:demand, 20)
+          end
+
+          it 'calculates the slot share' do
+            expect(slot.share).to eq(2.0 / 3.0)
+          end
+        end # and demands are known for all slots
+      end # as one of many carriers on the node
+    end # share
   end # Slot
 end # Refinery

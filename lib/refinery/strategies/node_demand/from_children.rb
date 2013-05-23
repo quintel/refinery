@@ -9,12 +9,12 @@ module Refinery::Strategies
 
       def self.calculate(node)
         slot = complete_slot(node)
-        slot.edges.sum(&:demand) / slot.get(:share)
+        slot.edges.sum(&:demand) / slot.share
       end
 
       def self.complete_slot(node)
         node.slots.out.detect do |slot|
-          slot.edges.any? && slot.edges.all?(&:demand)
+          slot.share && slot.edges.any? && slot.edges.all?(&:demand)
         end
       end
     end # FromChildren

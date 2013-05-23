@@ -44,7 +44,8 @@ module Refinery
     #
     # Returns a float or nil if the node does not have a demand value set.
     def demand_for(carrier)
-      demand * slots.in(carrier).get(:share) if demand
+      slot = slots.in(carrier)
+      demand * slot.share if demand && slot.share
     end
 
     # Public: The energy output of the node for a given +carrier+.
@@ -57,7 +58,8 @@ module Refinery
     #
     # Returns a float or nil if the node does not have a demand value set.
     def output_of(carrier)
-      demand * slots.out(carrier).get(:share) if demand
+      slot = slots.out(carrier)
+      demand * slot.share if demand && slot.share
     end
 
     # Public: Provides a fluent API for accessing the slots on the node.

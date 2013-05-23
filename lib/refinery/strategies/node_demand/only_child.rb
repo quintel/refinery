@@ -15,7 +15,7 @@ module Refinery::Strategies
         edge = exclusive_edge(node)
 
         edge.from.output_of(edge.label) / edge.child_share / #
-          node.slots.in(edge.label).get(:share)
+          node.slots.in(edge.label).share
       end
 
       # Internal: Returns the edge which connects the parent to the exclusive
