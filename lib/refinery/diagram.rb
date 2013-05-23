@@ -173,7 +173,7 @@ module Refinery
       attrs     = 'point-size="9" face="Helvetica Bold"'
 
       base + if node.demand.nil?
-        %(<font #{ attrs } color="red">?!</font>>)
+        %(<font #{ attrs } color="#{ color(:red) }">?!</font>>)
       else
         %(<font #{ attrs } color="#8c8c8c">) +
           %(#{ format_number(node.demand) }</font>>)
@@ -193,7 +193,8 @@ module Refinery
     #
     # Returns a string.
     def format_number(number)
-      return '' if number.nil?
+      return ''     if     number.nil?
+      return number unless number.is_a?(Numeric)
 
       formatted = '%.6g' % number
       formatted = formatted.match(/\./) ? formatted : "#{ formatted }.0"
@@ -204,9 +205,27 @@ module Refinery
       parts.join('.')
     end
 
+    # A diagram which allows you to set some nodes and labels to be
+    # semi-transparent.
+    class Recolored < Diagram
+      private
+
+      def recolor_label(label, transparent)
+        transparent && label.gsub(/(color=['"]#.{6})/, '\120') || label
+      end
+
+      def recolor_options(options, transparent)
+        return options unless transparent
+
+        options[:fontcolor] = "#{ options[:fontcolor] }20"
+        options[:color]     = "#{ options[:color] }20"
+        options
+      end
+    end
+
     # A diagram which shows the incalculable nodes and edges normally, and all
     # other elements mostly transparent.
-    class Incalculable < Diagram
+    class Incalculable < Recolored
       #######
       private
       #######
@@ -226,18 +245,6 @@ module Refinery
       def node_label(node)
         recolor_label(super, node.demand)
       end
-
-      def recolor_label(label, transparent)
-        transparent && label.gsub(/(color=['"]#.{6})/, '\120') || label
-      end
-
-      def recolor_options(options, transparent)
-        return options unless transparent
-
-        options[:fontcolor] = "#{ options[:fontcolor] }20"
-        options[:color]     = "#{ options[:color] }20"
-        options
-      end
     end # Incalculable
 
     # A diagram which shows the calculable nodes normally, fading the
@@ -255,5 +262,39 @@ module Refinery
         super(label, ! transparent)
       end
     end # Calculable
+
+    # A specialised "Calculable" diagram which also shows edges which had a
+    # parent or child share defined by the user.
+    class InitialValues < Recolored
+      #######
+      private
+      #######
+
+      def edge_options(edge)
+        recolor_options(super, no_initial_share?(edge))
+      end
+
+      def node_options(node)
+        recolor_options(super, ! node.get(:demand))
+      end
+
+      def edge_label(edge)
+        if no_initial_share?(edge)
+          recolor_label('?!', true)
+        else
+          "<<font face='Helvetica' color='#{ color(:lightgrey) }'> " \
+            "#{ format_number(edge.get(:parent_share) || '-') }, " \
+            "#{ format_number(edge.get(:child_share) || '-') }</font>>"
+        end
+      end
+
+      def node_label(node)
+        recolor_label(super, ! node.get(:demand))
+      end
+
+      def no_initial_share?(edge)
+        edge.get(:parent_share).nil? && edge.get(:child_share).nil?
+      end
+    end # InitialValues
   end # Diagram
 end # Refinery
