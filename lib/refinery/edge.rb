@@ -34,6 +34,8 @@ module Refinery
         set(:child_share, 1.0)
       elsif demand && demand.zero?
         set(:child_share, 0.0)
+      elsif to.demand && to.demand.zero?
+        set(:child_share, 1.0)
       elsif demand && to.demand
         set(:child_share, demand / to.demand_for(label))
       end

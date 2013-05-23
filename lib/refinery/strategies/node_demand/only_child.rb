@@ -13,19 +13,23 @@ module Refinery::Strategies
 
       def self.calculate(node)
         edge = exclusive_edge(node)
+        slot = node.slots.in(edge.label)
 
-        edge.from.output_of(edge.label) / edge.child_share / #
-          node.slots.in(edge.label).share
+        edge.from.output_of(edge.label) / edge.child_share / slot.share
       end
 
       # Internal: Returns the edge which connects the parent to the exclusive
       # child.
       def self.exclusive_edge(node)
         node.in_edges.detect do |edge|
+          slot_share = node.slots.in(edge.label).share
+
           # Child's only parent is the node being calculated?
           edge.from.out_edges.one? &&
             # And the edge has a share value.
             edge.child_share && edge.child_share.nonzero? &&
+            # And the slot has a share value.
+            slot_share && slot_share.nonzero? &&
             # And the child node has demand defined.
             edge.from.demand
         end
