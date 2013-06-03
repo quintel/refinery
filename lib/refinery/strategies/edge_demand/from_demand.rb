@@ -30,7 +30,7 @@ module Refinery::Strategies
     class FromDemand
       def self.calculable?(edge)
         # Parent and child demand?
-        edge.to.demand && edge.from.demand &&
+        edge.to.demand_for(edge.label) && edge.from.output_of(edge.label) &&
           # We already know how the parent node supplies its other children?
           (edge.from.out_edges(edge.label).to_a - [edge]).all?(&:demand)
       end
