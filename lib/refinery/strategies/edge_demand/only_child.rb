@@ -4,7 +4,9 @@ module Refinery::Strategies
     # receives carrier energy exclusively from the parent node.
     class OnlyChild
       def self.calculable?(edge)
-        edge.from.demand && edge.from.out_edges(edge.label).one?
+        edge.from.demand &&
+          edge.from.out_edges(edge.label).one? &&
+          edge.from.slots.out(edge.label).share
       end
 
       def self.calculate(edge)

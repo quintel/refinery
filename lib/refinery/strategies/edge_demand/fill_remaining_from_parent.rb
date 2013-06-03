@@ -13,9 +13,10 @@ module Refinery::Strategies
     # demand of 15 in order to use up all of the energy output by [A].
     class FillRemainingFromParent
       def self.calculable?(edge)
-        edge.from.demand && edge.from.out_edges(edge.label).all? do |other|
-          other.similar?(edge) || other.get(:demand)
-        end
+        edge.from.output_of(edge.label) &&
+          edge.from.out_edges(edge.label).all? do |other|
+            other.similar?(edge) || other.get(:demand)
+          end
       end
 
       def self.calculate(edge)

@@ -4,7 +4,7 @@ module Refinery::Strategies
     # output of the parent, and also have a parent share defined on the edge.
     class ParentShare
       def self.calculable?(edge)
-        edge.from.demand && edge.parent_share
+        edge.from.output_of(edge.label) && edge.parent_share
       end
 
       def self.calculate(edge)

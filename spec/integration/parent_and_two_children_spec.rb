@@ -348,6 +348,47 @@ describe 'Graph calculations; parent and two children' do
       it { expect(graph).to validate }
     end # and both children define demand
 
+    context 'and the slot shares are unknown' do
+      #         [M] (50)
+      #    :gas / \ :electricity
+      #       [C] [S]
+      before do
+        mother.set(:demand, 50.0)
+
+        mother.slots.out(:gas).set(:share, nil)
+        mother.slots.out(:electricity).set(:share, nil)
+
+        calculate!
+      end
+
+      it 'sets the edge shares' do
+        expect(mc_gas_edge).to have_child_share.of(1.0)
+        expect(ms_elec_edge).to have_child_share.of(1.0)
+      end
+
+      it 'does not attempt to calculate edge demands' do
+        # Specifically asserts that the OnlyChild calculator does not run if
+        # the slot share is not known.
+        expect(mc_gas_edge.calculator).to_not be_calculated
+        expect(ms_elec_edge.calculator).to_not be_calculated
+      end
+
+      it 'does not set the edge demands' do
+        expect(mc_gas_edge).to_not have_demand
+        expect(ms_elec_edge).to_not have_demand
+      end
+
+      it 'does not set child demand' do
+        expect(child).to_not have_demand
+      end
+
+      it 'does not set sibling demand' do
+        expect(sibling).to_not have_demand
+      end
+
+      it { expect(graph).to_not validate }
+    end # and the slot shares are unknown
+
     context 'and one of the children has parallel edges' do
       let!(:ms_gas_edge) { mother.connect_to(sibling, :gas) }
 
