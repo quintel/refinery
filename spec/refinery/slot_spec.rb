@@ -137,6 +137,16 @@ module Refinery
             expect(slot.share).to eq(2.0 / 3.0)
           end
         end # and demands are known for all slots
+
+        context 'and demand of the node is zero' do
+          before do
+            parent.set(:demand, 0)
+          end
+
+          it 'does not calculate the slot share' do
+            expect(slot.share).to be_nil
+          end
+        end
       end # as one of many carriers on the node
     end # share
   end # Slot

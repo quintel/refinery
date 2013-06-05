@@ -76,8 +76,13 @@ module Refinery
 
       if slots.one?
         set(:share, 1)
-      elsif demand && (@node.demand || slots.all?(&:demand))
-        set(:share, demand / (@node.demand || slots.sum(&:demand)))
+      elsif demand
+        node_demand = @node.demand ||
+          slots.all?(&:demand) && slots.sum(&:demand)
+
+        if node_demand && ! node_demand.zero?
+          set(:share, demand / node_demand)
+        end
       end
     end
 
