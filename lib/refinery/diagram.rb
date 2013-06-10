@@ -152,15 +152,13 @@ module Refinery
     #
     # Returns a string.
     def edge_label(edge)
-      if edge.demand
-        "<<font face='Helvetica' color='#{ color(:lightgrey) }'> " \
-          "#{ format_number(edge.parent_share) }</font><br/>" \
-          "#{ format_number(edge.demand) }<br/>" \
-          "<font face='Helvetica' color='#{ color(:lightgrey) }'> " \
-            "#{ format_number(edge.child_share) }</font>>"
-      else
-        '?!'
-      end
+      shares = [ format_number(edge.parent_share || '-'),
+                 format_number(edge.child_share || '-') ].join(', ')
+
+      demand = edge.demand ? " (#{ format_number(edge.demand) })" : ' (-)'
+
+      "<<font face='Helvetica' color='#{ color(:lightgrey) }'> " \
+        "#{ shares }</font> #{ demand }>"
     end
 
     # Internal: The label shown inside the node. Includes the node key and the
