@@ -294,5 +294,26 @@ module Refinery
         edge.get(:parent_share).nil? && edge.get(:child_share).nil?
       end
     end # InitialValues
+
+    # A diagram which, draws a specified edge or node with a really big border
+    # so that it can be more easily seen.
+    class Focused < Diagram
+      def initialize(graph, focused_element)
+        super(graph)
+        @focused_element = focused_element
+      end
+
+      #######
+      private
+      #######
+
+      def edge_options(edge)
+        super.merge(penwidth: edge == @focused_element ? 4.0 : 1.0)
+      end
+
+      def node_options(node)
+        super.merge(penwidth: node == @focused_element ? 3.0 : 1.0)
+      end
+    end # Focused
   end # Diagram
 end # Refinery
