@@ -66,7 +66,7 @@ module Refinery
     #
     # Returns a string.
     def element_value(element)
-      '%.10g' % element.demand
+      element.demand ? '%.10g' % element.demand : 'FAIL'
     end
   end # GraphDebugger
 end # Refinery
