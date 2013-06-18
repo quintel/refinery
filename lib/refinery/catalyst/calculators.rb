@@ -53,7 +53,7 @@ module Refinery
 
           calculators.reject! do |calculator|
             if calculator.calculable?
-              calculator.calculate!(order += 1) || true
+              calculate(calculator, order += 1)
             end
           end
 
@@ -62,6 +62,13 @@ module Refinery
             raise IncalculableGraphError.new(calculators)
           end
         end
+      end
+
+      # Internal: Given a single calculator, tells it to calculate it's value.
+      # This can be overridden in subclasses, providing a hook into the
+      # calculation process.
+      def calculate(calculator, order)
+        calculator.calculate!(order) || true
       end
 
       # Internal: Returns all uncalculated calculators from nodes and edges
