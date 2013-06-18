@@ -37,7 +37,6 @@ require 'refinery/reactor'
 require 'refinery/slot'
 require 'refinery/slots_collection'
 require 'refinery/stub'
-require 'refinery/visual_debugger'
 
 module Refinery
   module_function
