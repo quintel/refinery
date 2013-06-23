@@ -39,7 +39,7 @@ module Refinery
         super
 
         Diagram::Focused.new(@graph, calculator.model).
-          draw_to(@directory.join("#{ order }.png"))
+          draw_to(@directory.join("%05d.png" % step))
 
         true
       end
