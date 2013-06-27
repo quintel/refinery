@@ -69,6 +69,11 @@ describe Refinery::PreciseProperties do
         expect(model.get(:share)).to eq(Rational('1'))
       end
 
+      it 'sets negative values to zero' do
+        model.set(:share, -0.1)
+        expect(model.get(:share)).to eq(0)
+      end
+
       it 'does not cast nil' do
         model.set(:share, nil)
         expect(model.get(:share)).to be_nil

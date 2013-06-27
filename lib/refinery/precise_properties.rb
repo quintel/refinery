@@ -36,10 +36,11 @@ module Refinery
     # See Turbine::Properties.
     def set(key, value)
       if value && self.class.precise_properties.include?(key)
-        super(key, value.kind_of?(Rational) ? value : Rational(value.to_s))
-      else
-        super
+        value = value.kind_of?(Rational) ? value : Rational(value.to_s)
+        value = Rational(0) if value < 0
       end
+
+      super(key, value)
     end
 
     # Public: Mass assign properties to the object.

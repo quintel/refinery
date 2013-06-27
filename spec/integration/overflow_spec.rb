@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe 'Graph calculations; overflowing energy' do
+  before { pending('Pending until overflows come back') }
+
   %w( hvn mvn lvn solar consumer export ).each do |key|
     let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }
   end
