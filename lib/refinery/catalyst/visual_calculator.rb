@@ -25,6 +25,8 @@ module Refinery
       # Returns the graph.
       def call(graph)
         @graph = graph
+        FileUtils.mkdir_p(@directory)
+
         run!
       end
 
