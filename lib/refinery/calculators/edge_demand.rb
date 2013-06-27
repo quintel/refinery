@@ -18,7 +18,14 @@ module Refinery
       #
       # Returns nothing.
       def calculate!(order)
-        @model.set(:demand, strategy.calculate(@model))
+        @model.set(:demand, [
+          # Disallow the calculated value from exceeding the demand specified
+          # by the node -- assuming we already know what that demand is.
+          strategy.calculate(@model),
+          @model.to.demand_for(@model.label),
+          @model.from.output_of(@model.label)
+        ].compact.min)
+
         super
       end
 
