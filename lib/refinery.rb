@@ -16,6 +16,7 @@ require 'refinery/strategies/edge_demand/only_child'
 require 'refinery/strategies/edge_demand/parent_share'
 require 'refinery/strategies/edge_demand/child_share'
 require 'refinery/strategies/edge_demand/single_parent'
+require 'refinery/strategies/edge_demand/overflow'
 
 require 'refinery/precise_properties'
 require 'refinery/calculators/base'

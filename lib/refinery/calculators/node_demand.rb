@@ -3,7 +3,7 @@ module Refinery
     # Calculates the total expected or preset demand of a node by looking
     # either to the child nodes, or to a parent node.
     class NodeDemand < Base
-      STRATEGIES = [
+      DEFAULT_STRATEGIES = [
         Strategies::NodeDemand::FromChildren,
         Strategies::NodeDemand::OnlyChild,
         Strategies::NodeDemand::FromParents,
