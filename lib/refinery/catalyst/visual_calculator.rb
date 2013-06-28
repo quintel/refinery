@@ -25,7 +25,19 @@ module Refinery
       # Returns the graph.
       def call(graph)
         @graph = graph
-        run!
+        FileUtils.mkdir_p(@directory)
+
+        # Draw a final graph without the bolded arrow representing the most
+        # recently calculated element.
+        Diagram::InitialValues.new(@graph).draw_to(@directory.join('00000.png'))
+
+        result = run!
+
+        # Draw a final graph without the bolded arrow representing the most
+        # recently calculated element.
+        Diagram.new(@graph).draw_to(@directory.join('99999.png'))
+
+        result
       end
 
       #######

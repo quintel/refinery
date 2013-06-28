@@ -19,8 +19,17 @@ module Refinery::Strategies
       end
 
       def self.calculate(edge)
-        edge.to.demand_for(edge.label) -
-          edge.to.in_edges(edge.label).get(:demand).to_a.compact.sum
+        demand = edge.to.demand_for(edge.label)
+        supply = edge.to.in_edges(edge.label).get(:demand).to_a.compact.sum
+
+        if demand >= supply
+          demand - supply
+        else
+          # Node already has too much energy; this edge should be zero, and
+          # we assume that there is an overflow edge which will take away the
+          # excess.
+          0.0
+        end
       end
     end # FillRemaining
   end # EdgeDemand

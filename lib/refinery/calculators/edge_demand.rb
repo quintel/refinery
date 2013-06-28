@@ -3,7 +3,7 @@ module Refinery
     # Calculates the total expected or preset demand of a node by looking
     # either to the child nodes, or to a parent node.
     class EdgeDemand < Base
-      STRATEGIES = [
+      DEFAULT_STRATEGIES = [
         Strategies::EdgeDemand::SingleParent,
         Strategies::EdgeDemand::OnlyChild,
         Strategies::EdgeDemand::FromDemand,
@@ -18,7 +18,14 @@ module Refinery
       #
       # Returns nothing.
       def calculate!(order)
-        @model.set(:demand, strategy.calculate(@model))
+        @model.set(:demand, [
+          # Disallow the calculated value from exceeding the demand specified
+          # by the node -- assuming we already know what that demand is.
+          strategy.calculate(@model),
+          @model.to.demand_for(@model.label),
+          @model.from.output_of(@model.label)
+        ].compact.min)
+
         super
       end
 
@@ -27,6 +34,22 @@ module Refinery
       # Returns true or false.
       def calculated?
         super || @model.demand
+      end
+
+      #######
+      private
+      #######
+
+      # Internal: An array containing the strategies which may be used to
+      # calculate the edge.
+      #
+      # Returns an array of strategies.
+      def applicable_strategies
+        if @model.get(:type) == :overflow
+          [ Strategies::EdgeDemand::Overflow ]
+        else
+          super
+        end
       end
     end # EdgeDemand
   end # Calculators
