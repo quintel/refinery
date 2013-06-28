@@ -27,7 +27,13 @@ module Refinery
         @graph = graph
         FileUtils.mkdir_p(@directory)
 
-        run!
+        result = run!
+
+        # Draw a final graph without the bolded arrow representing the most
+        # recently calculated element.
+        Diagram.new(@graph).draw_to(@directory.join('99999.png'))
+
+        result
       end
 
       #######
