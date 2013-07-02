@@ -90,7 +90,15 @@ module Refinery
       # Returns the strategy, or nil if there is no way to currently calculate
       # the value.
       def strategy
-        self.class::STRATEGIES.detect { |strat| strat.calculable?(@model) }
+        applicable_strategies.detect { |strat| strat.calculable?(@model) }
+      end
+
+      # Internal: An array containing all of the strategies which may be used
+      # on the model.
+      #
+      # Returns an array of strategies.
+      def applicable_strategies
+        self.class::DEFAULT_STRATEGIES
       end
     end # Base
   end # Calculators

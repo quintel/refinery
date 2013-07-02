@@ -1,34 +1,45 @@
 require 'spec_helper'
 
 describe 'Graph calculations; overflowing energy' do
-  %w( hvn mvn lvn solar consumer export ).each do |key|
+  %w( source hvn mvn lvn solar consumer export ).each do |key|
     let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }
   end
 
+  #   ┌────────┐
+  #   │ SOURCE │
+  #   └────────┘
+  #      |
+  #      v
   #   ┌─────┐    ┌────────┐
   #   │ HVN │ ─> │ EXPORT │
   #   └─────┘    └────────┘
-  #      |
-  #      v
+  #     | ^
+  #     v |
   #   ┌─────┐
   #   | MVN |
   #   └─────┘
-  #      |
-  #      v
-  #   ┌─────┐    ┌─────┐
-  #   | LVN |    | SOL |
-  #   └─────┘    └─────┘
+  #     | ^
+  #     v |
+  #   ┌─────┐    ┌───────┐
+  #   | LVN | <- | SOLAR |
+  #   └─────┘    └───────┘
   #       |        |
   #       v        v
   #      ┌──────────┐
   #      | CONSUMER |
   #      └──────────┘
 
+  let!(:ih_edge) { source.connect_to(hvn, :electricity) }
   let!(:hm_edge) { hvn.connect_to(mvn, :electricity) }
   let!(:ml_edge) { mvn.connect_to(lvn, :electricity) }
   let!(:lc_edge) { lvn.connect_to(consumer, :electricity) }
   let!(:sc_edge) { solar.connect_to(consumer, :electricity) }
   let!(:he_edge) { hvn.connect_to(export, :electricity) }
+
+  # Overflow edges.
+  let!(:mh_edge) { mvn.connect_to(hvn, :electricity, type: :overflow) }
+  let!(:lm_edge) { lvn.connect_to(mvn, :electricity, type: :overflow) }
+  let!(:sl_edge) { solar.connect_to(lvn, :electricity, type: :overflow) }
 
   context 'when the secondary supplier under-supplies' do
     before do
@@ -38,8 +49,8 @@ describe 'Graph calculations; overflowing energy' do
       # Solar provides 80 of that, meaning the HVN needs to supply 20.
       solar.set(:demand, 80.0)
 
-      # But the HVN supplies 120!
-      hvn.set(:demand, 120.0)
+      # But the SOURCE gives 120!
+      source.set(:demand, 120.0)
 
       # Let's get this party started!
       calculate!
@@ -65,6 +76,18 @@ describe 'Graph calculations; overflowing energy' do
       expect(he_edge).to have_demand.of(100.0)
     end
 
+    it 'sets SOLAR->LVN (overflow) to 0.0' do
+      expect(sl_edge).to have_demand.of(0)
+    end
+
+    it 'sets LVN->MVN (overflow) to 0.0' do
+      expect(lm_edge).to have_demand.of(0)
+    end
+
+    it 'sets MVN->HVN (overflow) to 0.0' do
+      expect(mh_edge).to have_demand.of(0)
+    end
+
     it { expect(graph).to validate }
   end # when the secondary supplier undersupplies
 
@@ -76,8 +99,8 @@ describe 'Graph calculations; overflowing energy' do
       # Solar provides 100 of that, meaning the HVN needs to supply nothing.
       solar.set(:demand, 100.0)
 
-      # But, disaster! HVN supplies 50!
-      hvn.set(:demand, 50.0)
+      # But, disaster! SOURCE gives 50!
+      source.set(:demand, 50.0)
 
       # Tune in next week to find out what happens!
       calculate!
@@ -103,6 +126,18 @@ describe 'Graph calculations; overflowing energy' do
       expect(he_edge).to have_demand.of(50.0)
     end
 
+    it 'sets SOLAR->LVN (overflow) to 0.0' do
+      expect(sl_edge).to have_demand.of(0)
+    end
+
+    it 'sets LVN->MVN (overflow) to 0.0' do
+      expect(lm_edge).to have_demand.of(0)
+    end
+
+    it 'sets MVN->HVN (overflow) to 0.0' do
+      expect(mh_edge).to have_demand.of(0)
+    end
+
     it { expect(graph).to validate }
   end # when the secondary supplier fulfils demand exactly
 
@@ -115,31 +150,43 @@ describe 'Graph calculations; overflowing energy' do
       # to supply nothing.
       solar.set(:demand, 150.0)
 
-      # HVN then supplies an additional 50.
-      hvn.set(:demand, 50.0)
+      # SOURCE then gives an additional 50.
+      source.set(:demand, 50.0)
 
       # Om-nom-nom.
       calculate!
     end
 
-    it 'sets HVN->MVN to -50.0' do
-      expect(hm_edge).to have_demand.of(-50.0)
+    it 'sets HVN->MVN to 0.0' do
+      expect(hm_edge).to have_demand.of(0.0)
     end
 
-    it 'sets MVN->LVN to -50.0' do
-      expect(ml_edge).to have_demand.of(-50.0)
+    it 'sets MVN->LVN to 0.0' do
+      expect(ml_edge).to have_demand.of(0.0)
     end
 
-    it 'sets LVN->CONSUMER to -50.0' do
-      expect(lc_edge).to have_demand.of(-50.0)
+    it 'sets LVN->CONSUMER to 0.0' do
+      expect(lc_edge).to have_demand.of(0.0)
     end
 
-    it 'sets SOLAR->CONSUMER to 150.0' do
-      expect(sc_edge).to have_demand.of(150.0)
+    it 'sets SOLAR->CONSUMER to 100.0' do
+      expect(sc_edge).to have_demand.of(100.0)
     end
 
     it 'sets HVN->EXPORT to 100.0' do
       expect(he_edge).to have_demand.of(100.0)
+    end
+
+    it 'sets SOLAR->LVN (overflow) to 50.0' do
+      expect(sl_edge).to have_demand.of(50.0)
+    end
+
+    it 'sets LVN->MVN (overflow) to 50.0' do
+      expect(lm_edge).to have_demand.of(50.0)
+    end
+
+    it 'sets MVN->HVN (overflow) to 50.0' do
+      expect(mh_edge).to have_demand.of(50.0)
     end
 
     it { expect(graph).to validate }
@@ -179,8 +226,8 @@ describe 'Graph calculations; overflowing energy' do
       # Solar provides 100 of that, meaning the HVN needs to supply 20.
       so4.set(:demand, 100.0)
 
-      # But the HVN supplies 50!
-      hvn.set(:demand, 50.0)
+      # But the SOURCE provides 50!
+      source.set(:demand, 50.0)
 
       # Let's get this party started!
       calculate!
@@ -251,7 +298,7 @@ describe 'Graph calculations; overflowing energy' do
     before do
       consumer.set(:demand, 100.0)
       solar.set(:demand, 150.0)
-      hvn.set(:demand, 50.0)
+      source.set(:demand, 50.0)
 
       sink_edge.set(:parent_share, 0.3)
 
@@ -259,11 +306,134 @@ describe 'Graph calculations; overflowing energy' do
     end
 
     it 'sets HVN->EXPORT demand' do
-      expect(he_edge).to have_demand.of(85.0)
+      expect(he_edge).to have_demand.of(70.0)
     end
 
     it 'sets HVN->SINK demand' do
-      expect(sink_edge).to have_demand.of(15.0)
+      expect(sink_edge).to have_demand.of(30.0)
     end
   end # when HVN has a third child
 end # Graph calculations; overflowing energy
+
+# Additional overflow examples, as described in quintel/refinery#5.
+describe 'Graph calculations; overflowing energy (issue #5)' do
+  %w( a b c x y z ).each do |key|
+    let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }
+  end
+
+  #   ┌───┐    ┌───┐
+  #   │ A │    │ X │
+  #   └───┘    └───┘
+  #     |        |
+  #     v        v
+  #   ┌───┐ ─> ┌───┐
+  #   | B |    │ Y │
+  #   └───┘ <─ └───┘
+  #     |        |
+  #     v        v
+  #   ┌───┐    ┌───┐
+  #   | C |    │ Z │
+  #   └───┘    └───┘
+
+  let!(:ab_edge) { a.connect_to(b, :gas) }
+  let!(:bc_edge) { b.connect_to(c, :gas) }
+  let!(:by_edge) { b.connect_to(y, :gas, type: :overflow) }
+
+  let!(:xy_edge) { x.connect_to(y, :gas) }
+  let!(:yb_edge) { y.connect_to(b, :gas) }
+  let!(:yz_edge) { y.connect_to(z, :gas) }
+
+  context 'when the primary supplier under-supplies' do
+    #        ┌───┐    ┌───┐
+    #  (200) │ A │    │ X │ (0)
+    #        └───┘    └───┘
+    #          |        |
+    #          v        v
+    #        ┌───┐ ─> ┌───┐
+    #        | B |    │ Y │
+    #        └───┘ <─ └───┘
+    #          |        |
+    #          v        v
+    #        ┌───┐    ┌───┐
+    #  (100) | C |    │ Z │
+    #        └───┘    └───┘
+    before do
+      a.set(:demand, 200)
+      c.set(:demand, 100)
+      x.set(:demand, 0)
+
+      calculate!
+    end
+
+    it 'sets A->B to 200' do
+      expect(ab_edge).to have_demand.of(200)
+    end
+
+    it 'sets B->C to 100' do
+      expect(bc_edge).to have_demand.of(100)
+    end
+
+    it 'sets B->Y to 100' do
+      expect(by_edge).to have_demand.of(100)
+    end
+
+    it 'sets Y->B to 0' do
+      expect(yb_edge).to have_demand.of(0)
+    end
+
+    it 'sets X->Y to 0' do
+      expect(xy_edge).to have_demand.of(0)
+    end
+
+    it 'sets Y->Z to 100' do
+      expect(yz_edge).to have_demand.of(100)
+    end
+  end # when the primary supplier over-supplies
+
+  context 'when the primary supplier under-supplies' do
+    #        ┌───┐    ┌───┐
+    #  (100) │ A │    │ X │
+    #        └───┘    └───┘
+    #          |        |
+    #          v        v
+    #        ┌───┐ ─> ┌───┐
+    #        | B |    │ Y │
+    #        └───┘ <─ └───┘
+    #          |        |
+    #          v        v
+    #        ┌───┐    ┌───┐
+    #  (200) | C |    │ Z │
+    #        └───┘    └───┘
+    before do
+      a.set(:demand, 100)
+      c.set(:demand, 200)
+      x.set(:demand, 0)
+
+      calculate!
+    end
+
+    it 'sets A->B to 100' do
+      expect(ab_edge).to have_demand.of(100)
+    end
+
+    it 'sets B->C to 200' do
+      expect(bc_edge).to have_demand.of(200)
+    end
+
+    it 'sets B->Y to 0' do
+      expect(by_edge).to have_demand.of(0)
+    end
+
+    it 'sets Y->B to 100' do
+      expect(yb_edge).to have_demand.of(100)
+    end
+
+    it 'sets X->Y to 0' do
+      expect(xy_edge).to have_demand.of(0)
+    end
+
+    it 'sets Y->Z to 0' do
+      expect(yz_edge).to have_demand.of(0)
+    end
+  end # when the primary supplier under-supplies
+end # Graph calculations; overflowing energy (issue #5)
