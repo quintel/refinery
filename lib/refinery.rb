@@ -5,7 +5,6 @@ require 'turbine'
 
 module Refinery; end
 
-require 'refinery/strategies/node_demand/fill_remaining'
 require 'refinery/strategies/node_demand/from_children'
 require 'refinery/strategies/node_demand/from_parents'
 require 'refinery/strategies/node_demand/only_child'

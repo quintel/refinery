@@ -5,9 +5,8 @@ module Refinery
     class NodeDemand < Base
       DEFAULT_STRATEGIES = [
         Strategies::NodeDemand::FromChildren,
-        Strategies::NodeDemand::OnlyChild,
         Strategies::NodeDemand::FromParents,
-        Strategies::NodeDemand::FillRemaining
+        Strategies::NodeDemand::OnlyChild
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the
