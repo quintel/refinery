@@ -66,7 +66,8 @@ module Refinery::Strategies
           # The from node has no in edges; it is a primary supplier.
           edge.from.demand
         else
-          strict_sum(suppliers.reject { |o| o.from == edge.to })
+          Refinery::Util.strict_sum(
+            suppliers.reject { |o| o.from == edge.to }, &:demand)
         end
       end
 
@@ -75,7 +76,8 @@ module Refinery::Strategies
       #
       # Returns an array of edges.
       def self.unrelated_demand(edge)
-        strict_sum(edge.from.out_edges.select { |o| o != edge })
+        Refinery::Util.strict_sum(
+          edge.from.out_edges.select { |o| o != edge }, &:demand)
       end
 
       # Overflow edges are accompanied by a normal edge going in the opposite
@@ -84,18 +86,6 @@ module Refinery::Strategies
       # Returns an edge.
       def self.anti_parallel_edge(edge)
         edge.to.out_edges.to_a.detect { |o| o.to == edge.from }
-      end
-
-      # Internal: Sums the demands of the given edges.
-      #
-      # We're not using sum, since that will return 0 when a demand is zero,
-      # and we *want* to return nil if a demand is missing.
-      #
-      # Returns a numeric, or nil.
-      def self.strict_sum(edges)
-        edges.reduce(0) do |sum, edge|
-          edge.demand.nil? ? (return nil) : sum + edge.demand
-        end
       end
     end
   end # EdgeDemand

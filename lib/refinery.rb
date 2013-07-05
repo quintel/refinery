@@ -37,6 +37,7 @@ require 'refinery/reactor'
 require 'refinery/slot'
 require 'refinery/slots_collection'
 require 'refinery/stub'
+require 'refinery/util'
 
 module Refinery
   module_function
