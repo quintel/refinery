@@ -59,13 +59,24 @@ module Refinery::Spec
     end
 
     # Public: Calculates demand and edge shares for the graph. If the graph
-    # cannot be calcualted, no error is raised.
+    # cannot be calculated, no error is raised.
+    #
+    # debug - Uses the VisualCalculator to draw diagrams of the graph in each
+    #         step of the calculation. Diagrams are drawn to tmp/debug.
     #
     # Returns nothing.
-    def calculate!
+    def calculate!(debug = false)
+      if debug
+        directory = Pathname.new('tmp/debug')
+        directory.children.each { |child| child.delete }
+
+        catalyst = Refinery::Catalyst::VisualCalculator.new(directory)
+      else
+        catalyst = Refinery::Catalyst::Calculators
+      end
+
       Refinery::Reactor.new(
-        Refinery::Catalyst::ConvertFinalDemand,
-        Refinery::Catalyst::Calculators
+        Refinery::Catalyst::ConvertFinalDemand, catalyst
       ).run(graph)
     rescue Refinery::IncalculableGraphError
     end
