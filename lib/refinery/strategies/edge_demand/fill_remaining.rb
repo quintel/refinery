@@ -13,13 +13,13 @@ module Refinery::Strategies
     # demand of 20 (so that that all edges meet the demand of [X]).
     class FillRemaining
       def self.calculable?(edge)
-        edge.to.demand && edge.to.in_edges(edge.label).all? do |other|
+        child_demand(edge) && edge.to.in_edges(edge.label).all? do |other|
           other.similar?(edge) || other.get(:demand)
         end
       end
 
       def self.calculate(edge)
-        demand = edge.to.demand_for(edge.label)
+        demand = child_demand(edge) * edge.to.slots.in(edge.label).share
         supply = edge.to.in_edges(edge.label).get(:demand).to_a.compact.sum
 
         if demand >= supply
@@ -30,6 +30,18 @@ module Refinery::Strategies
           # excess.
           0.0
         end
+      end
+
+      # Internal: Given an edge, determines the demand of the child node.
+      #
+      # This will preferentially return the node's +demand+ attribute if it
+      # has one, otherwise it will see if all of the nodes out edges (minus
+      # those with the "overflow" behaviour) have a known demand. This allows
+      # it to act like ETEngine's "flexible" links.
+      #
+      # Returns a numeric, or nil if no demand can be determined.
+      def self.child_demand(edge)
+        edge.to.demand
       end
     end # FillRemaining
   end # EdgeDemand

@@ -45,8 +45,11 @@ module Refinery
       #
       # Returns an array of strategies.
       def applicable_strategies
-        if @model.get(:type) == :overflow
+        case @model.get(:type)
+        when :overflow
           [ Strategies::EdgeDemand::Overflow ]
+        when :flexible
+          [ Strategies::EdgeDemand::Flexible ]
         else
           super
         end
