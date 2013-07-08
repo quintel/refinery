@@ -13,9 +13,11 @@ module Refinery::Strategies
     # demand of 20 (so that that all edges meet the demand of [X]).
     class FillRemaining
       def self.calculable?(edge)
-        child_demand(edge) && edge.to.in_edges(edge.label).all? do |other|
-          other.similar?(edge) || other.get(:demand)
-        end
+        child_demand(edge) &&
+          edge.to.slots.in(edge.label).share &&
+          edge.to.in_edges(edge.label).all? do |other|
+            other.similar?(edge) || other.get(:demand)
+          end
       end
 
       def self.calculate(edge)
