@@ -185,4 +185,107 @@ describe 'Graph calculations; with two parents' do
       it { expect(graph).to validate }
     end
   end # the child has demand
+
+  context 'and the edges use different carriers' do
+    let!(:mc_edge) { mother.connect_to(child, :gas) }
+    let!(:fc_edge) { father.connect_to(child, :electricity) }
+
+    context 'and the parents define demand' do
+      #   (30) [M] [F] (20)
+      #          \ /
+      #          [C]
+      before do
+        mother.set(:demand, 30)
+        father.set(:demand, 20)
+
+        calculate!
+      end
+
+      it 'sets the edge shares' do
+        expect(mc_edge).to have_child_share.of(1)
+        expect(fc_edge).to have_child_share.of(1)
+      end
+
+      it 'sets the edge demands' do
+        expect(mc_edge).to have_demand.of(30)
+        expect(fc_edge).to have_demand.of(20)
+      end
+
+      it 'calculates the child slot shares' do
+        expect(child.slots.in(:gas).share).to eq(30.0 / 50)
+        expect(child.slots.in(:electricity).share).to eq(20.0 / 50)
+      end
+
+      it 'sets child demand' do
+        expect(child).to have_demand.of(50)
+      end
+
+      it { expect(graph).to validate }
+    end # and the parents define demand
+
+    context 'and the child defines output shares' do
+      before do
+        #   (30) [M] [F]
+        #    (0.6) \ / (0.4)
+        #          [C]
+        mother.set(:demand, 30)
+        child.slots.in(:gas).set(:share, 0.6)
+        child.slots.in(:electricity).set(:share, 0.4)
+
+        calculate!
+      end
+
+      it 'sets the edge shares' do
+        expect(mc_edge).to have_child_share.of(1)
+        expect(fc_edge).to have_child_share.of(1)
+      end
+
+      it 'sets the edge demands' do
+        expect(mc_edge).to have_demand.of(30)
+        expect(fc_edge).to have_demand.of(20)
+      end
+
+      it 'calculates the child slot shares' do
+        expect(child.slots.in(:gas).share).to eq(30.0 / 50)
+        expect(child.slots.in(:electricity).share).to eq(20.0 / 50)
+      end
+
+      it 'sets child demand' do
+        expect(child).to have_demand.of(50)
+      end
+
+      it { expect(graph).to validate }
+    end # and the child defines output shares
+
+    context 'and the child defines only one output share' do
+      before do
+        #   (30) [M] [F]
+        #    (0.6) \ /
+        #          [C]
+        mother.set(:demand, 30)
+        child.slots.in(:gas).set(:share, 0.6)
+
+        calculate!
+      end
+
+      it 'sets edge shares' do
+        expect(mc_edge).to have_child_share.of(1)
+        expect(fc_edge).to have_child_share.of(1)
+      end
+
+      it 'calculates child slot shares when a parent share is present' do
+        expect(child.slots.in(:gas).share).to eq(30.0 / 50.0)
+      end
+
+      it 'does not calculate share-less child slot shares' do
+        expect(child.slots.in(:electricity).share).to be_nil
+      end
+
+      it 'does sets child demand' do
+        expect(child).to have_demand.of(50)
+      end
+
+      it { expect(graph).to_not validate }
+    end # and the child defines only one output share
+  end # and the edges use different carriers
 end # Graph calcualtions; with two parents

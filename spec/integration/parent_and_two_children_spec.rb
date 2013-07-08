@@ -449,29 +449,40 @@ describe 'Graph calculations; parent and two children' do
           mother.set(:demand, 200.0)
           sibling.set(:demand, nil)
           calculate!
+
+          # Mother:
+          #   120 total gas.
+          #    80 total electricity.
+          #
+          # Sibling:
+          #   80% electricity in
+          #   20% gas in
+          #
+          # All mother electricity goes to sibling. Therefore 80 * 0.8 = 100
+          # demand in total.
         end
 
         it 'sets M->S electricity edge demand' do
           expect(ms_elec_edge).to have_demand.of(80.0)
         end
 
-        it 'does not set M->C gas edge demand' do
-          expect(mc_gas_edge).to_not have_demand
+        it 'sets M->S gas edge demand' do
+          expect(ms_gas_edge).to have_demand.of(20.0)
         end
 
-        it 'does not set M->S gas edge demand' do
-          expect(ms_gas_edge).to_not have_demand
+        it 'sets M->C gas edge demand' do
+          expect(mc_gas_edge).to have_demand.of(100.0)
         end
 
-        it 'does not set child demand' do
-          expect(child).to_not have_demand
+        it 'sets child demand' do
+          expect(child).to have_demand.of(100.0)
         end
 
-        it 'does not set sibling demand' do
-          expect(sibling).to_not have_demand
+        it 'does sets sibling demand' do
+          expect(sibling).to have_demand.of(100.0)
         end
 
-        it { expect(graph).to_not validate }
+        it { expect(graph).to validate }
       end # without demand
 
       context 'without parent demand' do

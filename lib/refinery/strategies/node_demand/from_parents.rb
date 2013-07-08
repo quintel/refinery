@@ -4,11 +4,18 @@ module Refinery::Strategies
     # of all its parents, and the shares of all incoming edges.
     class FromParents
       def self.calculable?(node)
-        node.in_edges.any? && node.in_edges.all?(&:demand)
+        ! complete_slot(node).nil?
       end
 
       def self.calculate(node)
-        node.in_edges.sum(&:demand)
+        slot = complete_slot(node)
+        slot.edges.sum(&:demand) / slot.share
+      end
+
+      def self.complete_slot(node)
+        node.slots.in.detect do |slot|
+          slot.share && slot.edges.any? && slot.edges.all?(&:demand)
+        end
       end
     end # FromParents
   end # NodeDemand
