@@ -9,7 +9,7 @@ module Refinery::Strategies
 
       def self.calculate(node)
         slot = complete_slot(node)
-        slot.edges.sum(&:demand) / slot.share
+        slot.share.zero? ? 0.0 : slot.edges.sum(&:demand) / slot.share
       end
 
       def self.complete_slot(node)
