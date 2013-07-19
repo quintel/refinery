@@ -29,15 +29,18 @@ module Refinery
 
         # Draw a final graph without the bolded arrow representing the most
         # recently calculated element.
-        Diagram::InitialValues.new(@graph).draw_to(@directory.join('00000.png'))
+        draw(Diagram::InitialValues, '00000')
 
         result = run!
 
         # Draw a final graph without the bolded arrow representing the most
         # recently calculated element.
-        Diagram.new(@graph).draw_to(@directory.join('99999.png'))
+        draw(Diagram, '99999')
 
         result
+      rescue IncalculableGraphError => ex
+        draw(Diagram::Calculable,   '99999-calculable')
+        draw(Diagram::Incalculable, '99999-incalculable')
       end
 
       #######
@@ -49,11 +52,16 @@ module Refinery
       # calculation process.
       def calculate(calculator, order)
         super
-
-        Diagram::Focused.new(@graph, calculator.model).
-          draw_to(@directory.join("%05d.png" % order))
+        draw(Diagram::Focused, '%05d' % order, calculator.model)
 
         true
+      end
+
+      # Internal: Given a diagram class, draws the diagram to the given
+      # +filename+ (within +@directory+, omit the extension). Additional
+      # +*args+ will be given to the diagram when initialzied.
+      def draw(klass, filename, *args)
+        klass.new(@graph, *args).draw_to(@directory.join("#{ filename }.png"))
       end
     end # VisualCalculator
   end # Catalyst
