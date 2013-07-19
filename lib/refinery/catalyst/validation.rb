@@ -52,8 +52,6 @@ module Refinery
       #
       # Returns self.
       def run!
-        @errors = {}
-
         @graph.nodes.each do |node|
           if node.demand.nil?
             # Associated slots and edges will obviously be invalid if the node
