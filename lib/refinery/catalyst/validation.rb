@@ -29,7 +29,8 @@ module Refinery
       # Strings for the various error messages.
       MESSAGES = {
         object_missing_demand: 'has no demand value set',
-        non_matching_demand:   'demand (%s) does not match %s the node (%s)'
+        non_matching_demand:   'demand (%s) does not match %s the node (%s)',
+        undetermined_share:    'has an undetermined share'
       }.freeze
 
       # Public: Returns the errors. This will be an empty hash if no errors
@@ -99,6 +100,8 @@ module Refinery
           end
         elsif slot.demand.nil?
           add_error(slot, :object_missing_demand)
+        elsif slot.share.nil?
+          add_error(slot, :undetermined_share)
         elsif ! ((expected - 1e-20)..(expected + 1e-20)).include?(slot.demand)
           noun = slot.direction == :in ? 'demand from' : 'output of'
           add_error(slot, :non_matching_demand, slot.demand, noun, expected)
