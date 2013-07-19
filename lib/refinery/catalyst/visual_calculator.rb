@@ -41,6 +41,8 @@ module Refinery
       rescue IncalculableGraphError => ex
         draw(Diagram::Calculable,   '99999-calculable')
         draw(Diagram::Incalculable, '99999-incalculable')
+
+        raise ex
       end
 
       #######
