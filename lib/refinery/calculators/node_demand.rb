@@ -14,8 +14,8 @@ module Refinery
       #
       # Returns nothing.
       def calculate!(order)
-        @model.set(:demand, strategy.calculate(@model))
         super
+        @model.set(:demand, strategy.calculate(@model))
       end
 
       # Public: Has a demand value been set for the node?

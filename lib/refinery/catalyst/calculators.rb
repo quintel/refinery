@@ -53,7 +53,15 @@ module Refinery
 
           calculators.reject! do |calculator|
             if calculator.calculable?
-              calculate(calculator, order += 1)
+              begin
+                calculate(calculator, order += 1)
+              rescue StandardError => ex
+                ex.message.gsub!(/$/,
+                  " (calculating #{ calculator.model.inspect }" \
+                  " using #{ calculator.strategy_used.inspect })")
+
+                raise ex
+              end
             end
           end
 

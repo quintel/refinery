@@ -18,6 +18,8 @@ module Refinery
       #
       # Returns nothing.
       def calculate!(order)
+        super
+
         @model.set(:demand, [
           # Disallow the calculated value from exceeding the demand specified
           # by the node -- assuming we already know what that demand is.
@@ -25,8 +27,6 @@ module Refinery
           @model.to.demand_for(@model.label),
           @model.from.output_of(@model.label)
         ].compact.min)
-
-        super
       end
 
       # Public: Has a demand value been set for the node?
