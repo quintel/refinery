@@ -18,8 +18,9 @@ module Refinery
       # all the values have been computed.
       #
       # Returns a Calculators.
-      def initialize(graph)
+      def initialize(graph, &block)
         @graph = graph
+        @block = block
       end
 
       # Public: Runs the catalyst on the +graph+.
@@ -55,6 +56,7 @@ module Refinery
             if calculator.calculable?
               begin
                 calculate(calculator, order += 1)
+                @block.call(calculator) if @block
               rescue StandardError => ex
                 ex.message.gsub!(/$/,
                   " (calculating #{ calculator.model.inspect }" \

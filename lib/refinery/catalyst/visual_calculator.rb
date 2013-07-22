@@ -15,8 +15,8 @@ module Refinery
       # directory - A directory in which to write the diagram PNGs.
       #
       # Returns a VisualCalculator.
-      def initialize(directory)
-        super(nil)
+      def initialize(directory, &block)
+        super(nil, &block)
         @directory = Pathname.new(directory)
       end
 
