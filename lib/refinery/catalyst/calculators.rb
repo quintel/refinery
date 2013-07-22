@@ -57,6 +57,7 @@ module Refinery
               begin
                 calculate(calculator, order += 1)
                 @block.call(calculator) if @block
+                true
               rescue StandardError => ex
                 ex.message.gsub!(/$/,
                   " (calculating #{ calculator.model.inspect }" \
