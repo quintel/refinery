@@ -20,14 +20,14 @@ module Refinery::Strategies
       end
 
       def calculable?(node)
-        completed_slot(node) || zero_demand?(node)
+        completed_slot(node) || all_edges_calculated?(node)
       end
 
       def calculate(node)
         if slot = completed_slot(node)
           slot.edges.sum(&:demand) / slot.share
         else
-          0.0
+          edges(node).sum(&:demand)
         end
       end
 
@@ -52,6 +52,11 @@ module Refinery::Strategies
         edges.any? && edges.get(:demand).all? do |demand|
           demand && demand.zero?
         end
+      end
+
+      def all_edges_calculated?(node)
+        edges = edges(node)
+        edges.any? && edges.get(:demand).all?
       end
 
       def slots(node)
