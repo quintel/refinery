@@ -49,8 +49,8 @@ module Refinery
         when :overflow
           [ Strategies::EdgeDemand::Overflow ]
         when :flexible
-          [ Strategies::EdgeDemand::Flexible,
-            Strategies::EdgeDemand::OnlyChild ]
+          [ Strategies::EdgeDemand::OnlyChild,
+            Strategies::EdgeDemand::Flexible ]
         else
           super
         end
