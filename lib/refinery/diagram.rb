@@ -290,9 +290,7 @@ module Refinery
         if no_initial_share?(edge)
           recolor_label('?!', true)
         else
-          "<<font face='Helvetica' color='#{ color(:lightgrey) }'> " \
-            "#{ format_number(edge.get(:parent_share) || '-') }, " \
-            "#{ format_number(edge.get(:child_share) || '-') }</font>>"
+          super
         end
       end
 
