@@ -141,8 +141,14 @@ module Refinery
     #
     # Returns a hash.
     def edge_options(edge)
+      style = case edge.get(:type)
+        when :overflow then :dashed
+        when :flexible then :dotted
+        else                :solid
+      end
+
       EDGE_OPTIONS.merge(
-        style:     edge.get(:type) == :overflow ? :dashed : :solid,
+        style:     style,
         label:     edge_label(edge),
         fontcolor: color(:grey),
         color:     color(EDGE_COLORS[edge.label]))
