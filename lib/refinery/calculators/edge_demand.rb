@@ -50,6 +50,8 @@ module Refinery
           [ Strategies::EdgeDemand::Overflow ]
         when :flexible
           [ Strategies::EdgeDemand::OnlyChild,
+            Strategies::EdgeDemand::ParentShare,
+            Strategies::EdgeDemand::ChildShare,
             Strategies::EdgeDemand::Flexible ]
         else
           super
