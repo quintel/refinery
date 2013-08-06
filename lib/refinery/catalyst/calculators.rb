@@ -6,7 +6,7 @@ module Refinery
       #
       # graph - The graph for which values will be computed.
       #
-      # Returns nothing.
+      # Returns the calculated graph.
       def self.call(graph)
         new(graph).run!
       end
@@ -18,9 +18,20 @@ module Refinery
       # all the values have been computed.
       #
       # Returns a Calculators.
-      def initialize(graph, &block)
+      def initialize(graph = nil, &block)
         @graph = graph
         @block = block
+      end
+
+      # Public: Runs the calculators, assuming you creates the Calculators
+      # instance manually with a block.
+      #
+      # graph - The graph for which values will be computed.
+      #
+      # Returns the calculated graph.
+      def call(graph)
+        @graph = graph
+        run!
       end
 
       # Public: Runs the catalyst on the +graph+.
