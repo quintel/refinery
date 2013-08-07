@@ -4,8 +4,12 @@ module Refinery
     # either to the child nodes, or to a parent node.
     class NodeDemand < Base
       DEFAULT_STRATEGIES = [
-        Strategies::NodeDemand::FromEdges.new(:out),
-        Strategies::NodeDemand::FromEdges.new(:in),
+        Strategies::NodeDemand::FromCompleteEdge.new(:out),
+        Strategies::NodeDemand::FromCompleteEdge.new(:in),
+        Strategies::NodeDemand::FromCompleteSlot.new(:out),
+        Strategies::NodeDemand::FromCompleteSlot.new(:in),
+        Strategies::NodeDemand::FromAllEdges.new(:out),
+        Strategies::NodeDemand::FromAllEdges.new(:in),
         Strategies::NodeDemand::OnlyChild
       ]
 

@@ -6,6 +6,9 @@ require 'turbine'
 module Refinery; end
 
 require 'refinery/strategies/node_demand/from_edges'
+require 'refinery/strategies/node_demand/from_complete_edge'
+require 'refinery/strategies/node_demand/from_complete_slot'
+require 'refinery/strategies/node_demand/from_all_edges'
 require 'refinery/strategies/node_demand/only_child'
 require 'refinery/strategies/edge_demand/fill_remaining'
 require 'refinery/strategies/edge_demand/fill_remaining_from_parent'
