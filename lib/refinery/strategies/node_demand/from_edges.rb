@@ -58,14 +58,6 @@ module Refinery::Strategies
         end
       end
 
-      # def zero_demand?(node)
-        # edges = edges(node)
-
-        # edges.any? && edges.get(:demand).all? do |demand|
-          # demand && demand.zero?
-        # end
-      # end
-
       def all_edges_calculated?(node)
         edges = edges(node)
         edges.any? && edges.get(:demand).all?
