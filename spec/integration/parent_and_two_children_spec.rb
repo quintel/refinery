@@ -518,6 +518,41 @@ describe 'Graph calculations; parent and two children' do
         it { expect(graph).to validate }
       end # without parent demand
 
+      context 'without parent demand, but with an edge share' do
+        #           [M]
+        #      :gas / \\ :electricity, :gas
+        #   (100) [C]  [S]
+        before do
+          mother.set(:demand, nil)
+          child.set(:demand, 100)
+          mc_gas_edge.set(:parent_share, Rational(100) / Rational(120))
+
+          calculate!
+        end
+
+        it 'sets M->C gas edge demand' do
+          expect(mc_gas_edge).to have_demand.of(100.0)
+        end
+
+        it 'sets M->S gas demand' do
+          expect(ms_gas_edge).to have_demand.of(20.0)
+        end
+
+        it 'sets M->S electricity demand' do
+          expect(ms_elec_edge).to have_demand.of(80.0)
+        end
+
+        it 'sets child demand' do
+          expect(child).to have_demand.of(100.0)
+        end
+
+        it 'sets parent demand' do
+          expect(mother).to have_demand.of(200.0)
+        end
+
+        it { expect(graph).to validate }
+      end # without parent demand, but wih an edge shaer
+
       context 'without parent demand and a grandparent' do
         #        [G] (200)
         #         |

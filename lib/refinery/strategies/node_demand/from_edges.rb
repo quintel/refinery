@@ -20,11 +20,15 @@ module Refinery::Strategies
       end
 
       def calculable?(node)
-        completed_slot(node) || all_edges_calculated?(node)
+        acceptable_edge(node) ||
+          completed_slot(node) ||
+          all_edges_calculated?(node)
       end
 
       def calculate(node)
-        if slot = completed_slot(node)
+        if edge = acceptable_edge(node)
+          edge.demand / share(edge) / slots(node).get(edge.label).share
+        elsif slot = completed_slot(node)
           slot.edges.sum(&:demand) / slot.share
         else
           edges(node).sum(&:demand)
@@ -34,6 +38,14 @@ module Refinery::Strategies
       #######
       private
       #######
+
+      def acceptable_edge(node)
+        edges(node).detect do |edge|
+          edge.demand &&
+            (share = share(edge)) && (! share.zero?) &&
+            (conv  = slots(node).get(edge.label).share) && (! conv.zero?)
+        end
+      end
 
       # Internal: Finds the first slot with a share whose edges all have a
       # demand available.
@@ -46,17 +58,21 @@ module Refinery::Strategies
         end
       end
 
-      def zero_demand?(node)
-        edges = edges(node)
+      # def zero_demand?(node)
+        # edges = edges(node)
 
-        edges.any? && edges.get(:demand).all? do |demand|
-          demand && demand.zero?
-        end
-      end
+        # edges.any? && edges.get(:demand).all? do |demand|
+          # demand && demand.zero?
+        # end
+      # end
 
       def all_edges_calculated?(node)
         edges = edges(node)
         edges.any? && edges.get(:demand).all?
+      end
+
+      def share(edge)
+        @direction == :in ? edge.child_share : edge.parent_share
       end
 
       def slots(node)
