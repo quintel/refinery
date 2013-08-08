@@ -35,7 +35,7 @@ module Refinery
 
         # Draw a final graph without the bolded arrow representing the most
         # recently calculated element.
-        draw(Diagram, '99999')
+        draw(Diagram::Base, '99999')
 
         result
       rescue IncalculableGraphError => ex
