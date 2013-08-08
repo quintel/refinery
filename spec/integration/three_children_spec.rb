@@ -97,6 +97,106 @@ describe 'Graph calculations; with three children' do
 
       it { expect(graph).to_not validate }
     end # when a child and parent are missing demand
+
+    context 'when a child is missing demand, with a share and ' \
+            'demand on siblings' do
+      # Tests the NodeDemand::FromPartialSlot strategy.
+      #
+      #                   [M]
+      #         (0.125) / / \
+      #      __________/ /   \
+      #     /           /     \
+      #   [C1]   (75) [C2]   [C3] (100)
+      before do
+        child_2.set(:demand, 75.0)
+        child_3.set(:demand, 100.0)
+        mc1_edge.set(:parent_share, 0.125)
+
+        calculate!
+      end
+
+      it 'sets parent demand' do
+        expect(mother).to have_demand.of(200)
+      end
+
+      it 'sets child demand' do
+        expect(child).to have_demand.of(25)
+      end
+
+      it 'sets M->C1 demand' do
+        expect(mc1_edge).to have_demand.of(25)
+      end
+
+      it 'sets M->C2 share' do
+        expect(mc2_edge).to have_parent_share.of(0.375)
+      end
+
+      it 'sets M->C3 share' do
+        expect(mc3_edge).to have_parent_share.of(0.5)
+      end
+
+      it { expect(graph).to validate }
+    end # when a child is missing demand, with a share dna demand on siblings
+
+    context 'when a child is missing demand, with a zero share and ' \
+            'demand on siblings' do
+      # Tests the NodeDemand::FromPartialSlot strategy.
+      #
+      #                   [M]
+      #           (0.0) / / \
+      #      __________/ /   \
+      #     /           /     \
+      #   [C1]   (75) [C2]   [C3] (100)
+      before do
+        child_2.set(:demand, 75.0)
+        child_3.set(:demand, 100.0)
+        mc1_edge.set(:parent_share, 0)
+
+        calculate!
+      end
+
+      it 'sets parent demand' do
+        expect(mother).to have_demand.of(175)
+      end
+
+      it 'sets child demand' do
+        expect(child).to have_demand.of(0)
+      end
+
+      it 'sets M->C1 demand' do
+        expect(mc1_edge).to have_demand.of(0)
+      end
+
+      it { expect(graph).to validate }
+    end # a child is missing demand, [...] zero share, and demand on siblings
+
+    context 'when a child is missing demand, with a share and ' \
+            'zero demand on siblings' do
+      # Tests the NodeDemand::FromPartialSlot strategy.
+      #
+      #                   [M]
+      #         (0.125) / / \
+      #      __________/ /   \
+      #     /           /     \
+      #   [C1]    (0) [C2]   [C3] (0)
+      before do
+        child_2.set(:demand, 0.0)
+        child_3.set(:demand, 0.0)
+        mc1_edge.set(:parent_share, 1.0)
+
+        calculate!
+      end
+
+      it 'does not set parent demand' do
+        expect(mother).to_not have_demand
+      end
+
+      it 'does not set child demand' do
+        expect(child).to_not have_demand
+      end
+
+      it { expect(graph).to_not validate }
+    end # when a child is missing demand, [...] and 0 demand on siblings
   end # with the same carriers
 
   context 'when the child is connected with a different carrier' do

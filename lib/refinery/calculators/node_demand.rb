@@ -10,6 +10,8 @@ module Refinery
         Strategies::NodeDemand::FromCompleteSlot.new(:in),
         Strategies::NodeDemand::FromAllEdges.new(:out),
         Strategies::NodeDemand::FromAllEdges.new(:in),
+        Strategies::NodeDemand::FromPartialSlot.new(:out),
+        Strategies::NodeDemand::FromPartialSlot.new(:in),
         Strategies::NodeDemand::OnlyChild
       ]
 
