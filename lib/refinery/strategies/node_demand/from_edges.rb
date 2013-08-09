@@ -13,6 +13,13 @@ module Refinery::Strategies
         @direction = direction.to_sym
       end
 
+      # Public: A human-readable version of the strategy.
+      #
+      # Returns a string.
+      def inspect
+        "#<#{ self.class.name } (#{ @direction.inspect })>"
+      end
+
       #######
       private
       #######
