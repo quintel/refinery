@@ -83,6 +83,12 @@ module Refinery
         if node_demand && ! node_demand.zero?
           set(:share, demand / node_demand)
         end
+      elsif get(:type) == :elastic
+        others = slots.reject { |slot| slot.get(:type) == :elastic }
+
+        if others.all?(&:share)
+          set(:share, 1 - others.sum(&:share))
+        end
       end
     end
 

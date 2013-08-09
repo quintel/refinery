@@ -389,6 +389,36 @@ describe 'Graph calculations; parent and two children' do
       it { expect(graph).to_not validate }
     end # and the slot shares are unknown
 
+    context 'and one slot share is known, the other is elastic' do
+      #              [M] (50)
+      #   (0.4) :gas / \ :electricity (elastic)
+      #            [C] [S]
+      before do
+        mother.set(:demand, 50.0)
+
+        mother.slots.out(:gas).set(:share, 0.4)
+        mother.slots.out(:electricity).set(:share, nil)
+        mother.slots.out(:electricity).set(:type, :elastic)
+
+        calculate!
+      end
+
+      it 'sets the edge demands' do
+        expect(mc_gas_edge).to have_demand.of(20.0)
+        expect(ms_elec_edge).to have_demand.of(30.0)
+      end
+
+      it 'sets child demand' do
+        expect(child).to have_demand.of(20.0)
+      end
+
+      it 'sets sibling demand' do
+        expect(sibling).to have_demand.of(30.0)
+      end
+
+      it { expect(graph).to validate }
+    end # and one slot share is known, the other is elastic
+
     context 'and one of the children has parallel edges' do
       let!(:ms_gas_edge) { mother.connect_to(sibling, :gas) }
 
