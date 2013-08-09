@@ -16,7 +16,7 @@ module Refinery::Strategies
         child_demand(edge) &&
           edge.to.slots.in(edge.label).share &&
           edge.to.in_edges(edge.label).all? do |other|
-            other.similar?(edge) || other.get(:demand)
+            calculable_sibling_edge?(edge, other)
           end
       end
 
@@ -44,6 +44,14 @@ module Refinery::Strategies
       # Returns a numeric, or nil if no demand can be determined.
       def self.child_demand(edge)
         edge.to.demand
+      end
+
+      # Internal: Given an incoming edge on the +to+ node, determines if the
+      # edge contains enough information to allow us to use this strategy.
+      #
+      # Returns true or false.
+      def self.calculable_sibling_edge?(edge, sibling)
+        sibling.similar?(edge) || sibling.get(:demand)
       end
     end # FillRemaining
   end # EdgeDemand

@@ -61,5 +61,24 @@ module Refinery
         set(:parent_share, demand / from.output_of(label))
       end
     end
+
+    # Public: The calculation priority for the edge. Only used in flex-max
+    # situations.
+    #
+    # Returns a numeric.
+    def priority
+      get(:priority) || -Float::INFINITY
+    end
+
+    # Public: Determines the maximum permitted demand of this edge. Used to
+    # assist in the calculation of flex-max edges, where a node has multiple
+    # incoming flexible edges with priorities.
+    #
+    # Returns a rational, or nil if no max demand is available.
+    def max_demand
+      if from.max_demand && (conversion = from.slots.out(label).share)
+        from.max_demand * conversion
+      end
+    end
   end # Edge
 end # Refinery

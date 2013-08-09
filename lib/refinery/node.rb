@@ -62,6 +62,17 @@ module Refinery
       demand * slot.share if demand && slot.share
     end
 
+    # Public: The maximum permitted demand of the node. Used only in the
+    # presence of a flex-max edge (a flexible edge with a priority).
+    #
+    # If no max demand is set on this node, it traverses to parent nodes
+    # through incoming edges to figure it out.
+    #
+    # Returns a rational, or nil if no max demand is available.
+    def max_demand
+      get(:max_demand)
+    end
+
     # Public: Provides a fluent API for accessing the slots on the node.
     #
     # For example
