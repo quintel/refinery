@@ -20,6 +20,13 @@ module Refinery::Strategies
         "#<#{ self.class.name } (#{ @direction.inspect })>"
       end
 
+      # Public: The strategy as a string.
+      #
+      # Returns a string.
+      def to_s
+        "#{ self.class.name }(#{ @direction.inspect })"
+      end
+
       #######
       private
       #######
