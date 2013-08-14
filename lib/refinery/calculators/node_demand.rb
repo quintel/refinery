@@ -12,7 +12,6 @@ module Refinery
         Strategies::NodeDemand::FromAllEdges.new(:in),
         Strategies::NodeDemand::FromPartialSlot.new(:out),
         Strategies::NodeDemand::FromPartialSlot.new(:in),
-        Strategies::NodeDemand::OnlyChild
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the

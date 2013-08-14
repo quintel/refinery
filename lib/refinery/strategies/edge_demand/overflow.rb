@@ -47,6 +47,8 @@ module Refinery::Strategies
           # If the node has more energy than it's children demand, then the
           # excess energy *must* overflow through this edge.
           node_supply - node_demand
+        elsif node_demand.zero?
+          node_supply
         else
           # If there is no excess energy (it is either balanced, or the node
           # still needs more), then the overflow must be zero.
@@ -78,8 +80,8 @@ module Refinery::Strategies
       #
       # Returns an array of edges.
       def self.unrelated_demand(edge)
-        if edge.from.out_edges.one? && edge.to.in_edges.one?
-          unrelated_supply(edge)
+        if edge.from.out_edges.one?
+          Rational(0)
         else
           Refinery::Util.strict_sum(
             edge.from.out_edges.select { |o| o != edge }, &:demand)
