@@ -70,11 +70,11 @@ describe 'Graph calculations; flexible edges' do
       expect(mother).to have_demand.of(50)
     end
 
-    it 'sets demand of [F] to 0' do
-      expect(father).to have_demand.of(0)
+    it 'does not set demand of [F]' do
+      expect(father).to_not have_demand
     end
 
-    it { expect(graph).to validate }
+    it { expect(graph).to_not validate }
   end # when [GRANDPARENT]=50
 
   context 'when [CHILD]=50 and [CHILD]->[MOTHER]=0.8' do

@@ -57,7 +57,9 @@ module Refinery
         set(:parent_share, 1.0)
       elsif demand && demand.zero?
         set(:parent_share, 0.0)
-      elsif demand && from.demand && ! from.output_of(label).zero?
+      elsif demand && from.demand &&
+            from.slots.out(label).share &&
+            ! from.output_of(label).zero?
         set(:parent_share, demand / from.output_of(label))
       end
     end
