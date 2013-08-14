@@ -66,8 +66,10 @@ module Refinery::Strategies
           # The from node has no in edges; it is a primary supplier.
           edge.from.demand
         else
-          Refinery::Util.strict_sum(
-            suppliers.reject { |o| o.from == edge.to }, &:demand)
+          Refinery::Util.strict_sum(suppliers.reject do |other|
+            other.from == edge.to ||
+              (! other.demand && other.get(:type) == :flexible)
+          end, &:demand)
         end
       end
 
@@ -76,8 +78,12 @@ module Refinery::Strategies
       #
       # Returns an array of edges.
       def self.unrelated_demand(edge)
-        Refinery::Util.strict_sum(
-          edge.from.out_edges.select { |o| o != edge }, &:demand)
+        if edge.from.out_edges.one? && edge.to.in_edges.one?
+          unrelated_supply(edge)
+        else
+          Refinery::Util.strict_sum(
+            edge.from.out_edges.select { |o| o != edge }, &:demand)
+        end
       end
 
       # Overflow edges are accompanied by a normal edge going in the opposite

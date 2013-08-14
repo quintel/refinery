@@ -21,10 +21,14 @@ module Refinery::Strategies
       #
       # Returns a numeric, or nil if no demand can be determined.
       def self.child_demand(edge)
-        super(edge) ||
-          Refinery::Util.strict_sum(edge.to.out_edges.select do |other|
-            other.demand || other.get(:type) != :overflow
-          end, &:demand)
+        if edge.to.in_edges.one?
+          edge.from.output_of(edge.label)
+        else
+          super(edge) ||
+            Refinery::Util.strict_sum(edge.to.out_edges.select do |other|
+              other.demand || other.get(:type) != :overflow
+            end, &:demand)
+        end
       end
 
       # Internal: Given an incoming edge on the +to+ node, determines if the

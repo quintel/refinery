@@ -105,6 +105,33 @@ describe 'Graph calculations; flexible edges' do
   end # when [CHILD]=50 and [CHILD]->[MOTHER]=0.8
 end # Graph calculations; flexible edges
 
+describe 'Graph calculations; flexible edges with a solo overflow' do
+  %w( supplier flexible core overflow ).each do |key|
+    let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }
+  end
+
+  let!(:sc_edge) { supplier.connect_to(core, :gas) }
+  let!(:fc_edge) { flexible.connect_to(core, :gas, type: :flexible) }
+  let!(:co_edge) { core.connect_to(overflow, :gas, type: :overflow) }
+
+  before do
+    supplier.set(:demand, 0)
+    calculate!
+  end
+
+  it 'sets demand of [CORE] to 0' do
+    expect(core).to have_demand.of(0)
+  end
+
+    it 'sets demand of [OVERFLOW] to 0' do
+    expect(overflow).to have_demand.of(0)
+  end
+
+  it 'sets demand of [FLEXIBLE] to 0' do
+    expect(flexible).to have_demand.of(0)
+  end
+end # Graph calculations; flexible edges with a solo overflow
+
 describe 'Graph calculations; flexible edges with overflows' do
   #
   #       ┌──────┐                ┌───────┐
