@@ -80,7 +80,11 @@ module Refinery::Strategies
       #
       # Returns an array of edges.
       def self.unrelated_demand(edge)
-        if edge.from.out_edges.one?
+        no_loop = edge.from.in_edges.none? do |other|
+          other.from == edge.to
+        end
+
+        if edge.from.out_edges.one? && no_loop
           Rational(0)
         else
           Refinery::Util.strict_sum(

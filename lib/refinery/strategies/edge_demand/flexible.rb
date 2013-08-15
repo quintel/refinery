@@ -26,7 +26,8 @@ module Refinery::Strategies
         else
           super(edge) ||
             Refinery::Util.strict_sum(edge.to.out_edges.select do |other|
-              other.demand || other.get(:type) != :overflow
+              other.demand ||
+                (other.get(:type) != :overflow || other.to == edge.from)
             end, &:demand)
         end
       end
