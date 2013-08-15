@@ -15,6 +15,8 @@ module Refinery
     #
     # Returns a rational, or nil.
     def strict_sum(enumerable)
+      enumerable = enumerable.to_a
+
       return nil if enumerable.none?
 
       enumerable.reduce(Rational(0)) do |sum, element|
