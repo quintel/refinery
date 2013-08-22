@@ -47,7 +47,8 @@ module Refinery
       def applicable_strategies
         case @model.get(:type)
         when :overflow
-          [ Strategies::EdgeDemand::Overflow ]
+          [ Strategies::EdgeDemand::Overflow,
+            Strategies::EdgeDemand::SingleParent ]
         when :flexible
           [ Strategies::EdgeDemand::OnlyChild,
             Strategies::EdgeDemand::ParentShare,
