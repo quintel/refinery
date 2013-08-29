@@ -10,6 +10,12 @@ module Refinery
   class SlotsCollection
     include Enumerable
 
+    # Public: The direction of the slots in the collection. +:in+ or +:out+.
+    attr_reader :direction
+
+    # Public: The Refinery::Node to which the collection belongs.
+    attr_reader :node
+
     # Public: Creates a new collection for the given +node+ and +direction+.
     #
     # Returns a SlotsCollection.
