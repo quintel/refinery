@@ -1,22 +1,35 @@
 module Refinery
   module Diagram
-    class Focused < Base
-      def initialize(graph, focused_element)
-        super(graph)
-        @focused_element = focused_element
-      end
+    class InitialValues < Base
+      include Transparency
 
       #######
       private
       #######
 
       def edge_options(edge)
-        super.merge(penwidth: edge == @focused_element ? 4.0 : 1.0)
+        recolor_options(super, no_initial_share?(edge))
       end
 
       def node_options(node)
-        super.merge(penwidth: node == @focused_element ? 3.0 : 1.0)
+        recolor_options(super, ! node.get(:demand))
       end
-    end # Focused
+
+      def edge_label(edge)
+        if no_initial_share?(edge)
+          recolor_label('?!', true)
+        else
+          super
+        end
+      end
+
+      def node_label(node)
+        recolor_label(super, ! node.get(:demand))
+      end
+
+      def no_initial_share?(edge)
+        edge.get(:parent_share).nil? && edge.get(:child_share).nil?
+      end
+    end # InitialValues
   end # Diagram
 end # Refinery
