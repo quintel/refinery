@@ -19,6 +19,8 @@ module Refinery
         @filter_by  = options[:filter_by]  || ->(*) { true }
         @cluster_by = options[:cluster_by] || ->(*) { nil }
 
+        @demand_label = options[:format_demand] || ->(value) { value }
+
         @clusters[nil] = @diagram
       end
 
@@ -126,9 +128,7 @@ module Refinery
           "<font color='#{ color(:lightgrey) }'>#{ share }</font>"
         end
 
-        demand = edge.demand ? format_number(edge.demand / 1000) : '-'
-
-        "<#{ shares[1] } (#{ demand }) #{ shares[0] }>"
+        "<#{ shares[1] } (#{ format_demand(edge.demand) }) #{ shares[0] }>"
       end
 
       # Internal: The label shown inside the node. Includes the node key and
@@ -144,7 +144,7 @@ module Refinery
           %(<font #{ attrs } color="#{ color(:red) }">?!</font>>)
         else
           %(<font #{ attrs } color="#8c8c8c">) +
-            %(#{ format_number(node.demand / 1000) }</font>>)
+            %(#{ format_demand(node.demand) }</font>>)
         end
       end
 
@@ -171,6 +171,14 @@ module Refinery
         parts = formatted.to_s.split('.')
         parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1,")
         parts.join('.')
+      end
+
+      # Internal: A variant of +format_number+ which will format a demand
+      # value for use in a label.
+      #
+      # Returns a string.
+      def format_demand(value)
+        value ? format_number(@demand_label.call(value)) : '-'
       end
     end # Base
   end # Diagram
