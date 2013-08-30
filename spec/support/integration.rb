@@ -67,14 +67,38 @@ module Refinery::Spec
     # Returns nothing.
     def calculate!(debug = false)
       if debug
-        directory = Pathname.new('tmp/debug')
-        directory.children.each { |child| child.delete }
-
-        catalyst = Refinery::Catalyst::VisualCalculator.new(directory)
+        calculate_and_debug!
       else
-        catalyst = Refinery::Catalyst::Calculators
+        do_calculate!(Refinery::Catalyst::Calculators)
       end
 
+      graph
+    end
+
+    #######
+    private
+    #######
+
+    # Internal: Runs calculation of the graph, outputting relevant debugging
+    # information to tmp/debug.
+    #
+    # Returns nothing.
+    def calculate_and_debug!
+      directory = Pathname.new('tmp/debug')
+
+      FileUtils.mkdir_p(directory)
+      directory.children.each { |child| child.delete }
+
+      do_calculate!(Refinery::Catalyst::VisualCalculator.new(directory))
+
+      File.write(directory.join('_d.txt'), Refinery::GraphDebugger.new(graph))
+
+    end
+
+    # Internal: Runs the calcualtion of the graph.
+    #
+    # Returns nothing.
+    def do_calculate!(catalyst)
       Refinery::Reactor.new(
         Refinery::Catalyst::ConvertFinalDemand, catalyst
       ).run(graph)
