@@ -40,7 +40,11 @@ module Refinery::Strategies
           return 0.0
         end
 
-        node_supply = unrelated_supply(edge)
+        # If the slot has a share, we need to respect that, otherwise we
+        # assume that that share will be calculated later (hence || 1.0)
+        slot_share  = edge.from.slots.out(edge.label).share || 1.0
+
+        node_supply = unrelated_supply(edge) * slot_share
         node_demand = unrelated_demand(edge)
 
         if node_supply > node_demand

@@ -34,7 +34,7 @@ describe 'Graph calculations; overflowing energy' do
   let!(:ml_edge) { mvn.connect_to(lvn, :electricity) }
   let!(:lc_edge) { lvn.connect_to(consumer, :electricity) }
   let!(:sc_edge) { solar.connect_to(consumer, :electricity) }
-  let!(:he_edge) { hvn.connect_to(export, :electricity) }
+  let!(:he_edge) { hvn.connect_to(export, :electricity, type: :overflow) }
 
   # Overflow edges.
   let!(:mh_edge) { mvn.connect_to(hvn, :electricity, type: :overflow) }
@@ -313,6 +313,71 @@ describe 'Graph calculations; overflowing energy' do
       expect(sink_edge).to have_demand.of(30.0)
     end
   end # when HVN has a third child
+
+  context 'when the exporter has a second output slot' do
+    #     ┌────────┐
+    #     │ SOURCE │
+    #     └────────┘
+    #           |
+    #           v
+    #        ┌─────┐    ┌────────┐
+    # ... <─ │ HVN │ ─> │ EXPORT │
+    #        └─────┘    └────────┘
+    #          | ^
+    #          v |
+    #          ...
+    before do
+      # Consumer demands 90 energy.
+      consumer.set(:demand, 90.0)
+
+      # Solar provides 0 of that, meaning the HVN needs to supply 90.
+      solar.set(:demand, 0.0)
+
+      # And the source provides exactly what is needed.
+      source.set(:demand, 100.0)
+
+      # ... because HVN loses 10% to loss.
+      hvn.slots.out.get(:electricity).set(:share, 0.9)
+      hvn.slots.out.add(:loss).set(:share, 0.1)
+
+      # Here we go!
+      calculate!
+    end
+
+    it 'sets HVN->MVN to 90.0' do
+      expect(hm_edge).to have_demand.of(90.0)
+    end
+
+    it 'sets MVN->LVN to 90.0' do
+      expect(ml_edge).to have_demand.of(90.0)
+    end
+
+    it 'sets LVN->CONSUMER to 90.0' do
+      expect(lc_edge).to have_demand.of(90.0)
+    end
+
+    it 'sets SOLAR->CONSUMER to 0.0' do
+      expect(sc_edge).to have_demand.of(0.0)
+    end
+
+    it 'sets HVN->EXPORT to 0.0' do
+      expect(he_edge).to have_demand.of(0.0)
+    end
+
+    it 'sets SOLAR->LVN (overflow) to 0.0' do
+      expect(sl_edge).to have_demand.of(0)
+    end
+
+    it 'sets LVN->MVN (overflow) to 0.0' do
+      expect(lm_edge).to have_demand.of(0)
+    end
+
+    it 'sets MVN->HVN (overflow) to 0.0' do
+      expect(mh_edge).to have_demand.of(0)
+    end
+
+    it { expect(graph).to validate }
+  end # when the exporter has a second output slot
 end # Graph calculations; overflowing energy
 
 # Additional overflow examples, as described in quintel/refinery#5.
