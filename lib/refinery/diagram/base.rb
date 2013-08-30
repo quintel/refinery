@@ -126,7 +126,7 @@ module Refinery
           "<font color='#{ color(:lightgrey) }'>#{ share }</font>"
         end
 
-        demand = edge.demand ? format_number(edge.demand) : '-'
+        demand = edge.demand ? format_number(edge.demand / 1000) : '-'
 
         "<#{ shares[1] } (#{ demand }) #{ shares[0] }>"
       end
@@ -144,7 +144,7 @@ module Refinery
           %(<font #{ attrs } color="#{ color(:red) }">?!</font>>)
         else
           %(<font #{ attrs } color="#8c8c8c">) +
-            %(#{ format_number(node.demand) }</font>>)
+            %(#{ format_number(node.demand / 1000) }</font>>)
         end
       end
 
