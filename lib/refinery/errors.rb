@@ -29,7 +29,7 @@ module Refinery
       "  * #{ model.to_s }"
     end.join("\n")
 
-    "Insufficient data to calculate calculate #{ remaining_models.length } " \
+    "Insufficient data to calculate #{ remaining_models.length } " \
     "items: \n\n#{ elements }"
   end
 
