@@ -4,7 +4,7 @@ module Refinery::Strategies
     # only one parent for the edge's carrier.
     class SingleParent
       def self.calculable?(edge)
-        edge.to.demand && edge.to.in_edges(edge.label).one?
+        edge.to.demand_for(edge.label) && edge.to.in_edges(edge.label).one?
       end
 
       def self.calculate(edge)

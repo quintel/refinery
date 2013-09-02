@@ -11,7 +11,7 @@ module Refinery::Strategies
     # half of the carrier energy demanded by [X].
     class ChildShare
       def self.calculable?(edge)
-        edge.to.demand && edge.child_share
+        edge.to.demand_for(edge.label) && edge.child_share
       end
 
       def self.calculate(edge)
