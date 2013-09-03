@@ -348,4 +348,49 @@ describe 'Graph calculations; with two parents and a step sibling' do
 
     it { expect(graph).to_not validate }
   end # and the child and sibling have no demand
-end # Graph calculations; with two parents and a step-sibling
+end # Graph calculations; with two parents and a step sibling
+
+describe 'Graph calculations; with two parents, a step sibling, ' \
+         'and two carriers' do
+
+  %w( mother father sibling child ).each do |key|
+    let!(key) { graph.add(Refinery::Node.new(key.to_sym)) }
+  end
+
+  let!(:ms_edge) { mother.connect_to(sibling, :gas) }
+  let!(:mc_edge) { mother.connect_to(child, :gas) }
+  let!(:fc_edge) { father.connect_to(child, :electricity) }
+
+  context 'and the sibling has no demand; different carriers' do
+    #   (100) [M]        [F] (100)
+    #         / \ :gas    /
+    #   :gas /   \   ____/ :electricity
+    #       /     \ /
+    #     [S]     [C] (125)
+    before do
+      father.set(:demand, 100)
+      child.set(:demand, 125)
+      mother.set(:demand, 100)
+
+      calculate!
+    end
+
+    it 'calculates sibling demand' do
+      expect(sibling).to have_demand.of(75.0)
+    end
+
+    it 'calculates M->S demand' do
+      expect(ms_edge).to have_demand.of(75.0)
+    end
+
+    it 'calculates M->C demand, accounting for supply from F' do
+      expect(mc_edge).to have_demand.of(25.0)
+    end
+
+    it 'calculates F->C demand' do
+      expect(fc_edge).to have_demand.of(100.0)
+    end
+
+    it { expect(graph).to validate }
+  end # and the sibling has no demand
+end # Graph calculations; with two parents, a step sibling, and two carriers

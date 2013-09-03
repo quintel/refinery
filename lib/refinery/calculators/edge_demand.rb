@@ -7,6 +7,7 @@ module Refinery
         Strategies::EdgeDemand::SingleParent,
         Strategies::EdgeDemand::OnlyChild,
         Strategies::EdgeDemand::FromDemand,
+        Strategies::EdgeDemand::FromChildDemand,
         Strategies::EdgeDemand::FillRemaining,
         Strategies::EdgeDemand::FillRemainingFromParent,
         Strategies::EdgeDemand::ParentShare,

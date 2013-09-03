@@ -30,9 +30,9 @@ module Refinery::Strategies
     class FromDemand
       def self.calculable?(edge)
         # Parent and child demand?
-        edge.to.demand_for(edge.label) && edge.from.output_of(edge.label) &&
+        edge.to.demand && edge.from.demand &&
           # We already know how the parent node supplies its other children?
-          (edge.from.out_edges(edge.label).to_a - [edge]).all?(&:demand)
+          (edge.from.out_edges.to_a - [edge]).all?(&:demand)
       end
 
       def self.calculate(edge)
@@ -82,7 +82,7 @@ module Refinery::Strategies
       #
       # Returns a float.
       def available_supply
-        @edge.from.output_of(@edge.label) - related_parent_edges.sum(&:demand)
+        @edge.from.demand - related_parent_edges.sum(&:demand)
       end
 
       # Internal: Calculates how much energy is needs to be supplied to the
@@ -114,7 +114,7 @@ module Refinery::Strategies
           existing_supply = related_child_edges.map(&:demand).compact.sum
         end
 
-        @edge.to.demand_for(@edge.label) - existing_supply
+        @edge.to.demand - existing_supply
       end
 
       # Internal: The "out" edges on the parent node, excluding the edge being
@@ -122,7 +122,7 @@ module Refinery::Strategies
       #
       # Returns an array of edges.
       def related_parent_edges
-        @rpe ||= @edge.from.out_edges(@edge.label).to_a - [@edge]
+        @rpe ||= @edge.from.out_edges.to_a - [@edge]
       end
 
       # Internal: The "in" edges on the child node, excluding the edge being
@@ -130,7 +130,7 @@ module Refinery::Strategies
       #
       # Returns an array of edges.
       def related_child_edges
-        @rce ||= @edge.to.in_edges(@edge.label).to_a - [@edge]
+        @rce ||= @edge.to.in_edges.to_a - [@edge]
       end
     end # FromDemand
   end # EdgeDemand
