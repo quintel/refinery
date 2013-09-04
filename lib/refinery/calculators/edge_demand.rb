@@ -9,6 +9,7 @@ module Refinery
         Strategies::EdgeDemand::FromDemand,
         Strategies::EdgeDemand::FromChildDemand,
         Strategies::EdgeDemand::FillRemaining,
+        Strategies::EdgeDemand::FillRemainingAcrossSlots,
         Strategies::EdgeDemand::FillRemainingFromParent,
         Strategies::EdgeDemand::ParentShare,
         Strategies::EdgeDemand::ChildShare

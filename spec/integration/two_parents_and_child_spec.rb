@@ -278,14 +278,14 @@ describe 'Graph calculations; with two parents' do
       end
 
       it 'does not calculate share-less child slot shares' do
-        expect(child.slots.in(:electricity).share).to be_nil
+        expect(child.slots.in(:electricity).share).to eq(20.0 / 50.0)
       end
 
       it 'does sets child demand' do
         expect(child).to have_demand.of(50)
       end
 
-      it { expect(graph).to_not validate }
+      it { expect(graph).to validate }
     end # and the child defines only one output share
   end # and the edges use different carriers
 end # Graph calcualtions; with two parents
