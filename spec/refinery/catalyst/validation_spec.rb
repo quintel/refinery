@@ -131,5 +131,29 @@ module Refinery
         expect(validation.errors[x.slots.in(:gas)]).to be_nil
       end
     end # given a node without demand
+
+    context 'given a node with max_demand' do
+      #   [A] (50) max_demand: ??
+      #    |  (50)
+      #   [X] (50)
+      let!(:a)       { graph.add(Node.new(:a, demand: 50)) }
+      let!(:x)       { graph.add(Node.new(:x, demand: 50)) }
+      let!(:ax_edge) { a.connect_to(x, :gas, demand: 50) }
+
+      it 'passes when edge demand is less than max_demand' do
+        a.set(:max_demand, 55)
+        expect(validation.errors).to have(:no).elements
+      end
+
+      it 'passes when edge demand equals max_demand' do
+        a.set(:max_demand, ax_edge.demand)
+        expect(validation.errors).to have(:no).elements
+      end
+
+      it 'passes when edge demand exceeds max_demand' do
+        a.set(:max_demand, 45)
+        expect(validation.errors[a]).to have(1).error
+      end
+    end # given an node with max_demand
   end # Catalyst::Validation
 end # Refinery

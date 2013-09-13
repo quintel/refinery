@@ -30,7 +30,8 @@ module Refinery
       MESSAGES = {
         object_missing_demand: 'has no demand value set',
         non_matching_demand:   'demand (%s) does not match %s the node (%s)',
-        undetermined_share:    'has an undetermined share'
+        undetermined_share:    'has an undetermined share',
+        max_demand_exceeded:   'demand (%f) exceeds max_demand (%f)'
       }.freeze
 
       # Public: Returns the errors. This will be an empty hash if no errors
@@ -59,6 +60,8 @@ module Refinery
             # has no demand, so we don't even bother testing them.
             add_error(node, :object_missing_demand)
           else
+            validate_node(node)
+
             (node.slots.in.to_a + node.slots.out.to_a).each do |slot|
               validate_slot(slot) if slot.edges.any?
             end
@@ -79,6 +82,19 @@ module Refinery
       #######
       private
       #######
+
+      # Internal: Given a node, asserts that energy coming in equals that
+      # which leaves.
+      #
+      # node - The slot to be validated.
+      #
+      # Returns nothing.
+      def validate_node(node)
+        if node.max_demand && node.demand > node.max_demand
+          add_error(node, :max_demand_exceeded,
+                    node.demand, node.max_demand)
+        end
+      end
 
       # Internal: Given a slot, validates that demand was calculated for all
       # of its edges and that the demand of the slot matches the demand or
