@@ -4,15 +4,15 @@ module Refinery
     # either to the child nodes, or to a parent node.
     class EdgeDemand < Base
       DEFAULT_STRATEGIES = [
-        Strategies::EdgeDemand::SingleParent,
-        Strategies::EdgeDemand::OnlyChild,
+        Strategies::EdgeDemand::FillRemainingFromParent,
+        Strategies::EdgeDemand::ParentShare,
+        Strategies::EdgeDemand::ChildShare,
         Strategies::EdgeDemand::FromDemand,
         Strategies::EdgeDemand::FromChildDemand,
         Strategies::EdgeDemand::FillRemaining,
         Strategies::EdgeDemand::FillRemainingAcrossSlots,
-        Strategies::EdgeDemand::FillRemainingFromParent,
-        Strategies::EdgeDemand::ParentShare,
-        Strategies::EdgeDemand::ChildShare
+        Strategies::EdgeDemand::SingleParent,
+        Strategies::EdgeDemand::OnlyChild
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the
