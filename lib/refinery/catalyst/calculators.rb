@@ -38,9 +38,7 @@ module Refinery
       #
       # Returns nothing.
       def run!
-        validate_slot_shares!
         run_calculators!
-
         @graph
       end
 
@@ -101,36 +99,6 @@ module Refinery
         @graph.tsort { |e| e.get(:type) != :overflow }.map do |node|
           [ node.calculator, *node.out_edges.map(&:calculator).to_a ]
         end.flatten.reject(&:calculated?).reverse
-      end
-
-      # Internal: Asserts that the in and out slots for each node sum up to
-      # 1.0. This is mostly a sanity check which asserts that:
-      #
-      #   1. Nodes are only automatically assigned a single slot on each side
-      #      (we can't magically know that CHPs need to output 70% heat and
-      #      30% electricity, a user has to input this manually).
-      #
-      #   2. Nodes which have user-assigned slots were given sensible shares.
-      #
-      # Raises InvalidSlotSumError if any node failed the above conditions.
-      #
-      # Returns nothing.
-      def validate_slot_shares!
-        @graph.nodes.each do |node|
-          # assert_valid_slot_shares(node, :in)
-          # assert_valid_slot_shares(node, :out)
-        end
-      end
-
-      # Internal: Asserts that the slots on a single side of a node add up to
-      # 1.0. See validate_slot_shares!
-      #
-      # Returns nothing.
-      def assert_valid_slot_shares(node, direction)
-        return true if node.slots.public_send(direction).empty?
-
-        sum = node.slots.public_send(direction).sum { |s| s.get(:share) }
-        raise InvalidSlotSumError.new(node, direction, sum) if sum != 1.0
       end
     end # Calculators
   end # Catalyst
