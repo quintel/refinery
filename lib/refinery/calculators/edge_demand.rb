@@ -4,6 +4,7 @@ module Refinery
     # either to the child nodes, or to a parent node.
     class EdgeDemand < Base
       include Strategies::EdgeDemand
+
       DEFAULT_STRATEGIES = [
         ByShare.forwards.new,
         ByShare.reversed.new,
@@ -13,6 +14,18 @@ module Refinery
         FillRemaining.reversed.new,
         FillRemainingAcrossSlots.forwards.new,
         FillRemainingAcrossSlots.reversed.new
+      ]
+
+      OVERFLOW_STRATEGIES = [
+        Overflow.new,
+        Solo.reversed.new
+      ]
+
+      FLEXIBLE_STRATEGIES = [
+        Solo.forwards.new,
+        ByShare.reversed.new,
+        ByShare.forwards.new,
+        Flexible.new
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the
@@ -48,16 +61,9 @@ module Refinery
       # Returns an array of strategies.
       def applicable_strategies
         case @model.get(:type)
-        when :overflow
-          [ Overflow.new,
-            Solo.reversed.new ]
-        when :flexible
-          [ Solo.forwards.new,
-            ByShare.reversed.new,
-            ByShare.forwards.new,
-            Flexible.new ]
-        else
-          super
+        when :overflow then OVERFLOW_STRATEGIES
+        when :flexible then FLEXIBLE_STRATEGIES
+        else                super
         end
       end
     end # EdgeDemand
