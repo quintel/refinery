@@ -41,7 +41,7 @@ module Refinery::Strategies
       # edge contains enough information to allow us to use this strategy.
       #
       # Returns true or false.
-      def calculable_sibling_edge?(edge, sibling)
+      def calculable_sibling?(edge, sibling)
         super || (
           sibling.get(:type) == :flexible &&
           sibling.priority < edge.priority )
