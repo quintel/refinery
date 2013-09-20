@@ -8,8 +8,6 @@ module Refinery
         FillRemaining.compile(:forwards).new,
         ByShare.compile(:reversed).new,
         ByShare.compile(:forwards).new,
-        FromDemand.compile(:forwards).new,
-        FromDemand.compile(:reversed).new,
         FillRemaining.compile(:reversed).new,
         FillRemainingAcrossSlots.compile(:reversed).new,
         FillRemainingAcrossSlots.compile(:forwards).new,
