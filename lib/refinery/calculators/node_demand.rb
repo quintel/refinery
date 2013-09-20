@@ -6,12 +6,12 @@ module Refinery
       include Strategies::NodeDemand
 
       DEFAULT_STRATEGIES = [
-        FromCompleteEdge.compile(:reversed).new,
-        FromCompleteEdge.compile(:forwards).new,
-        FromCompleteSlot.compile(:reversed).new,
-        FromCompleteSlot.compile(:forwards).new,
-        FromPartialSlot.compile(:reversed).new,
-        FromPartialSlot.compile(:forwards).new,
+        FromCompleteEdge.reversed.new,
+        FromCompleteEdge.forwards.new,
+        FromCompleteSlot.reversed.new,
+        FromCompleteSlot.forwards.new,
+        FromPartialSlot.reversed.new,
+        FromPartialSlot.forwards.new,
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the

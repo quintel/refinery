@@ -29,6 +29,20 @@ module Refinery::Strategies
     end
 
     module ClassMethods
+      # Public: The strategy class in "fowards" mode.
+      #
+      # Returns a class.
+      def forwards
+        @forwards ||= compile(:forwards)
+      end
+
+      # Public: The strategy class in "backwards" mode.
+      #
+      # Returns a class.
+      def reversed
+        @reversed ||= compile(:reversed)
+      end
+
       # Public: Creates a new class, based on "self", mixing in the module
       # which controls the direction in which the calculation works.
       #
@@ -43,6 +57,8 @@ module Refinery::Strategies
 
         klass
       end
+
+      private :compile
 
       # Public: Creates a new instance of the strategy, raising an error if
       # the user forgot to +compile+ a version to give the strategy 

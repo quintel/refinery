@@ -5,14 +5,14 @@ module Refinery
     class EdgeDemand < Base
       include Strategies::EdgeDemand
       DEFAULT_STRATEGIES = [
-        FillRemaining.compile(:forwards).new,
-        ByShare.compile(:reversed).new,
-        ByShare.compile(:forwards).new,
-        FillRemaining.compile(:reversed).new,
-        FillRemainingAcrossSlots.compile(:reversed).new,
-        FillRemainingAcrossSlots.compile(:forwards).new,
-        Solo.compile(:forwards).new,
-        Solo.compile(:reversed).new
+        ByShare.forwards.new,
+        ByShare.reversed.new,
+        Solo.forwards.new,
+        Solo.reversed.new,
+        FillRemaining.forwards.new,
+        FillRemaining.reversed.new,
+        FillRemainingAcrossSlots.forwards.new,
+        FillRemainingAcrossSlots.reversed.new
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the
@@ -49,11 +49,12 @@ module Refinery
       def applicable_strategies
         case @model.get(:type)
         when :overflow
-          [ Overflow.new, Solo.compile(:reversed).new ]
+          [ Overflow.new,
+            Solo.reversed.new ]
         when :flexible
-          [ Solo.compile(:forwards).new,
-            ByShare.compile(:reversed).new,
-            ByShare.compile(:forwards).new,
+          [ Solo.forwards.new,
+            ByShare.reversed.new,
+            ByShare.forwards.new,
             Flexible.new ]
         else
           super

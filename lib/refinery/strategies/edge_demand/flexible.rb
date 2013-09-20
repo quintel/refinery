@@ -1,6 +1,6 @@
 module Refinery::Strategies
   module EdgeDemand
-    class Flexible < FillRemaining.compile(:out)
+    class Flexible < FillRemaining.reversed
       # Public: Calculates the demand of the edge. Checks that the calculated
       # value does not exceed the max demand of the parent node.
       #
