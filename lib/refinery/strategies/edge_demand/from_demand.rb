@@ -28,34 +28,18 @@ module Refinery::Strategies
     # value for C->Y by understanding that [Y] still requires a further 20
     # energy to meet its demand.
     class FromDemand
-      def self.calculable?(edge)
+      include Reversible
+
+      def calculable?(edge)
         # Parent and child demand?
-        edge.to.demand && edge.from.demand &&
-          # We already know how the parent node supplies its other children?
-          (edge.from.out_edges.to_a - [edge]).all?(&:demand)
+        from(edge).demand && to(edge).demand &&
+          # We already know how the parent supplies its other children?
+          related_parent_edges(edge).all?(&:demand)
       end
 
-      def self.calculate(edge)
-        new(edge).calculate
-      end
-
-      # Public: Creates a new FromDemand strategy which seeks to intelligently
-      # infer the demand of an edge by looking at the demands of the parent
-      # and child nodes, and their relatives.
-      #
-      # edge - The edge whose demand is to be calculated.
-      #
-      # Returns a FromDemand.
-      def initialize(edge)
-        @edge = edge
-      end
-
-      # Public: Runs the calculation, returning the demand value for the edge.
-      #
-      # Returns a float.
-      def calculate
-        available   = available_supply
-        unfulfilled = unfulfilled_demand
+      def calculate(edge)
+        available   = available_supply(edge)
+        unfulfilled = unfulfilled_demand(edge)
 
         available < unfulfilled ? available : unfulfilled
       end
@@ -81,8 +65,8 @@ module Refinery::Strategies
       # Therefore available supply is 2.
       #
       # Returns a float.
-      def available_supply
-        @edge.from.demand - related_parent_edges.sum(&:demand)
+      def available_supply(edge)
+        from(edge).demand - related_parent_edges(edge).sum(&:demand)
       end
 
       # Internal: Calculates how much energy is needs to be supplied to the
@@ -104,33 +88,37 @@ module Refinery::Strategies
       # unfulfilled.
       #
       # Returns a float.
-      def unfulfilled_demand
-        existing_supply = 0.0
+      def unfulfilled_demand(edge)
+        existing_supply =
+          if (rce = related_child_edges(edge)).any?
+            # If the child element has other parents, and we already know
+            # their demand, we will reduce the unfulfilled demand to
+            # compensate for that.
+            #
+            # We do not need to explictly call "compact" on the result of the
+            # map, since Turbine pipelines skip elements which are nil.
+            rce.sum { |other| other.demand || Rational(0) }
+          else
+            0.0
+          end
 
-        if related_child_edges
-          # If the child element has other parents, and we already know their
-          # demand, we will reduce the unfulfilled demand to compensate for
-          # that.
-          existing_supply = related_child_edges.map(&:demand).compact.sum
-        end
-
-        @edge.to.demand - existing_supply
+        to(edge).demand - existing_supply
       end
 
       # Internal: The "out" edges on the parent node, excluding the edge being
       # calculated.
       #
       # Returns an array of edges.
-      def related_parent_edges
-        @rpe ||= @edge.from.out_edges.to_a - [@edge]
+      def related_parent_edges(edge)
+        out_edges(from(edge)).reject { |member| member == edge }
       end
 
       # Internal: The "in" edges on the child node, excluding the edge being
       # calculated.
       #
       # Returns an array of edges.
-      def related_child_edges
-        @rce ||= @edge.to.in_edges.to_a - [@edge]
+      def related_child_edges(edge)
+        in_edges(to(edge)).reject { |member| member == edge }
       end
     end # FromDemand
   end # EdgeDemand

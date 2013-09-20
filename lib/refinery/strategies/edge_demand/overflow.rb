@@ -25,13 +25,13 @@ module Refinery::Strategies
     # into [X]. In "normal" circumstances, however, energy will flow from both
     # [A] and [X] in to [B], and the overflow edge will have a demand of 0.
     class Overflow
-      def self.calculable?(edge)
+      def calculable?(edge)
         edge.get(:type) == :overflow &&
           unrelated_demand(edge) &&
           unrelated_supply(edge)
       end
 
-      def self.calculate(edge)
+      def calculate(edge)
         # If the anti-parallel edge already has demand assigned, then the
         # overflow edge *must not* carry any energy.
         anti = anti_parallel_edge(edge)
@@ -60,14 +60,30 @@ module Refinery::Strategies
         end
       end
 
-      # ----------------------------------------------------------------------
+      # Public: A human-readable version of the strategy.
+      #
+      # Returns a string.
+      def inspect
+        "#<#{ to_s }>"
+      end
+
+      # Public: The strategy as a string.
+      #
+      # Returns a string.
+      def to_s
+        self.class.name
+      end
+
+      #######
+      private
+      #######
 
       # Internal: Given an overflow edge, creates an array of edges on the
       # "from" node which supply energy, *except* for the anti-parallel edge
       # whose demand is likely to be unknown.
       #
       # Returns an array of edges.
-      def self.unrelated_supply(edge)
+      def unrelated_supply(edge)
         if (suppliers = edge.from.in_edges.to_a).length.zero?
           # The from node has no in edges; it is a primary supplier.
           edge.from.demand
@@ -83,7 +99,7 @@ module Refinery::Strategies
       # "from" node which take energy away, excluding the overflow edge.
       #
       # Returns an array of edges.
-      def self.unrelated_demand(edge)
+      def unrelated_demand(edge)
         no_loop = edge.from.in_edges.none? do |other|
           other.from == edge.to
         end
@@ -100,7 +116,7 @@ module Refinery::Strategies
       # ("anti-parallel") direction.
       #
       # Returns an edge.
-      def self.anti_parallel_edge(edge)
+      def anti_parallel_edge(edge)
         edge.to.out_edges.to_a.detect { |o| o.to == edge.from }
       end
     end

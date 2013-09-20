@@ -5,7 +5,9 @@ module Refinery::Strategies
     # all of them.
     #
     # See: https://github.com/quintel/refinery/issues/32
-    class FromPartialSlot < FromEdges
+    class FromPartialSlot
+      include Reversible
+
       def calculable?(node)
         partial_slot(node)
       end
@@ -18,7 +20,7 @@ module Refinery::Strategies
         end
 
         known_share  = slot.edges.sum do |edge|
-          (! edge.demand && share(edge)) || Rational(0)
+          (! edge.demand && child_share(edge)) || Rational(0)
         end
 
         known_demand / (1 - known_share)
@@ -33,15 +35,15 @@ module Refinery::Strategies
       #
       # Returns a slot or nil.
       def partial_slot(node)
-        slots(node).detect do |slot|
+        in_slots(node).detect do |slot|
           slot.share && ! slot.share.zero? &&
-            slot.edges.all? { |edge| edge.demand || share(edge) } &&
+            slot.edges.all? { |edge| edge.demand || child_share(edge) } &&
             # We don't need to explicitly test that there are two or more
             # edges since an edge with a demand and share will be calculated
             # by the earlier FromCompleteEdge.
             slot.edges.count(&:demand) > 0 &&
             slot.edges.sum { |edge| edge.demand || Rational(0) } > 0 &&
-            slot.edges.count { |edge| share(edge) } > 0
+            slot.edges.count { |edge| child_share(edge) } > 0
         end
       end
     end # FromPartialSlot

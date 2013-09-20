@@ -3,13 +3,15 @@ module Refinery
     # Calculates the total expected or preset demand of a node by looking
     # either to the child nodes, or to a parent node.
     class NodeDemand < Base
+      include Strategies::NodeDemand
+
       DEFAULT_STRATEGIES = [
-        Strategies::NodeDemand::FromCompleteEdge.new(:out),
-        Strategies::NodeDemand::FromCompleteEdge.new(:in),
-        Strategies::NodeDemand::FromCompleteSlot.new(:out),
-        Strategies::NodeDemand::FromCompleteSlot.new(:in),
-        Strategies::NodeDemand::FromPartialSlot.new(:out),
-        Strategies::NodeDemand::FromPartialSlot.new(:in),
+        FromCompleteEdge.compile(:reversed).new,
+        FromCompleteEdge.compile(:forwards).new,
+        FromCompleteSlot.compile(:reversed).new,
+        FromCompleteSlot.compile(:forwards).new,
+        FromPartialSlot.compile(:reversed).new,
+        FromPartialSlot.compile(:forwards).new,
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the

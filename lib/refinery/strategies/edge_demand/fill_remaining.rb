@@ -1,112 +1,66 @@
 module Refinery::Strategies
   module EdgeDemand
-    # A strategy for calculating edge demand when all of the node's other
-    # outbound edges of the same carrier already have a demand calculated.
+    # A strategy for calculating the demand of an edge, when we already know
+    # the demands of the other edges which use the same carrier, on the parent
+    # node.
     #
-    # For example, in this simple case:
+    # A strategy for calculating edge demand when we already know the demand
+    # of all the other outbound of the same carrier on the parent node.
     #
-    #    [A] [B]
-    #      \ / (5)
-    #      [X] (20)
+    # For example:
     #
-    # ... we know that B->X has a demand of 5, therefore A->X must have a
-    # demand of 20 (so that that all edges meet the demand of [X]).
+    #      [A] (20)
+    #      / \ (5)
+    #    [X] [Y]
+    #
+    # ... we know that A->Y has a demand of 5, and the parent node demand is
+    # 20, therefore A->X must have a demand of 15.
     class FillRemaining
-      def self.calculable?(edge)
-        child_demand(edge) &&
-          edge.to.slots.in(edge.label).share &&
-          edge.to.in_edges(edge.label).all? do |other|
+      include Reversible
+
+      def calculable?(edge)
+        parent_demand(edge) &&
+          parent_slot(edge).share &&
+          out_edges(from(edge), edge.label).all? do |other|
             calculable_sibling_edge?(edge, other)
           end
       end
 
-      def self.calculate(edge)
-        demand = child_demand(edge) * edge.to.slots.in(edge.label).share
-        supply = edge.to.in_edges(edge.label).get(:demand).to_a.compact.sum
+      def calculate(edge)
+        sibling_edges = out_edges(from(edge), edge.label)
+
+        demand = parent_demand(edge) * parent_slot(edge).share
+        supply = sibling_edges.get(:demand).to_a.compact.sum
 
         if demand >= supply
           demand - supply
         else
-          # Node already has too much energy; this edge should be zero, and
-          # we assume that there is an overflow edge which will take away the
-          # excess.
+          # This should only occur when the strategy is being calculated in
+          # reverse (from child-to-parent), and it is assumed that there is
+          # an overflow edge which will take away the excess.
           0.0
         end
       end
 
-      # Internal: Given an edge, determines the demand of the child node.
-      #
-      # This will preferentially return the node's +demand+ attribute if it
-      # has one, otherwise it will see if all of the nodes out edges (minus
-      # those with the "overflow" behaviour) have a known demand. This allows
-      # it to act like ETEngine's "flexible" links.
+      #######
+      private
+      #######
+
+      # Internal: Given an edge, determines the demand of the parent node.
       #
       # Returns a numeric, or nil if no demand can be determined.
-      def self.child_demand(edge)
-        edge.to.demand
+      def parent_demand(edge)
+        from(edge).demand
       end
 
-      # Internal: Given an incoming edge on the +to+ node, determines if the
-      # edge contains enough information to allow us to use this strategy.
+      # Internal: Given the edge to be calculated, and one of its siblings
+      # (another outgoing edge from the parent), determines if the edge
+      # provides enough information to use this strategy.
       #
       # Returns true or false.
-      def self.calculable_sibling_edge?(edge, sibling)
-        sibling.similar?(edge) || sibling.get(:demand)
+      def calculable_sibling_edge?(edge, sibling)
+        sibling == edge || sibling.demand
       end
     end # FillRemaining
-
-    # A strategy for calculating edge demand when all of the node's other
-    # outbound edges of the same carrier already have a demand calculated.
-    #
-    # For example, in this simple case:
-    #
-    #    [A] [B]
-    #      \ / (5)
-    #      [X] (20)
-    #
-    # ... we know that B->X has a demand of 5, therefore A->X must have a
-    # demand of 20 (so that that all edges meet the demand of [X]).
-    class FillRemainingAcrossSlots
-      def self.calculable?(edge)
-        child_demand(edge) &&
-          edge.to.in_edges.all? do |other|
-            calculable_sibling_edge?(edge, other)
-          end
-      end
-
-      def self.calculate(edge)
-        demand = child_demand(edge)
-        supply = edge.to.in_edges.get(:demand).to_a.compact.sum
-
-        if demand >= supply
-          demand - supply
-        else
-          # Node already has too much energy; this edge should be zero, and
-          # we assume that there is an overflow edge which will take away the
-          # excess.
-          0.0
-        end
-      end
-
-      # Internal: Given an edge, determines the demand of the child node.
-      #
-      # This will preferentially return the node's +demand+ attribute if it
-      # has one, otherwise it will see if all of the nodes out edges (minus
-      # those with the "overflow" behaviour) have a known demand. This allows
-      # it to act like ETEngine's "flexible" links.
-      #
-      # Returns a numeric, or nil if no demand can be determined.
-      def self.child_demand(edge)
-        edge.to.demand
-      end
-
-      # Internal: Given an incoming edge on the +to+ node, determines if the
-      # edge contains enough information to allow us to use this strategy.
-      #
-      # Returns true or false.
-      def self.calculable_sibling_edge?(edge, sibling)
-        sibling.similar?(edge) || sibling.get(:demand)
-      end
-    end # FillRemainingAcrossSlots
   end # EdgeDemand
 end # Refinery::Strategies

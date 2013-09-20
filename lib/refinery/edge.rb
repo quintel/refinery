@@ -19,6 +19,10 @@ module Refinery
       get(:demand)
     end
 
+    def inspect
+      super.sub(/>$/, " (type=#{ get :type })>")
+    end
+
     # Public: The proportion of "carrier" energy supplied to the child node.
     #
     # "Carrier" energy means that share only accounts for other edges which

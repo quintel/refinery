@@ -3,16 +3,18 @@ module Refinery
     # Calculates the total expected or preset demand of a node by looking
     # either to the child nodes, or to a parent node.
     class EdgeDemand < Base
+      include Strategies::EdgeDemand
       DEFAULT_STRATEGIES = [
-        Strategies::EdgeDemand::FillRemainingFromParent,
-        Strategies::EdgeDemand::ParentShare,
-        Strategies::EdgeDemand::ChildShare,
-        Strategies::EdgeDemand::FromDemand,
-        Strategies::EdgeDemand::FromChildDemand,
-        Strategies::EdgeDemand::FillRemaining,
-        Strategies::EdgeDemand::FillRemainingAcrossSlots,
-        Strategies::EdgeDemand::SingleParent,
-        Strategies::EdgeDemand::OnlyChild
+        FillRemaining.compile(:forwards).new,
+        ByShare.compile(:reversed).new,
+        ByShare.compile(:forwards).new,
+        FromDemand.compile(:forwards).new,
+        FromDemand.compile(:reversed).new,
+        FillRemaining.compile(:reversed).new,
+        FillRemainingAcrossSlots.compile(:reversed).new,
+        FillRemainingAcrossSlots.compile(:forwards).new,
+        Solo.compile(:forwards).new,
+        Solo.compile(:reversed).new
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the
@@ -49,13 +51,12 @@ module Refinery
       def applicable_strategies
         case @model.get(:type)
         when :overflow
-          [ Strategies::EdgeDemand::Overflow,
-            Strategies::EdgeDemand::SingleParent ]
+          [ Overflow.new, Solo.compile(:reversed).new ]
         when :flexible
-          [ Strategies::EdgeDemand::OnlyChild,
-            Strategies::EdgeDemand::ParentShare,
-            Strategies::EdgeDemand::ChildShare,
-            Strategies::EdgeDemand::Flexible ]
+          [ Solo.compile(:forwards).new,
+            ByShare.compile(:reversed).new,
+            ByShare.compile(:forwards).new,
+            Flexible.new ]
         else
           super
         end
