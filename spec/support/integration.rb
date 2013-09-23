@@ -99,9 +99,8 @@ module Refinery::Spec
     #
     # Returns nothing.
     def do_calculate!(catalyst)
-      Refinery::Reactor.new(
-        Refinery::Catalyst::ConvertFinalDemand, catalyst
-      ).run(graph)
+      [ Refinery::Catalyst::ConvertFinalDemand, catalyst ]
+        .reduce(graph) { |result, catalyst| catalyst.call(result) }
     rescue Refinery::IncalculableGraphError
     end
   end # Integration
