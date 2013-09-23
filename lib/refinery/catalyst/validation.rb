@@ -20,7 +20,7 @@ module Refinery
         validator = new(graph).run!
 
         if validator.errors.any?
-          raise Refinery::FailedValidationError.new(validator.errors)
+          fail Refinery::FailedValidationError.new(validator.errors)
         end
 
         graph

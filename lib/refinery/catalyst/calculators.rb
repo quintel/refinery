@@ -79,7 +79,7 @@ module Refinery
 
           if calculators.length == previous_length
             # Nothing new could be calculated!
-            raise IncalculableGraphError.new(calculators)
+            fail IncalculableGraphError.new(calculators)
           end
         end
       end

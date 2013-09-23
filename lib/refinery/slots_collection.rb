@@ -30,7 +30,7 @@ module Refinery
     # Returns a Slot, or nil if no such slot exists in the collection.
     def get(carrier)
       @slots[carrier] ||
-        raise(NoSuchCarrierError.new(@node, @direction, carrier))
+        fail(NoSuchCarrierError.new(@node, @direction, carrier))
     end
 
     # Public: Adds a new slot to the collection, using the given +carrier+.
@@ -42,7 +42,7 @@ module Refinery
     # Returns the slot.
     def add(carrier, properties = {})
       if include?(carrier)
-        raise SlotAlreadyExistsError.new(@node, @direction, carrier)
+        fail SlotAlreadyExistsError.new(@node, @direction, carrier)
       end
 
       @slots[carrier] = Slot.new(@node, @direction, carrier, properties)

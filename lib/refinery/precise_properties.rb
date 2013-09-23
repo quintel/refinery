@@ -5,8 +5,8 @@ module Refinery
     # Returns nothing.
     def self.included(base)
       unless base < Turbine::Properties
-        raise "You can only include PreciseProperties on classes which " \
-              "also include Turbine::Properties."
+        fail "You can only include PreciseProperties on classes which " \
+             "also include Turbine::Properties."
       end
 
       base.extend(ClassMethods)
