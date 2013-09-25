@@ -1,6 +1,12 @@
 module Refinery::Strategies
   module Reversible
-    # Methods which calculate a strategy from the parent towards the child.
+    # Runs a strategy in the opposite direction in which it is written. i.e.,
+    # each call to +in_edges+ will actually call +out_edges+, +parent_share+
+    # fetches the child share, etc.
+    #
+    # Since Reversible strategies are written assuming that we know something
+    # about the parent (either a in/from node, or in_edges), mixing in
+    # Reversed has the effect of changing the direction to child-to-parent.
     module Reversed
       def forwards?
         false
