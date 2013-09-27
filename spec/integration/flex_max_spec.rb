@@ -22,7 +22,7 @@ describe 'Graph calculations; flex-max' do
     #           └───┘  └───┘  └───┘        vv
     #               \    |    /
     #               ┌─────────┐
-    #               | DISTRIB | (100)
+    #               │ DISTRIB │ (100)
     #               └─────────┘
     before do
       b.set(:max_demand, 10)
@@ -61,7 +61,7 @@ describe 'Graph calculations; flex-max' do
     #           └───┘  └───┘  └───┘    vv
     #               \    |    /
     #               ┌─────────┐
-    #               | DISTRIB |
+    #               │ DISTRIB │
     #               └─────────┘
     before do
       b.set(:max_demand, 10)
@@ -91,3 +91,114 @@ describe 'Graph calculations; flex-max' do
     it { expect(graph).to_not validate }
   end # with max_demand on the flexible-edged node
 end # Graph calculations; flex-max
+
+describe 'Graph calculations; recursive flex-max' do
+  #         ┌───┐   ┌───┐
+  #  (md:3) │ A │   │ B │ (md:7)
+  #         └───┘   └───┘
+  #             \  /
+  #             ┌───┐     ┌───┐        ││
+  #             │ X │     │ Y │        ││
+  #             └───┘     └───┘        vv
+  #                 \     /
+  #               ┌─────────┐
+  #               │ CONSUME │ (100)
+  #               └─────────┘
+  %w( a b x y c ).each do |key|
+    let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }
+  end
+
+  let!(:ax_edge) { a.connect_to(x, :gas, type: :flexible, priority: 2) }
+  let!(:bx_edge) { b.connect_to(x, :gas, type: :flexible, priority: 1) }
+
+  let!(:xc_edge) { x.connect_to(c, :gas, type: :flexible, priority: 1) }
+  let!(:yc_edge) { y.connect_to(c, :gas, type: :flexible) }
+
+  before do
+    c.set(:demand, 100)
+    a.set(:max_demand, 3)
+    x.set(:max_demand, :recursive)
+  end
+
+  context 'when both parents have a max demand' do
+    before do
+      b.set(:max_demand, 7)
+      calculate!
+    end
+
+    it 'sets A->X to 3' do
+      expect(ax_edge).to have_demand.of(3)
+    end
+
+    it 'sets B->X to 7' do
+      expect(bx_edge).to have_demand.of(7)
+    end
+
+    it 'sets Y->C to 90' do
+      expect(yc_edge).to have_demand.of(90)
+    end
+
+    it { expect(graph).to validate }
+  end # when both parents have a max demand
+
+  context 'when demand is less than max_demand' do
+    before do
+      c.set(:demand, 2)
+      b.set(:max_demand, 7)
+      calculate!
+    end
+
+    it 'sets A->X to 2' do
+      expect(ax_edge).to have_demand.of(2)
+    end
+
+    it 'sets B->X to 0' do
+      expect(bx_edge).to have_demand.of(0)
+    end
+
+    it 'sets Y->C to 0' do
+      expect(yc_edge).to have_demand.of(0)
+    end
+
+    it { expect(graph).to validate }
+  end # when demand is less than max_demand
+
+  context 'when one parent has no max demand' do
+    before { calculate! }
+
+    it 'does not set A->X' do
+      expect(ax_edge).to_not have_demand
+    end
+
+    it 'does not set B->X' do
+      expect(bx_edge).to_not have_demand
+    end
+
+    it 'does not sets Y->C' do
+      expect(yc_edge).to_not have_demand
+    end
+
+    it { expect(graph).to_not validate }
+  end # when one parent has no max demand
+
+  context 'when one parent is connected via a non-flex-max link' do
+    before do
+      bx_edge.set(:priority, nil)
+      calculate!
+    end
+
+    it 'sets A->X to 3' do
+      expect(ax_edge).to have_demand.of(3)
+    end
+
+    it 'sets B->X to 97' do
+      expect(bx_edge).to have_demand.of(97)
+    end
+
+    it 'sets Y->C to 0' do
+      expect(yc_edge).to have_demand.of(0)
+    end
+
+    it { expect(graph).to validate }
+  end # when one parent has no max demand
+end # Graph calculations; recursive flex-max

@@ -1,6 +1,13 @@
 module Refinery::Strategies
   module EdgeDemand
     class Flexible < FillRemaining.reversed
+      # Public: Determines if the flexible edge can be calculated. In addition
+      # to the normal FillRemaining checks, we assert that the supplier has a
+      # max_demand defined if the edge is a flex-max edge.
+      def calculable?(edge)
+        super unless edge.get(:priority) && edge.from.max_demand.nil?
+      end
+
       # Public: Calculates the demand of the edge. Checks that the calculated
       # value does not exceed the max demand of the parent node.
       #

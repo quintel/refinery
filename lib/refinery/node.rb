@@ -70,7 +70,18 @@ module Refinery
     #
     # Returns a rational, or nil if no max demand is available.
     def max_demand
-      get(:max_demand)
+      if get(:max_demand) == :recursive || get(:max_demand) == 'recursive'
+        if in_edges.any? { |edge| edge.get(:priority).nil? }
+          # If any of the incoming edges are not flex-max, then there is at
+          # least one edge which could supply *all* of the demand from child
+          # nodes.
+          set(:max_demand, Float::INFINITY)
+        else
+          set(:max_demand, Refinery::Util.strict_sum(in_edges, &:max_demand))
+        end
+      else
+        get(:max_demand)
+      end
     end
 
     # Public: Provides a fluent API for accessing the slots on the node.
