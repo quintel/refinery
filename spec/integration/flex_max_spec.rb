@@ -97,19 +97,25 @@ describe 'Graph calculations; recursive flex-max' do
   #  (md:3) │ A │   │ B │ (md:7)
   #         └───┘   └───┘
   #             \  /
-  #             ┌───┐     ┌───┐        ││
-  #             │ X │     │ Y │        ││
-  #             └───┘     └───┘        vv
+  #             ┌───┐
+  #             │ M │
+  #             └───┘                  ││
+  #               │                    ││
+  #             ┌───┐     ┌───┐        vv
+  #             │ X │     │ Y │
+  #             └───┘     └───┘
   #                 \     /
   #               ┌─────────┐
   #               │ CONSUME │ (100)
   #               └─────────┘
-  %w( a b x y c ).each do |key|
+  %w( a b m x y c ).each do |key|
     let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }
   end
 
-  let!(:ax_edge) { a.connect_to(x, :gas, type: :flexible, priority: 2) }
-  let!(:bx_edge) { b.connect_to(x, :gas, type: :flexible, priority: 1) }
+  let!(:am_edge) { a.connect_to(m, :gas, type: :flexible, priority: 2) }
+  let!(:bm_edge) { b.connect_to(m, :gas, type: :flexible, priority: 1) }
+
+  let!(:mx_edge) { m.connect_to(x, :gas, type: :flexible, priority: 1) }
 
   let!(:xc_edge) { x.connect_to(c, :gas, type: :flexible, priority: 1) }
   let!(:yc_edge) { y.connect_to(c, :gas, type: :flexible) }
@@ -126,12 +132,16 @@ describe 'Graph calculations; recursive flex-max' do
       calculate!
     end
 
-    it 'sets A->X to 3' do
-      expect(ax_edge).to have_demand.of(3)
+    it 'sets A->M to 3' do
+      expect(am_edge).to have_demand.of(3)
     end
 
-    it 'sets B->X to 7' do
-      expect(bx_edge).to have_demand.of(7)
+    it 'sets B->M to 7' do
+      expect(bm_edge).to have_demand.of(7)
+    end
+
+    it 'sets M->X to 10' do
+      expect(mx_edge).to have_demand.of(10)
     end
 
     it 'sets Y->C to 90' do
@@ -148,12 +158,16 @@ describe 'Graph calculations; recursive flex-max' do
       calculate!
     end
 
-    it 'sets A->X to 2' do
-      expect(ax_edge).to have_demand.of(2)
+    it 'sets A->M to 2' do
+      expect(am_edge).to have_demand.of(2)
     end
 
-    it 'sets B->X to 0' do
-      expect(bx_edge).to have_demand.of(0)
+    it 'sets B->M to 0' do
+      expect(bm_edge).to have_demand.of(0)
+    end
+
+    it 'sets M->X to 2' do
+      expect(mx_edge).to have_demand.of(2)
     end
 
     it 'sets Y->C to 0' do
@@ -166,12 +180,12 @@ describe 'Graph calculations; recursive flex-max' do
   context 'when one parent has no max demand' do
     before { calculate! }
 
-    it 'does not set A->X' do
-      expect(ax_edge).to_not have_demand
+    it 'does not set A->M' do
+      expect(am_edge).to_not have_demand
     end
 
-    it 'does not set B->X' do
-      expect(bx_edge).to_not have_demand
+    it 'does not set B->M' do
+      expect(bm_edge).to_not have_demand
     end
 
     it 'does not sets Y->C' do
@@ -183,16 +197,20 @@ describe 'Graph calculations; recursive flex-max' do
 
   context 'when one parent is connected via a non-flex-max link' do
     before do
-      bx_edge.set(:priority, nil)
+      bm_edge.set(:priority, nil)
       calculate!
     end
 
-    it 'sets A->X to 3' do
-      expect(ax_edge).to have_demand.of(3)
+    it 'sets A->M to 3' do
+      expect(am_edge).to have_demand.of(3)
     end
 
-    it 'sets B->X to 97' do
-      expect(bx_edge).to have_demand.of(97)
+    it 'sets B->M to 97' do
+      expect(bm_edge).to have_demand.of(97)
+    end
+
+    it 'sets M->X to 97' do
+      expect(mx_edge).to have_demand.of(100)
     end
 
     it 'sets Y->C to 0' do

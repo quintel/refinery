@@ -80,10 +80,16 @@ module Refinery
     # assist in the calculation of flex-max edges, where a node has multiple
     # incoming flexible edges with priorities.
     #
+    # force_recurse - Used internally to recursively determine the maximum
+    #                 demand by traversing the parent node (and if necessary,
+    #                 it's parents, until we can find out the max_demand.
+    #
     # Returns a rational, or nil if no max demand is available.
-    def max_demand
-      if from.max_demand && (conversion = from.slots.out(label).share)
-        from.max_demand * conversion
+    def max_demand(force_recurse = false)
+      parent_max_demand = from.max_demand(force_recurse)
+
+      if parent_max_demand && (conversion = from.slots.out(label).share)
+        parent_max_demand * conversion
       end
     end
   end # Edge
