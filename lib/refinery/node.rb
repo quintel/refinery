@@ -106,8 +106,8 @@ module Refinery
     # Returns a SlotsFacade.
     def slots
       @slots ||= SlotsFacade.new(
-        SlotsCollection.new(self, :in),
-        SlotsCollection.new(self, :out)
+        SlotCollection.new(self, :in),
+        SlotCollection.new(self, :out)
       )
     end
 

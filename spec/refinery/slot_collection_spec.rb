@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 module Refinery
-  describe SlotsCollection do
+  describe SlotCollection do
     let(:node) { Node.new(:node) }
-    let(:coll) { SlotsCollection.new(node, :out) }
+    let(:coll) { SlotCollection.new(node, :out) }
 
     it 'is enumerable' do
       gas  = coll.add(:gas)
@@ -86,5 +86,5 @@ module Refinery
         expect(coll.length).to eql(2)
       end
     end # length
-  end # SlotsCollection
+  end # SlotCollection
 end # Refinery

@@ -7,7 +7,7 @@ module Refinery
   #
   #   node.slots.in(:gas)
   #   # => #<Slot>
-  class SlotsCollection
+  class SlotCollection
     include Enumerable
 
     # Public: The direction of the slots in the collection. +:in+ or +:out+.
@@ -18,7 +18,7 @@ module Refinery
 
     # Public: Creates a new collection for the given +node+ and +direction+.
     #
-    # Returns a SlotsCollection.
+    # Returns a SlotCollection.
     def initialize(node, direction)
       @node      = node
       @direction = direction
@@ -94,5 +94,5 @@ module Refinery
     end
 
     alias_method :to_s, :inspect
-  end # SlotsCollection
+  end # SlotCollection
 end # Refinery
