@@ -65,9 +65,6 @@ module Refinery
     # Public: The maximum permitted demand of the node. Used only in the
     # presence of a flex-max edge (a flexible edge with a priority).
     #
-    # If no max demand is set on this node, it traverses to parent nodes
-    # through incoming edges to figure it out.
-    #
     # force_recurse - Used internally to recursively determine the maximum
     #                 demand of the node by traversing the incoming edges until
     #                 we reach nodes which have an explicit max_demand.
@@ -78,16 +75,9 @@ module Refinery
 
       if (! max_demand && force_recurse) ||
             max_demand == :recursive || max_demand == 'recursive'
-        if in_edges.any? { |edge| edge.get(:priority).nil? }
-          # If any of the incoming edges are not flex-max, then there is at
-          # least one edge which could supply *all* of the demand from child
-          # nodes.
-          set(:max_demand, Float::INFINITY)
-        else
-          set(:max_demand, Refinery::Util.strict_sum(in_edges) do |edge|
-            edge.max_demand(true)
-          end)
-        end
+        set(:max_demand, Refinery::Util.strict_sum(in_edges) do |edge|
+          edge.max_demand(true)
+        end)
       else
         max_demand
       end

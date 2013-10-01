@@ -219,4 +219,48 @@ describe 'Graph calculations; recursive flex-max' do
 
     it { expect(graph).to validate }
   end # when one parent has no max demand
+
+  #         ┌───┐   ┌───┐
+  #  (md:3) │ A │   │ B │ (md:7)
+  #         └───┘   └───┘
+  #             \  /
+  #             ┌───┐
+  #             │ M │
+  #             └───┘                  ││
+  #               │                    ││
+  #             ┌───┐     ┌───┐        vv
+  #             │ X │     │ Y │
+  #             └───┘     └───┘
+  #                 \     /
+  #               ┌─────────┐
+  #               │ CONSUME │ (100)
+  #               └─────────┘
+  context 'when the bridge edge is not flexible' do
+    before do
+      mx_edge.set(:priority, nil)
+      mx_edge.set(:type, :share)
+
+      b.set(:max_demand, 7)
+
+      calculate!
+    end
+
+    it 'sets A->M to 3' do
+      expect(am_edge).to have_demand.of(3)
+    end
+
+    it 'sets B->M to 7' do
+      expect(bm_edge).to have_demand.of(7)
+    end
+
+    it 'sets M->X to 10' do
+      expect(mx_edge).to have_demand.of(10)
+    end
+
+    it 'sets Y->C to 90' do
+      expect(yc_edge).to have_demand.of(90)
+    end
+
+    it { expect(graph).to validate }
+  end # when the bridge edge is not flexible
 end # Graph calculations; recursive flex-max

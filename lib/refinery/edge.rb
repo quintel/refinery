@@ -86,10 +86,22 @@ module Refinery
     #
     # Returns a rational, or nil if no max demand is available.
     def max_demand(force_recurse = false)
-      parent_max_demand = from.max_demand(force_recurse)
+      if get(:max_demand)
+        get(:max_demand)
+      elsif get(:type) == :flexible && get(:priority).nil?
+        # A flexible edge with no priority is not a flex-max edge, and therefore
+        # could provide all of the demand.
+        set(:max_demand, Float::INFINITY)
+      else
+        parent_max_demand = from.max_demand(force_recurse)
 
-      if parent_max_demand && (conversion = from.slots.out(label).share)
-        parent_max_demand * conversion
+        if parent_max_demand == Float::INFINITY
+          # When the parent has no maximum demand, then this node must also have
+          # no maximum demand.
+          set(:max_demand, Float::INFINITY)
+        elsif parent_max_demand && (conversion = from.slots.out(label).share)
+          set(:max_demand, parent_max_demand * conversion)
+        end
       end
     end
   end # Edge
