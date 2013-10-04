@@ -23,9 +23,10 @@ module Refinery
 
       FLEXIBLE_STRATEGIES = [
         Solo.forwards.new,
-        ByShare.reversed.new,
+        FillRemaining.forwards.new,
+        Flexible.new,
         ByShare.forwards.new,
-        Flexible.new
+        ByShare.reversed.new
       ]
 
       # Public: Performs the calculation, setting the demand attribute on the
