@@ -28,10 +28,10 @@ module Refinery
 
       # Strings for the various error messages.
       MESSAGES = {
-        object_missing_demand: 'has no demand value set',
-        non_matching_demand:   'demand (%s) does not match %s the node (%s)',
-        undetermined_share:    'has an undetermined share',
-        max_demand_exceeded:   'demand (%f) exceeds max_demand (%f)'
+        missing_demand:      'has no demand value set',
+        non_matching_demand: 'demand (%s) does not match %s the node (%s) (%s)',
+        undetermined_share:  'has an undetermined share',
+        max_demand_exceeded: 'demand (%f) exceeds max_demand (%f)'
       }.freeze
 
       # Public: Returns the errors. This will be an empty hash if no errors
@@ -58,7 +58,7 @@ module Refinery
           if node.demand.nil?
             # Associated slots and edges will obviously be invalid if the node
             # has no demand, so we don't even bother testing them.
-            add_error(node, :object_missing_demand)
+            add_error(node, :missing_demand)
           else
             validate_node(node)
 
@@ -112,15 +112,21 @@ module Refinery
           # We only need to alert that an edge is missing demand once; so we
           # ignore this error on :in slots.
           if slot.direction == :out
-            demandless.each { |edge| add_error(edge, :object_missing_demand) }
+            demandless.each { |edge| add_error(edge, :missing_demand) }
           end
         elsif slot.demand.nil?
-          add_error(slot, :object_missing_demand)
+          add_error(slot, :missing_demand)
         elsif slot.share.nil?
           add_error(slot, :undetermined_share)
         elsif ! ((expected - 1e-20)..(expected + 1e-20)).include?(slot.demand)
           noun = slot.direction == :in ? 'demand from' : 'output of'
-          add_error(slot, :non_matching_demand, slot.demand, noun, expected)
+
+          add_error(
+            slot, :non_matching_demand,
+            format_energy(slot.demand),
+            noun,
+            format_energy(expected),
+            format_energy(slot.demand - expected, '%-+f'))
         end
       end
 
@@ -139,6 +145,30 @@ module Refinery
         @errors[object].push(MESSAGES[key] % details)
 
         nil
+      end
+
+      # Internal: Given an energy value in petajoules, formats it nicely,
+      # converting it to terajoules, gigajoules, etc, as necessary, and
+      # inserting delimiters between each thousand.
+      #
+      # Returns a string.
+      def format_energy(value, format_string = '%f')
+        formatted = if value < (1.0 / 1_000_000_000)
+          "#{ sprintf(format_string, value * 1_000_000_000) } MJ"
+        elsif value < (1.0 / 1_000_000)
+          "#{ sprintf(format_string, value * 1_000_000) } GJ"
+        elsif value < (1.0 / 1_000)
+          "#{ sprintf(format_string, value * 1_000) } TJ"
+        else
+          "#{ sprintf(format_string, value) } PJ"
+        end
+
+        parts = formatted.split('.')
+
+        parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1,")
+        parts[1].gsub!(/\.?0+ /, '')
+
+        parts.join('.')
       end
     end # Validation
   end # Catalyst
