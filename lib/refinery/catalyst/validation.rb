@@ -153,6 +153,8 @@ module Refinery
       #
       # Returns a string.
       def format_energy(value, format_string = '%f')
+        return 'nil' if value.nil?
+
         formatted = if value < (1.0 / 1_000_000_000)
           "#{ sprintf(format_string, value * 1_000_000_000) } MJ"
         elsif value < (1.0 / 1_000_000)
@@ -166,9 +168,9 @@ module Refinery
         parts = formatted.split('.')
 
         parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1,")
-        parts[1].gsub!(/\.?0+ /, '')
+        parts[1].gsub!(/0+ /, ' ')
 
-        parts.join('.')
+        parts[1][0] == ' ' ? parts.join : parts.join('.')
       end
     end # Validation
   end # Catalyst
