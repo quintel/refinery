@@ -119,7 +119,12 @@ module Refinery
           add_error(slot, :missing_demand)
         elsif slot.share.nil?
           add_error(slot, :undetermined_share)
-        elsif ! ((expected - 1e-20)..(expected + 1e-20)).include?(slot.demand)
+        elsif ! ((expected - 1e-9)..(expected + 1e-9)).include?(slot.demand)
+          # 1e-9 is one megajoule; we allow nodes to disagree by that much
+          # before complaining.
+          #
+          # See: https://github.com/quintel/etsource/issues/555
+
           noun = slot.direction == :in ? 'demand from' : 'output of'
 
           add_error(
