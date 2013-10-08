@@ -31,7 +31,7 @@ module Refinery
         missing_demand:      'has no demand value set',
         non_matching_demand: 'demand (%s) does not match %s the node (%s) (%s)',
         undetermined_share:  'has an undetermined share',
-        max_demand_exceeded: 'demand (%f) exceeds max_demand (%f)'
+        max_demand_exceeded: 'demand (%s) exceeds max_demand (%s)'
       }.freeze
 
       # Public: Returns the errors. This will be an empty hash if no errors
@@ -92,7 +92,8 @@ module Refinery
       def validate_node(node)
         if node.max_demand && node.demand > node.max_demand
           add_error(node, :max_demand_exceeded,
-                    node.demand, node.max_demand)
+                    format_energy(node.demand),
+                    format_energy(node.max_demand))
         end
       end
 
