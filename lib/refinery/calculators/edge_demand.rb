@@ -6,12 +6,12 @@ module Refinery
       include Strategies::EdgeDemand
 
       DEFAULT_STRATEGIES = [
-        FillRemaining.forwards.new,
-        FillRemaining.reversed.new,
         ByShare.forwards.new,
         ByShare.reversed.new,
         Solo.forwards.new,
         Solo.reversed.new,
+        FillRemaining.forwards.new,
+        FillRemaining.reversed.new,
         FillRemainingAcrossSlots.forwards.new,
         FillRemainingAcrossSlots.reversed.new
       ]
