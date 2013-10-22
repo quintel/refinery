@@ -1,6 +1,10 @@
 module Refinery
   module Catalyst
     class Validation
+      # The factor by which a slot demand is allowed to disagree with the demand
+      # of the node. 1e-15 is 0.0000000000001%.
+      PERMITTED_SLOT_DEVIATION = 1e-15
+
       # Public: Given a graph, asserts that the demands were all set
       # correctly, and that there were no anomalous results. Bad demand
       # calculations are typically the result of user error. If the user gives
@@ -119,20 +123,13 @@ module Refinery
           add_error(slot, :missing_demand)
         elsif slot.share.nil?
           add_error(slot, :undetermined_share)
-        elsif ! ((expected - 1e-9)..(expected + 1e-9)).include?(slot.demand)
-          # 1e-9 is one megajoule; we allow nodes to disagree by that much
-          # before complaining.
-          #
-          # See: https://github.com/quintel/etsource/issues/555
-
-          noun = slot.direction == :in ? 'demand from' : 'output of'
-
+        elsif deviant_slot_demand?(slot)
           add_error(
             slot, :non_matching_demand,
             format_energy(slot.demand),
-            noun,
-            format_energy(expected),
-            format_energy(slot.demand - expected, '%-+f'))
+            slot.direction == :in ? 'demand from' : 'output of',
+            format_energy(expected_slot_demand(slot)),
+            format_energy(slot.demand - expected_slot_demand(slot), '%-+f'))
         end
       end
 
@@ -151,6 +148,36 @@ module Refinery
         @errors[object].push(MESSAGES[key] % details)
 
         nil
+      end
+
+      # Internal: Determines if the demand of a slot differs substantially from
+      # the value we would expected when multiplying the demand of the node by
+      # the slot conversion.
+      #
+      # The demand is allowed to disagree with the node by a tiny amount ––
+      # in the larger nodes in big countries (e.g. Germany) the variation comes
+      # to about one megajoule.
+      #
+      # See: https://github.com/quintel/etsource/issues/555
+      #
+      # slot - The slot to check.
+      #
+      # Returns true or false.
+      def deviant_slot_demand?(slot)
+        expected = expected_slot_demand(slot)
+        permitted_deviation = expected * PERMITTED_SLOT_DEVIATION
+
+        (expected - permitted_deviation) > slot.demand ||
+          (expected + permitted_deviation) < slot.demand
+      end
+
+      # Internal: Given a slot, returns how much demand it's edges are expected
+      # to have, according to the node.
+      #
+      # Returns a numeric.
+      def expected_slot_demand(slot)
+        slot.node.public_send(
+          slot.direction == :in ? :demand_for : :output_of, slot.carrier)
       end
 
       # Internal: Given an energy value in petajoules, formats it nicely,
