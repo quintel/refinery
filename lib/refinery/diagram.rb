@@ -4,7 +4,7 @@ module Refinery
     NODE_OPTIONS = { fontname: 'Helvetica', fontsize: 11, shape: 'rect' }
 
     # Default options used for all edges.
-    EDGE_OPTIONS = { fontname: 'Helvetica Bold', fontsize: 9 }
+    EDGE_OPTIONS = { fontname: 'Helvetica-Bold', fontsize: 9 }
 
     # General colors.
     COLORS = {
