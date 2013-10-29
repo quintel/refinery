@@ -2,8 +2,8 @@ module Refinery
   module Catalyst
     class Validation
       # The factor by which a slot demand is allowed to disagree with the demand
-      # of the node. 1e-15 is 0.0000000000001%.
-      PERMITTED_SLOT_DEVIATION = 1e-15
+      # of the node. 1e-15 is 0.000000000001%.
+      PERMITTED_SLOT_DEVIATION = 1e-14
 
       # Public: Given a graph, asserts that the demands were all set
       # correctly, and that there were no anomalous results. Bad demand
