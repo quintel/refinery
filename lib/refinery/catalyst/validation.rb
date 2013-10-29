@@ -188,7 +188,7 @@ module Refinery
       def format_energy(value, format_string = '%f')
         return 'nil' if value.nil?
 
-        formatted = if value < (1.0 / 1_000_000_000_000)
+        formatted = if value.abs < (1.0 / 1_000_000_000_000)
           "#{ sprintf(format_string, value * 1_000_000_000_000) } KJ"
         elsif value < (1.0 / 1_000_000_000)
           "#{ sprintf(format_string, value * 1_000_000_000) } MJ"
