@@ -47,5 +47,5 @@ module Enumerable
     else
       inject { |sum, element| sum + element } || identity
     end
-  end
+  end unless method_defined?(:sum)
 end
