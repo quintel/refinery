@@ -23,7 +23,7 @@ module Refinery::Strategies
           (! edge.demand && child_share(edge)) || Rational(0)
         end
 
-        known_demand / (1 - known_share)
+        (known_demand / (1 - known_share)) / slot.share
       end
 
       #######
