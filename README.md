@@ -1,13 +1,12 @@
 # Refinery
 
-A replacement for xls2yml which takes a source, creates a temporary Turbine
-graph, and runs a series of transforms ("catalysts") adjusting the graph data
-prior to exporting back to YAML for use in ETengine.
+Refinery is an energy-graph solver which, given demands on some nodes and
+shares on some edges, seeks to find the demand of all the unspecified nodes.
 
-For the moment, the graph source is a manually-constructed "stub" graph which
-is used for developing new features. Once the stub graph is reasonably complex
-it will  be replaced by parsing the InputExcel CSVs. In the longer term, the
-CSVs will likely also be replaced with something else.
+Refinery is used at Quintel to take the the graph defined in
+[ETSource][etsource], and determine the way in which energy flows through a
+country; from the primary sources (such as coal production, or "ambient wind"),
+all the way to the use in business, industry, and residences.
 
 #### Terminology
 
@@ -32,3 +31,6 @@ CSVs will likely also be replaced with something else.
 * **Siblings**: Describes nodes which are connected to a common parent.
 
   ![](https://dl.dropbox.com/sh/dr9ui09l5s2kgrt/SEYBOLGAMz/sibling.png)
+
+[etsource]: https://github.com/quintel/etsource
+[atlas]:    https://github.com/quintel/atlas
