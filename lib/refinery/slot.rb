@@ -74,13 +74,13 @@ module Refinery
 
       slots = @node.slots.public_send(@direction)
 
+      others = slots.reject do |slot|
+        slot == self || slot.get(:type) == :elastic
+      end
+
       if slots.one?
         set(:share, 1)
       elsif get(:type) == :elastic
-        others = slots.reject do |slot|
-          slot == self || slot.get(:type) == :elastic
-        end
-
         if others.all?(&:share)
           set(:share, 1 - others.sum(&:share))
         end
@@ -88,8 +88,17 @@ module Refinery
         node_demand = @node.demand ||
           slots.all?(&:demand) && slots.sum(&:demand)
 
-        if node_demand && ! node_demand.zero?
-          set(:share, demand / node_demand)
+        if node_demand
+          if node_demand.zero? && edges.all? { |e| e.get(:type) == :overflow }
+            # Special-case for when a node demand is zero, and contains a slot
+            # with "normal" links, and a slot with overflow links.
+            set(:share, 0.0)
+          elsif node_demand.zero? && others.all?(&:share)
+            # Opposite of the special case above.
+            set(:share, 1.0 - others.sum(&:share))
+          elsif ! node_demand.zero?
+            set(:share, demand / node_demand)
+          end
         end
       end
     end
