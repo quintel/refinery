@@ -31,7 +31,7 @@ module Refinery
       biogenic_waste:            :olive,
       bio_ethanol:               :olive,
       bio_oil:                   :olive,
-      bio_residues_for_firing:   :olive,
+      woody_biomass:             :olive,
       car_kms:                   :purple,
       coal:                      :black,
       coal_gas:                  :black,
