@@ -101,7 +101,7 @@ describe Refinery::PreciseProperties do
     it 'raises an error' do
       expect do
         Class.new { include Refinery::PreciseProperties }
-      end.to raise_error
+      end.to raise_error(RuntimeError, /PreciseProperties/)
     end
   end
 end # Refinery::PreciseProperties

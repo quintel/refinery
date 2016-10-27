@@ -17,25 +17,22 @@
 #   expect(node).to have_demand.of(666.0)
 #
 RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
-  @fetcher   = fetcher
-  @attribute = attribute
-
   def format(number)
     number.kind_of?(Rational) ? '%.10g' % number : number.inspect
   end
 
-  def actual(model)
-    value = if @fetcher.nil?
-      model.public_send(@attribute)
+  def actual(attribute, fetcher, model)
+    value = if fetcher.nil?
+      model.public_send(attribute)
     else
-      @fetcher.call(model)
+      fetcher.call(model)
     end
 
     value.nil? ? nil : value.to_f
   end
 
   match do |model|
-    value = actual(model)
+    value = actual(attribute, fetcher, model)
 
     if @expectation
       (! value.nil?) &&
@@ -50,23 +47,23 @@ RSpec::Matchers.define :have_calculated_value do |attribute, fetcher = nil|
     @expectation = expectation.to_f
   end
 
-  failure_message_for_should do |model|
+  failure_message do |model|
     if @expectation
       "expected #{ model } to have #{ attribute } " \
       "#{ format(@expectation) }, but it was " \
-      "#{ format(actual(model)) }"
+      "#{ format(actual(attribute, fetcher, model)) }"
     else
       "expected #{ model } to have #{ attribute } calculated"
     end
   end
 
-  failure_message_for_should_not do |model|
+  failure_message_when_negated do |model|
     if @expectation
       "expected #{ model } to not have #{ attribute } of " \
       "#{ format(@expectation) }"
     else
       "expected #{ model } to not have #{ attribute } calculated, but it " \
-      "was #{ format(actual(model)) }"
+      "was #{ format(actual(attribute, fetcher, model)) }"
     end
   end
 end
@@ -77,7 +74,7 @@ RSpec::Matchers.define :validate do
     @validator.errors.empty?
   end
 
-  failure_message_for_should do |graph|
+  failure_message do |graph|
     errors = @validator.errors.map do |model, messages|
       messages.map { |message| "  * #{ model.inspect } #{ message }" }
     end.flatten.join("\n")
@@ -85,7 +82,7 @@ RSpec::Matchers.define :validate do
     "Expected graph to validate, but had the following errors:\n\n#{ errors }"
   end
 
-  failure_message_for_should_not do |graph|
+  failure_message_when_negated do |graph|
     "Expected graph to fail validation, but it passed"
   end
 

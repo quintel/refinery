@@ -83,7 +83,7 @@ module Refinery
 
     context 'when an edge does not have demand' do
       let(:slot) { Slot.new(parent, :out, :gas) }
-      before { slot.edges.first.should_receive(:demand).and_return(nil) }
+      before { expect(slot.edges.first).to receive(:demand).and_return(nil) }
 
       it 'has no demand' do
         expect(slot.demand).to be_nil

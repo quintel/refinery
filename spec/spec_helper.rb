@@ -1,4 +1,5 @@
 require 'rspec'
+require 'rspec/collection_matchers'
 require 'support/coverage' if ENV['COVERAGE']
 require 'refinery'
 
@@ -16,10 +17,8 @@ RSpec.configure do |config|
   config.filter_run(focus: true)
   config.run_all_when_everything_filtered = true
 
-  # Allow adding examples to a filter group with only a symbol.
-  config.treat_symbols_as_metadata_keys_with_true_values = true
-
   # Enable integration helpers when required.
-  config.include Refinery::Spec::Integration, type: :integration,
-    example_group: { file_path: %r{spec\/integration} }
+  config.include Refinery::Spec::Integration,
+    type: :integration,
+    file_path: %r{spec\/integration}
 end
