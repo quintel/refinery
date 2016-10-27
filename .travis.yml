@@ -2,6 +2,6 @@ language: ruby
 script: "bundle exec rspec"
 bundler_args: "--without extras"
 rvm:
-  - 2.1
+  - '2.1.9'
   - 2.2
   - 2.3
