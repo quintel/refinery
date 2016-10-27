@@ -1,4 +1,9 @@
-# Refinery
+<h1 align="center">Refinery</h1>
+<p align="center">Network solver for energy graphs.</p>
+
+<p align="center">
+  <a href="https://travis-ci.org/quintel/refinery"><img alt="Master branch build status" src="https://img.shields.io/travis/quintel/refinery/master.svg" /></a>
+</p>
 
 Refinery is an energy-graph solver which, given demands on some nodes and
 shares on some edges, seeks to find the demand of all the unspecified nodes.
