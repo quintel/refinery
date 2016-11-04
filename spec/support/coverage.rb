@@ -9,3 +9,8 @@ SimpleCov.start do
   add_filter('/lib/refinery/graph_debugger')
   add_filter('/lib/refinery/catalyst/visual_calculator')
 end
+
+if ENV['CI']
+  require 'codecov'
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+end

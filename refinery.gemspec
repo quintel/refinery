@@ -23,5 +23,6 @@ Gem::Specification.new do |gem|
   gem.add_dependency 'terminal-table'
 
   gem.add_development_dependency 'rake', '>= 10.0.3'
+  gem.add_development_dependency 'codecov'
 
 end
