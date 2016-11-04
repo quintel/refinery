@@ -1,4 +1,6 @@
 module Refinery
+  # Customises Turbine's Edge class to provide methods useful for calculating
+  # the Refinery graph.
   class Edge < Turbine::Edge
     include PreciseProperties
 

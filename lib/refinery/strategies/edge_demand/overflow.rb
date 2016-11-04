@@ -36,9 +36,7 @@ module Refinery::Strategies
         # overflow edge *must not* carry any energy.
         anti = anti_parallel_edge(edge)
 
-        if anti && anti.demand && ! anti.demand.zero?
-          return 0.0
-        end
+        return 0.0 if anti && anti.demand && ! anti.demand.zero?
 
         # If the slot has a share, we need to respect that, otherwise we
         # assume that that share will be calculated later (hence || 1.0)
@@ -64,7 +62,7 @@ module Refinery::Strategies
       #
       # Returns a string.
       def inspect
-        "#<#{ to_s }>"
+        "#<#{ self }>"
       end
 
       # Public: The strategy as a string.
@@ -74,9 +72,7 @@ module Refinery::Strategies
         self.class.name
       end
 
-      #######
       private
-      #######
 
       # Internal: Given an overflow edge, creates an array of edges on the
       # "from" node which supply energy, *except* for the anti-parallel edge

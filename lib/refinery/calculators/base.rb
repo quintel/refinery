@@ -34,7 +34,7 @@ module Refinery
       #
       # Returns true or false.
       def calculable?
-        not strategy.nil?
+        ! strategy.nil?
       end
 
       # Public: Performs the calculation, setting the appropriate attributes
@@ -78,9 +78,7 @@ module Refinery
         "#{ self.class.name.gsub(/.+::/, '') } for #{ @model.inspect }"
       end
 
-      #######
       private
-      #######
 
       # Internal: Which strategy should be used to calculate the value.
       #

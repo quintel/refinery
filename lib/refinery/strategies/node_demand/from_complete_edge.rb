@@ -14,9 +14,7 @@ module Refinery::Strategies
         edge.demand / child_share(edge) / in_slots(node, edge.label).share
       end
 
-      #######
       private
-      #######
 
       # Internal: Looks for an edge which has a demand and share, where we
       # also know the share of the slot.
@@ -28,11 +26,11 @@ module Refinery::Strategies
         end
 
         suitable_slots.each do |slot|
-          edge = slot.edges.detect do |edge|
+          found = slot.edges.detect do |edge|
             edge.demand && (share = child_share(edge)) && ! share.zero?
           end
 
-          return edge if edge
+          return found if found
         end
 
         nil

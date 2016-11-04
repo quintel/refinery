@@ -17,7 +17,10 @@ module Refinery
   # Returns an exception class.
   def self.error_class(superclass = RefineryError, &block)
     Class.new(superclass) do
-      def initialize(*args) ; super(make_message(*args)) ; end
+      def initialize(*args)
+        super(make_message(*args))
+      end
+
       define_method(:make_message, &block)
     end
   end
@@ -26,7 +29,7 @@ module Refinery
   # reached where it is impossible to continue calculating.
   IncalculableGraphError = error_class do |remaining_models|
     elements = remaining_models.map do |model|
-      "  * #{ model.to_s }"
+      "  * #{ model }"
     end.join("\n")
 
     "Insufficient data to calculate #{ remaining_models.length } " \
@@ -61,7 +64,7 @@ module Refinery
       messages.map { |message| "  * #{ model.inspect } #{ message }" }
     end.flatten.join("\n")
 
-    "Post-calculation validations failed with the following " \
+    'Post-calculation validations failed with the following ' \
     "errors:\n\n#{ failures }"
   end
 end # Refinery

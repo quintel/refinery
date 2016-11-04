@@ -5,9 +5,7 @@ module Refinery
     class Incalculable < Base
       include Transparency
 
-      #######
       private
-      #######
 
       def edge_options(edge)
         recolor_options(super, edge.demand)

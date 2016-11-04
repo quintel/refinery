@@ -1,7 +1,6 @@
 module Refinery
   module Diagram
     class Base
-
       # Public: Creates a new Diagram which creates a PNG showing the nodes
       # and their edges. On the graph is also the share assigned to each edge,
       # and the demand calculated for each node.
@@ -34,13 +33,14 @@ module Refinery
           supplier = add_node(edge.from)
           consumer = add_node(edge.to)
 
-          add_to = if cluster_for(edge.from) == cluster_for(edge.to)
-            # If both edges are in the same cluster, constrain the edges to
-            # it's boundary.
-            cluster_for(edge.from)
-          else
-            @diagram
-          end
+          add_to =
+            if cluster_for(edge.from) == cluster_for(edge.to)
+              # If both edges are in the same cluster, constrain the edges to
+              # it's boundary.
+              cluster_for(edge.from)
+            else
+              @diagram
+            end
 
           add_to.add_edges(supplier, consumer, edge_options(edge))
         end
@@ -48,9 +48,7 @@ module Refinery
         @diagram.output(png: path)
       end
 
-      #######
       private
-      #######
 
       # Graph Organisation ---------------------------------------------------
 
@@ -94,24 +92,27 @@ module Refinery
         NODE_OPTIONS.merge(
           label:     label,
           color:     color(:black),
-          fontcolor: color(:black))
+          fontcolor: color(:black)
+        )
       end
 
       # Internal: The hash of options for formatting an edge.
       #
       # Returns a hash.
       def edge_options(edge)
-        style = case edge.get(:type)
+        style =
+          case edge.get(:type)
           when :overflow then :dashed
           when :flexible then :dotted
           else                :solid
-        end
+          end
 
         EDGE_OPTIONS.merge(
           style:     style,
           label:     edge_label(edge),
           fontcolor: color(:grey),
-          color:     color(EDGE_COLORS[edge.label]))
+          color:     color(EDGE_COLORS[edge.label])
+        )
       end
 
       # Labels ---------------------------------------------------------------
@@ -140,12 +141,13 @@ module Refinery
         base      = %(<<font#{ key_attrs }>#{ node.key }</font> )
         attrs     = 'point-size="9" face="Helvetica-Bold"'
 
-        base + if node.demand.nil?
-          %(<font #{ attrs } color="#{ color(:red) }">?!</font>>)
-        else
-          %(<font #{ attrs } color="#8c8c8c">) +
-            %(#{ format_demand(node.demand) }</font>>)
-        end
+        base +
+          if node.demand.nil?
+            %(<font #{ attrs } color="#{ color(:red) }">?!</font>>)
+          else
+            %(<font #{ attrs } color="#8c8c8c">) +
+              %(#{ format_demand(node.demand) }</font>>)
+          end
       end
 
       # Internal: The color string for the given color name. Optionally with
@@ -164,12 +166,12 @@ module Refinery
         return ''     if     number.nil?
         return number unless number.is_a?(Numeric)
 
-        formatted = '%.6g' % number
-        formatted = formatted.match(/\./) ? formatted : "#{ formatted }.0"
+        formatted = format('%.6g', number)
+        formatted = formatted =~ /\./ ? formatted : "#{ formatted }.0"
 
         # Add comma delimiters.
         parts = formatted.to_s.split('.')
-        parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1,")
+        parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, '\\1,')
         parts.join('.')
       end
 

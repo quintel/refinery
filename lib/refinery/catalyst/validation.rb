@@ -24,7 +24,7 @@ module Refinery
         validator = new(graph).run!
 
         if validator.errors.any?
-          fail Refinery::FailedValidationError.new(validator.errors)
+          raise Refinery::FailedValidationError, validator.errors
         end
 
         graph
@@ -83,9 +83,7 @@ module Refinery
         @errors.any?
       end
 
-      #######
       private
-      #######
 
       # Internal: Given a node, asserts that energy coming in equals that
       # which leaves.
@@ -94,11 +92,13 @@ module Refinery
       #
       # Returns nothing.
       def validate_node(node)
-        if node.max_demand && node.demand > node.max_demand
-          add_error(node, :max_demand_exceeded,
-                    format_energy(node.demand),
-                    format_energy(node.max_demand))
-        end
+        return unless node.max_demand && node.demand > node.max_demand
+
+        add_error(
+          node, :max_demand_exceeded,
+          format_energy(node.demand),
+          format_energy(node.max_demand)
+        )
       end
 
       # Internal: Given a slot, validates that demand was calculated for all
@@ -111,7 +111,6 @@ module Refinery
       def validate_slot(slot)
         demandless = slot.edges.reject(&:demand)
         transform  = slot.direction == :in ? :demand_for : :output_of
-        expected   = slot.node.public_send(transform, slot.carrier)
 
         if demandless.any?
           # We only need to alert that an edge is missing demand once; so we
@@ -129,7 +128,8 @@ module Refinery
             format_energy(slot.demand),
             slot.direction == :in ? 'demand from' : 'output of',
             format_energy(expected_slot_demand(slot)),
-            format_energy(slot.demand - expected_slot_demand(slot), '%-+f'))
+            format_energy(slot.demand - expected_slot_demand(slot), '%-+f')
+          )
         end
       end
 
@@ -141,7 +141,7 @@ module Refinery
       # Returns nothing.
       def add_error(object, key, *details)
         details = details.map do |detail|
-          detail.is_a?(Rational) ? '%f' % detail : detail
+          detail.is_a?(Rational) ? format('%f', detail) : detail
         end
 
         @errors[object] ||= []
@@ -154,7 +154,7 @@ module Refinery
       # the value we would expected when multiplying the demand of the node by
       # the slot conversion.
       #
-      # The demand is allowed to disagree with the node by a tiny amount ––
+      # The demand is allowed to disagree with the node by a tiny amount --
       # in the larger nodes in big countries (e.g. Germany) the variation comes
       # to about one megajoule.
       #
@@ -177,7 +177,8 @@ module Refinery
       # Returns a numeric.
       def expected_slot_demand(slot)
         slot.node.public_send(
-          slot.direction == :in ? :demand_for : :output_of, slot.carrier)
+          slot.direction == :in ? :demand_for : :output_of, slot.carrier
+        )
       end
 
       # Internal: Given an energy value in petajoules, formats it nicely,
@@ -188,21 +189,22 @@ module Refinery
       def format_energy(value, format_string = '%f')
         return 'nil' if value.nil?
 
-        formatted = if value.abs < (1.0 / 1_000_000_000_000)
-          "#{ sprintf(format_string, value * 1_000_000_000_000) } KJ"
-        elsif value < (1.0 / 1_000_000_000)
-          "#{ sprintf(format_string, value * 1_000_000_000) } MJ"
-        elsif value < (1.0 / 1_000_000)
-          "#{ sprintf(format_string, value * 1_000_000) } GJ"
-        elsif value < (1.0 / 1_000)
-          "#{ sprintf(format_string, value * 1_000) } TJ"
-        else
-          "#{ sprintf(format_string, value) } PJ"
-        end
+        formatted =
+          if value.abs < (1.0 / 1_000_000_000_000)
+            "#{ format(format_string, value * 1_000_000_000_000) } KJ"
+          elsif value < (1.0 / 1_000_000_000)
+            "#{ format(format_string, value * 1_000_000_000) } MJ"
+          elsif value < (1.0 / 1_000_000)
+            "#{ format(format_string, value * 1_000_000) } GJ"
+          elsif value < (1.0 / 1_000)
+            "#{ format(format_string, value * 1_000) } TJ"
+          else
+            "#{ format(format_string, value) } PJ"
+          end
 
         parts = formatted.split('.')
 
-        parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, "\\1,")
+        parts[0].gsub!(/(\d)(?=(\d\d\d)+(?!\d))/, '\\1,')
         parts[1].gsub!(/0+ /, ' ')
 
         parts[1][0] == ' ' ? parts.join : parts.join('.')

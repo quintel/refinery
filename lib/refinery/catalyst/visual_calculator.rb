@@ -45,16 +45,14 @@ module Refinery
         raise ex
       end
 
-      #######
       private
-      #######
 
       # Internal: Given a single calculator, tells it to calculate it's value.
       # This can be overridden in subclasses, providing a hook into the
       # calculation process.
       def calculate(calculator, order)
         super
-        draw(Diagram::Focused, '%05d' % order, calculator.model)
+        draw(Diagram::Focused, format('%05d', order), calculator.model)
 
         true
       end

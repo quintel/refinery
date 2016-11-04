@@ -3,7 +3,7 @@ module Refinery
     # Plugs into Refinery::Reactor to convert an ordinary Turbine graph to a
     # Refinery graph which can be used to complete the demand and share
     # calculations.
-    FromTurbine = ->(original) do
+    FromTurbine = lambda do |original|
       refinery = Turbine::Graph.new
 
       # For each node in the original graph, we add a Refinery::Node to the

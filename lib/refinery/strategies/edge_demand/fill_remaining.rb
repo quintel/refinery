@@ -38,9 +38,7 @@ module Refinery::Strategies
         end
       end
 
-      #######
       private
-      #######
 
       # Internal: Given an edge, determines the demand of the parent node.
       #

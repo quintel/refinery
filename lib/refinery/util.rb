@@ -1,6 +1,7 @@
 module Refinery
+  # Contains helpful methods which don't belong anywhere else.
   module Util
-    extend self
+    module_function
 
     # Public: Given an enumerable, sums each value. Unlike Enumerable#sum in
     # that it will return nil if any element's value is nil.

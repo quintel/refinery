@@ -6,7 +6,7 @@ module Refinery
     # graph - The graph.
     #
     # Returns nothing.
-    ConvertFinalDemand = ->(graph) do
+    ConvertFinalDemand = lambda do |graph|
       graph.nodes.each do |node|
         if demand = node.get(:final_demand)
           node.set(:demand, demand)

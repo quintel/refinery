@@ -3,9 +3,7 @@ module Refinery
     # A diagram which shows the calculable nodes normally, fading the
     # incalculable elements into the background.
     class Calculable < Incalculable
-      #######
       private
-      #######
 
       def recolor_label(label, transparent)
         super(label, ! transparent)

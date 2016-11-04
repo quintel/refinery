@@ -17,7 +17,7 @@ module Refinery::Strategies
     #
     # Returns a string.
     def inspect
-      "#<#{ to_s }>"
+      "#<#{ self }>"
     end
 
     # Public: Is the strategy being executed in reverse mode? "forwards" is
@@ -49,7 +49,6 @@ module Refinery::Strategies
       # Returns a class.
       def compile(direction)
         klass = Class.new(self)
-        name  = name
 
         klass.instance_eval do
           include(direction == :forwards ? Forwards : Reversed)
@@ -61,13 +60,13 @@ module Refinery::Strategies
       private :compile
 
       # Public: Creates a new instance of the strategy, raising an error if
-      # the user forgot to +compile+ a version to give the strategy 
+      # the user forgot to +compile+ a version to give the strategy
       # direction.
       #
       # Returns the strategy.
       def new
         unless (ancestors & [Forwards, Reversed]).any?
-          raise(UncompiledReversibleError.new(self))
+          raise(UncompiledReversibleError, self)
         end
 
         super

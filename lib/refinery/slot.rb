@@ -81,9 +81,7 @@ module Refinery
       if slots.one?
         set(:share, 1)
       elsif get(:type) == :elastic
-        if others.all?(&:share)
-          set(:share, 1 - others.sum(&:share))
-        end
+        set(:share, 1 - others.sum(&:share)) if others.all?(&:share)
       elsif demand
         node_demand = @node.demand ||
           slots.all?(&:demand) && slots.sum(&:demand)

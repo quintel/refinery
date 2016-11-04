@@ -1,5 +1,8 @@
 module Refinery::Strategies
   module EdgeDemand
+    # Provides a slot with whatever energy is still demanded, after all other
+    # edges have been calulated. Unlike FillRemaining.reversed, Flexible will
+    # defer calculation if the edge has a max_demand which is not yet known.
     class Flexible < FillRemaining.reversed
       # Public: Determines if the flexible edge can be calculated. In addition
       # to the normal FillRemaining checks, we assert that the supplier has a
@@ -19,9 +22,7 @@ module Refinery::Strategies
         max_demand && max_demand < calculated ? max_demand : calculated
       end
 
-      #######
       private
-      #######
 
       # Internal: Given an edge, determines the demand of the child node (the
       # flexible strategy is used in child-to-parent mode only).
@@ -36,12 +37,19 @@ module Refinery::Strategies
         if edge.to.in_edges.one?
           edge.from.output_of(edge.label)
         else
-          super(edge) ||
-            Refinery::Util.strict_sum(edge.to.out_edges.select do |other|
-              other.demand ||
-                (other.get(:type) != :overflow || other.to == edge.from)
-            end, &:demand)
+          super(edge) || parent_demand_from_outputs(edge)
         end
+      end
+
+      # Internal: Tries to determine the demand of the parent by looking at the
+      # demand of its output edges. Ignores any edges which are overflow (since
+      # their demand will not yet be set, butw will resolve to zero if this edge
+      # has demand) and any which loop back to this edge's "from" node.
+      def parent_demand_from_outputs(edge)
+        Refinery::Util.strict_sum(edge.to.out_edges.select do |other|
+          other.demand ||
+            (other.get(:type) != :overflow || other.to == edge.from)
+        end, &:demand)
       end
 
       # Internal: Given an incoming edge on the +to+ node, determines if the
@@ -51,7 +59,8 @@ module Refinery::Strategies
       def calculable_sibling?(edge, sibling)
         super || (
           sibling.get(:type) == :flexible &&
-          sibling.priority < edge.priority )
+          sibling.priority < edge.priority
+        )
       end
     end # Flexible
   end # EdgeDemand

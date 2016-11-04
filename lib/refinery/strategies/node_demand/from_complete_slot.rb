@@ -15,9 +15,7 @@ module Refinery::Strategies
         slot.edges.sum(&:demand) / slot.share
       end
 
-      #######
       private
-      #######
 
       # Internal: Finds the first slot with a share whose edges all have a
       # demand available.

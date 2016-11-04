@@ -21,7 +21,7 @@ module Refinery
     # Returns a string.
     def to_s
       table = Terminal::Table.new(
-        headings: %w( # Element Strategy Value ),
+        headings: %w(# Element Strategy Value),
         rows: calculators.map do |calc|
           [ calc.order,
             format_element(calc.model),
@@ -36,9 +36,7 @@ module Refinery
       table.to_s
     end
 
-    #######
     private
-    #######
 
     # Internal: All the calculators which ran and computed a value for their
     # graph element.
@@ -57,7 +55,7 @@ module Refinery
     #
     # Returns a string.
     def format_element(element)
-      element.kind_of?(Node) ? "[#{ element.key.inspect }]" : element.to_s
+      element.is_a?(Node) ? "[#{ element.key.inspect }]" : element.to_s
     end
 
     # Internal: The value which was computed by the calculator. This is
@@ -66,7 +64,7 @@ module Refinery
     #
     # Returns a string.
     def element_value(element)
-      element.demand ? '%.10g' % element.demand : 'FAIL'
+      element.demand ? format('%.10g', element.demand) : 'FAIL'
     end
   end # GraphDebugger
 end # Refinery

@@ -42,9 +42,7 @@ module Refinery
         @graph
       end
 
-      #######
       private
-      #######
 
       # Internal: Runs the calculators, computing the demands of nodes and
       # shares of edges.
@@ -55,7 +53,6 @@ module Refinery
       # Returns nothing.
       def run_calculators!
         calculators = uncalculated
-        cycle       = 0
         order       = 0
 
         while calculators.length.nonzero?
@@ -79,7 +76,7 @@ module Refinery
 
           if calculators.length == previous_length
             # Nothing new could be calculated!
-            fail IncalculableGraphError.new(calculators)
+            raise IncalculableGraphError, calculators
           end
         end
       end

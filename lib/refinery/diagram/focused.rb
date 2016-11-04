@@ -6,9 +6,7 @@ module Refinery
         @focused_element = focused_element
       end
 
-      #######
       private
-      #######
 
       def edge_options(edge)
         super.merge(penwidth: edge == @focused_element ? 4.0 : 1.0)

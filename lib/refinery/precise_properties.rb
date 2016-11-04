@@ -1,12 +1,14 @@
 module Refinery
+  # Defines a that a property on a Node or Edge is numeric and should be
+  # converted to a Rational to ensure no loss of precision.
   module PreciseProperties
     # Internal: Callback run when you execute `include PreciseProperties`.
     #
     # Returns nothing.
     def self.included(base)
       unless base < Turbine::Properties
-        fail "You can only include PreciseProperties on classes which " \
-             "also include Turbine::Properties."
+        raise 'You can only include PreciseProperties on classes which ' \
+              'also include Turbine::Properties.'
       end
 
       base.extend(ClassMethods)
@@ -36,7 +38,7 @@ module Refinery
     # See Turbine::Properties.
     def set(key, value)
       if value && self.class.precise_properties.include?(key)
-        value = value.kind_of?(Rational) ? value : Rational(value.to_s)
+        value = value.is_a?(Rational) ? value : Rational(value.to_s)
         value = Rational(0) if value < 0
       end
 
@@ -51,9 +53,7 @@ module Refinery
     def properties=(properties)
       super({})
 
-      unless properties.nil?
-        properties.each { |key, value| set(key, value) }
-      end
+      properties.each { |key, value| set(key, value) } unless properties.nil?
 
       self.properties
     end

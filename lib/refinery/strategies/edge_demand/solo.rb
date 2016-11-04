@@ -13,9 +13,7 @@ module Refinery::Strategies
         output_of(from(edge), edge.label)
       end
 
-      #######
       private
-      #######
 
       def only_edge?(edge)
         if forwards?

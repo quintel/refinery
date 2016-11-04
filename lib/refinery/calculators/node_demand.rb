@@ -11,8 +11,8 @@ module Refinery
         FromCompleteSlot.reversed.new,
         FromCompleteSlot.forwards.new,
         FromPartialSlot.reversed.new,
-        FromPartialSlot.forwards.new,
-      ]
+        FromPartialSlot.forwards.new
+      ].freeze
 
       # Public: Performs the calculation, setting the demand attribute on the
       # node.

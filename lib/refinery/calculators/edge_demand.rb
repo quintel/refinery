@@ -14,12 +14,12 @@ module Refinery
         FillRemaining.reversed.new,
         FillRemainingAcrossSlots.forwards.new,
         FillRemainingAcrossSlots.reversed.new
-      ]
+      ].freeze
 
       OVERFLOW_STRATEGIES = [
         Overflow.new,
         Solo.reversed.new
-      ]
+      ].freeze
 
       FLEXIBLE_STRATEGIES = [
         Solo.forwards.new,
@@ -27,7 +27,7 @@ module Refinery
         Flexible.new,
         ByShare.forwards.new,
         ByShare.reversed.new
-      ]
+      ].freeze
 
       # Public: Performs the calculation, setting the demand attribute on the
       # node.
@@ -52,9 +52,7 @@ module Refinery
         super || @model.demand
       end
 
-      #######
       private
-      #######
 
       # Internal: An array containing the strategies which may be used to
       # calculate the edge.

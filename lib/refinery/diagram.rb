@@ -1,10 +1,11 @@
 module Refinery
+  # Helper methods used in the creation of debugging diagrams.
   module Diagram
     # Default options used for all nodes.
-    NODE_OPTIONS = { fontname: 'Helvetica', fontsize: 11, shape: 'rect' }
+    NODE_OPTIONS = { fontname: 'Helvetica', fontsize: 11, shape: 'rect' }.freeze
 
     # Default options used for all edges.
-    EDGE_OPTIONS = { fontname: 'Helvetica-Bold', fontsize: 9 }
+    EDGE_OPTIONS = { fontname: 'Helvetica-Bold', fontsize: 9 }.freeze
 
     # General colors.
     COLORS = {
@@ -19,7 +20,7 @@ module Refinery
       purple:    '#9370db',
       pink:      '#ffc0cb',
       red:       '#ee4000'
-    }
+    }.freeze
 
     # Colors assigned to edges depending on their label.
     EDGE_COLORS = {
@@ -79,6 +80,7 @@ module Refinery
     }
 
     EDGE_COLORS.default = :black
+    EDGE_COLORS.freeze
 
     # Included in a diagram, provides the ability to change the transparency
     # of nodes, edges, or labels.
@@ -95,6 +97,5 @@ module Refinery
         options
       end
     end # Transparency
-
   end # Diagram
 end # Refinery

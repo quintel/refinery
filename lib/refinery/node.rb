@@ -1,4 +1,6 @@
 module Refinery
+  # Customises Turbine's Node class to provide methods useful for calculating
+  # the Refinery graph.
   class Node < Turbine::Node
     include PreciseProperties
 
@@ -74,7 +76,7 @@ module Refinery
       max_demand = get(:max_demand)
 
       if (! max_demand && force_recurse) ||
-            max_demand == :recursive || max_demand == 'recursive'
+          max_demand == :recursive || max_demand == 'recursive'.freeze
         set(:max_demand, Refinery::Util.strict_sum(in_edges) do |edge|
           edge.max_demand(true)
         end)
@@ -118,7 +120,7 @@ module Refinery
     # Raises a Turbine::DuplicateEdgeError if the Edge already existed.
     def connect_to(target, label = nil, properties = nil)
       Edge.new(self, target, label, properties).tap do |edge|
-        self.connect_via(edge)
+        connect_via(edge)
         target.connect_via(edge)
       end
     end

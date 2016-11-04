@@ -19,16 +19,14 @@ module Refinery::Strategies
           edge.demand || Rational(0)
         end
 
-        known_share  = slot.edges.sum do |edge|
+        known_share = slot.edges.sum do |edge|
           (! edge.demand && child_share(edge)) || Rational(0)
         end
 
         (known_demand / (1 - known_share)) / slot.share
       end
 
-      #######
       private
-      #######
 
       # Internal: Finds the first slot with a share whose edges all have a
       # demand available.

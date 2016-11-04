@@ -19,9 +19,7 @@ module Refinery::Strategies
     # ... we know that A->Y has a demand of 5, and the parent node demand is
     # 20, therefore A->X must have a demand of 15.
     class FillRemainingAcrossSlots < FillRemaining
-      #######
       private
-      #######
 
       def siblings(edge)
         out_edges(from(edge))
