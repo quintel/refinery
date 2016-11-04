@@ -1,6 +1,6 @@
 require 'rspec'
 require 'rspec/collection_matchers'
-require 'support/coverage' if ENV['COVERAGE']
+require 'support/coverage'
 require 'refinery'
 
 Dir['./spec/{support,factories}/**/*.rb'].map do |file|
