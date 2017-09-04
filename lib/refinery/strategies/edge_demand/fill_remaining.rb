@@ -1,11 +1,7 @@
 module Refinery::Strategies
   module EdgeDemand
-    # A strategy for calculating the demand of an edge, when we already know
-    # the demands of the other edges which use the same carrier, on the parent
-    # node.
-    #
-    # A strategy for calculating edge demand when we already know the demand
-    # of all the other outbound of the same carrier on the parent node.
+    # A strategy which calculates edge demand when we already know the demand
+    # of all the other outbound edges of the same carrier.
     #
     # For example:
     #
