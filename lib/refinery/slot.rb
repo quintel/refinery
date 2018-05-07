@@ -91,6 +91,8 @@ module Refinery
             # Special-case for when a node demand is zero, and contains a slot
             # with "normal" links, and a slot with overflow links.
             set(:share, 0.0)
+          elsif node_demand.zero? && others.sum(&:demand).zero?
+            set(:share, 1.0 / (others.count + 1))
           elsif node_demand.zero? && others.all?(&:share)
             # Opposite of the special case above.
             set(:share, 1.0 - others.sum(&:share))
