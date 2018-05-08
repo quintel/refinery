@@ -267,6 +267,26 @@ describe 'Graph calculations; parent and two children' do
       mother.slots.out(:electricity).set(:share, 0.4)
     end
 
+    context 'and the children have zero demand' do
+      #         [M]
+      #    :gas / \ :electricity
+      #   (0) [C] [S] (0)
+      before do
+        mother.slots.out(:gas).set(:share, nil)
+        mother.slots.out(:electricity).set(:share, nil)
+
+        child.set(:demand, 0.0)
+        sibling.set(:demand, 0.0)
+
+        calculate!
+      end
+
+      it 'does not set the slot shares' do
+        expect(mother.slots.out(:gas).share).to be_nil
+        expect(mother.slots.out(:electricity).share).to be_nil
+      end
+    end
+
     context 'and the parent defines demand' do
       #         [M] (50)
       #    :gas / \ :electricity

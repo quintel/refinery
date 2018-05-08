@@ -68,8 +68,13 @@ module Refinery
     #
     #   * Otherwise, the share cannot be determined automatically.
     #
+    # recursing - Flag indicating if `share` is being called from the `share`
+    #             method of other slot. Prevents infinitely recursing through
+    #             all the slots of a node when demand is zero and the shares
+    #             cannot be calculated.
+    #
     # Returns a Rational or nil.
-    def share
+    def share(recursing = false)
       if (explicit = get(:share)) then return explicit end
 
       slots = @node.slots.public_send(@direction)
@@ -91,7 +96,8 @@ module Refinery
             # Special-case for when a node demand is zero, and contains a slot
             # with "normal" links, and a slot with overflow links.
             set(:share, 0.0)
-          elsif node_demand.zero? && others.all?(&:share)
+          elsif ! recursing && node_demand.zero? &&
+                others.all? { |o| o.share(true) }
             # Opposite of the special case above.
             set(:share, 1.0 - others.sum(&:share))
           elsif ! node_demand.zero?
