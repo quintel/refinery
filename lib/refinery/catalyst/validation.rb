@@ -95,7 +95,7 @@ module Refinery
         # Allow node demand to very slightly exceed max_demand: Edge#max_demand
         # is a float, rather than a Rational as it's value may sometimes be
         # Infinity or "recursive". Small floating point errors can happen.
-        return unless node.max_demand
+        return if !node.max_demand || node.demand.zero?
         return if node.demand < node.max_demand * (1 + PERMITTED_SLOT_DEVIATION)
 
         add_error(

@@ -165,6 +165,16 @@ module Refinery
 
         expect(validation.errors).to have(:no).elements
       end
+
+      it 'passes when demand and max_demand are zero' do
+        x.set(:demand, 0.0)
+        ax_edge.set(:demand, 0.0)
+
+        a.set(:demand, 0.0)
+        a.set(:max_demand, 0.0)
+
+        expect(validation.errors).to have(:no).elements
+      end
     end # given an node with max_demand
   end # Catalyst::Validation
 end # Refinery
