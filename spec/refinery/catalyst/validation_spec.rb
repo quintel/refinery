@@ -150,9 +150,20 @@ module Refinery
         expect(validation.errors).to have(:no).elements
       end
 
-      it 'passes when edge demand exceeds max_demand' do
+      it 'fails when edge demand exceeds max_demand' do
         a.set(:max_demand, 45)
         expect(validation.errors[a]).to have(1).error
+      end
+
+      it 'passes when edge demand slightly exceeds max_demand' do
+        a.set(
+          :demand,
+          50 + (50 * Refinery::Catalyst::Validation::PERMITTED_SLOT_DEVIATION)
+        )
+
+        a.set(:max_demand, 50)
+
+        expect(validation.errors).to have(:no).elements
       end
     end # given an node with max_demand
   end # Catalyst::Validation

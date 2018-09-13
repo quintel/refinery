@@ -92,7 +92,11 @@ module Refinery
       #
       # Returns nothing.
       def validate_node(node)
-        return unless node.max_demand && node.demand > node.max_demand
+        # Allow node demand to very slightly exceed max_demand: Edge#max_demand
+        # is a float, rather than a Rational as it's value may sometimes be
+        # Infinity or "recursive". Small floating point errors can happen.
+        return unless node.max_demand
+        return if node.demand < node.max_demand * (1 + PERMITTED_SLOT_DEVIATION)
 
         add_error(
           node, :max_demand_exceeded,
