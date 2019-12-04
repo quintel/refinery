@@ -86,7 +86,9 @@ module Refinery::Strategies
         else
           Refinery::Util.strict_sum(suppliers.reject do |other|
             other.from == edge.to ||
-              (! other.demand && other.get(:type) == :flexible)
+            (!other.demand &&
+              other.get(:type) == :flexible &&
+              !other.get(:reversed))
           end, &:demand)
         end
       end

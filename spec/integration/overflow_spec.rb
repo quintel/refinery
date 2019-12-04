@@ -380,6 +380,53 @@ describe 'Graph calculations; overflowing energy' do
   end # when the exporter has a second output slot
 end # Graph calculations; overflowing energy
 
+describe 'Graph calculations; overflowing with an incoming reversed flexible' do
+  #                    [G] (45)
+  #                     |
+  #           (0) [A]  [B]
+  #                 \ / (type=flexible reversed=true)
+  #                 [M]
+  # (type=overflow) / \ (type=share)
+  #               [X]  [Y] (10)
+  %w[g a b m x y].each do |key|
+    let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }
+  end
+
+  let!(:am_edge) { a.connect_to(m, :gas, type: :share, reversed: true) }
+  let!(:gb_edge) { g.connect_to(b, :gas) }
+  let!(:bm_edge) { b.connect_to(m, :gas, type: :flexible, reversed: true) }
+  let!(:mx_edge) { m.connect_to(x, :gas, type: :overflow) }
+  let!(:my_edge) { m.connect_to(y, :gas, type: :share) }
+
+  before do
+    g.set(:demand, 45)
+    a.set(:demand, 0)
+    y.set(:demand, 10)
+
+    calculate! #true
+  end
+
+  it 'sets G->B to 45' do
+    expect(gb_edge).to have_demand.of(45)
+  end
+
+  it 'sets A->M to 0' do
+    expect(am_edge).to have_demand.of(0)
+  end
+
+  it 'sets B->M to 45' do
+    expect(bm_edge).to have_demand.of(45)
+  end
+
+  it 'sets M->X to 35' do
+    expect(mx_edge).to have_demand.of(35)
+  end
+
+  it 'sets M->Y to 10' do
+    expect(my_edge).to have_demand.of(10)
+  end
+end
+
 # Additional overflow examples, as described in quintel/refinery#5.
 describe 'Graph calculations; overflowing energy (issue #5)' do
   %w( a b c x y z ).each do |key|
