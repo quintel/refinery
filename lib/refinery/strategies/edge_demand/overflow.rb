@@ -39,8 +39,8 @@ module Refinery::Strategies
         return 0.0 if anti && anti.demand && ! anti.demand.zero?
 
         # If the slot has a share, we need to respect that, otherwise we
-        # assume that that share will be calculated later (hence || 1.0)
-        slot_share  = edge.from.slots.out(edge.label).share || 1.0
+        # assume that that share will be calculated later (hence || 1)
+        slot_share  = edge.from.slots.out(edge.label).share || Rational(1)
 
         node_supply = unrelated_supply(edge) * slot_share
         node_demand = unrelated_demand(edge)
