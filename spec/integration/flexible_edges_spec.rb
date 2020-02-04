@@ -105,6 +105,47 @@ describe 'Graph calculations; flexible edges' do
   end # when [CHILD]=50 and [CHILD]->[MOTHER]=0.8
 end # Graph calculations; flexible edges
 
+describe 'Graph calculations; with reversed flex and two share siblings' do
+  %w[mother child brother sister].each do |key|
+    let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }
+  end
+
+  # The order of these edges is important. Connecting the M->C second or third
+  # would trigger a bug where the Flexible strategy would use 100% of the [M]
+  # demand, ignoring the shares set on the other edges. The bug would not be
+  # triggered when the edge is connected first as it would calculate the
+  # flexible before enough information was available from the other edges.
+
+  let!(:mb_edge) { mother.connect_to(brother, :gas) }
+  let!(:ms_edge) { mother.connect_to(sister, :gas) }
+
+  let!(:mc_edge) do
+    mother.connect_to(child, :gas, type: :flexible, reversed: true)
+  end
+
+  context 'when [CHILD] = 10, and [BROTHER] and [SISTER] have shares' do
+    before do
+      mother.set(:demand, 10)
+      mb_edge.set(:parent_share, 0.4)
+      ms_edge.set(:parent_share, 0.0)
+
+      calculate!
+    end
+
+    it 'sets demand of [BROTHER] to 4' do
+      expect(brother).to have_demand.of(4)
+    end
+
+    it 'sets demand of [SISTER] to 0' do
+      expect(sister).to have_demand.of(0)
+    end
+
+    it 'sets demand of [CHILD] to 6' do
+      expect(child).to have_demand.of(6)
+    end
+  end
+end
+
 describe 'Graph calculations; flexible edges with a solo overflow' do
   %w( supplier flexible core overflow ).each do |key|
     let!(key.to_sym) { graph.add(Refinery::Node.new(key.to_sym)) }

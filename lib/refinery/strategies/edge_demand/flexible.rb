@@ -8,7 +8,13 @@ module Refinery::Strategies
       # to the normal FillRemaining checks, we assert that the supplier has a
       # max_demand defined if the edge is a flex-max edge.
       def calculable?(edge)
-        super unless edge.get(:priority) && edge.from.max_demand.nil?
+        # Don't handle reversed edges.
+        return false if edge.get(:reversed)
+
+        # Assert max demand is present for flex-max edges.
+        return false if edge.get(:priority) && edge.from.max_demand.nil?
+
+        super
       end
 
       # Public: Calculates the demand of the edge. Checks that the calculated
