@@ -40,11 +40,7 @@ module Refinery::Strategies
       #
       # Returns a numeric, or nil if no demand can be determined.
       def parent_demand(edge)
-        if edge.to.in_edges.one?
-          edge.from.output_of(edge.label)
-        else
-          super(edge) || parent_demand_from_outputs(edge)
-        end
+        super || parent_demand_from_outputs(edge)
       end
 
       # Internal: Tries to determine the demand of the parent by looking at the
