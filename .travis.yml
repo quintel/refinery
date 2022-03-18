@@ -1,9 +1,0 @@
-language: ruby
-script: "bundle exec rspec"
-bundler_args: "--without extras"
-env:
-  - CI=true
-rvm:
-  - 2.6
-  - 2.7
-  - 3.0
