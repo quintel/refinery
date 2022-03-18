@@ -2,7 +2,7 @@
 <p align="center">Network solver for energy graphs.</p>
 
 <p align="center">
-  <a href="https://travis-ci.org/quintel/refinery"><img alt="Master branch build status" src="https://img.shields.io/travis/quintel/refinery/master.svg" /></a>
+  <a href="https://quintel.semaphoreci.com/projects/refinery"><img alt="Master branch build status" src="https://quintel.semaphoreci.com/badges/refinery/branches/master.svg?style=shields" /></a>
   <a href="https://codecov.io/gh/quintel/refinery"><img alt="Code coverage status" src="https://img.shields.io/codecov/c/github/quintel/refinery/master.svg" /></a>
 </p>
 
