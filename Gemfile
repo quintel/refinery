@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 gemspec
 
 group :test do
-  gem 'rspec', '~> 3.5'
+  gem 'rspec', '~> 3.11'
   gem 'rspec-collection_matchers'
   gem 'simplecov',               require: false
 end
