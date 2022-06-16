@@ -13,3 +13,5 @@ Refinery is used at Quintel to take the the graph defined in
 [ETSource][etsource], and determine the way in which energy flows through a
 country; from the primary sources (such as coal production, or "ambient wind"),
 all the way to the use in business, industry, and residences.
+
+[etsource]: https://github.com/quintel/etsource
