@@ -15,6 +15,6 @@ module Refinery
       def node_options(node)
         super.merge(penwidth: node == @focused_element ? 3.0 : 1.0)
       end
-    end # Focused
-  end # Diagram
-end # Refinery
+    end
+  end
+end

@@ -25,5 +25,5 @@ module Refinery
         value.nil? ? (return nil) : sum + value
       end
     end
-  end # Util
-end # Refinery
+  end
+end

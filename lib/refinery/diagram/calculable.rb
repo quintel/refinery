@@ -12,6 +12,6 @@ module Refinery
       def recolor_options(label, transparent)
         super(label, ! transparent)
       end
-    end # Calculable
-  end # Diagram
-end # Refinery
+    end
+  end
+end

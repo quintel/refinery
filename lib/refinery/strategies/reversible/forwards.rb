@@ -59,6 +59,6 @@ module Refinery::Strategies
       def demand_for(node, carrier)
         node.demand_for(carrier)
       end
-    end # Forwards
-  end # Reversible
-end # Refinery::Strategies
+    end
+  end
+end

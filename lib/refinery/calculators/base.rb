@@ -99,6 +99,6 @@ module Refinery
       def applicable_strategies
         self.class::DEFAULT_STRATEGIES
       end
-    end # Base
-  end # Calculators
-end # Refinery
+    end
+  end
+end

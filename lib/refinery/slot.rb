@@ -11,7 +11,6 @@ module Refinery
     # Public: The edges aggregated by the node.
     attr_reader :edges
 
-    # Shares should be cast to Rational.
     precise_property :share
 
     # Public: The direction of the slot indicates which "side" of the node is
@@ -128,8 +127,8 @@ module Refinery
     end
 
     def inspect
-      "#<#{ self.class.name } (#{ @direction }, #{ @carrier }) " \
-        "node=#{ @node.key.inspect }>"
+      "#<#{self.class.name} (#{@direction}, #{@carrier}) " \
+        "node=#{@node.key.inspect}>"
     end
-  end # Slot
-end # Refinery
+  end
+end

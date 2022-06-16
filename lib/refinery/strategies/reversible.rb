@@ -10,14 +10,14 @@ module Refinery::Strategies
     #
     # Returns a string.
     def to_s
-      reversed? ? "#{ self.class.name } (reversed)" : self.class.name
+      reversed? ? "#{self.class.name} (reversed)" : self.class.name
     end
 
     # Public: A human-readable version of the strategy.
     #
     # Returns a string.
     def inspect
-      "#<#{ self }>"
+      "#<#{self}>"
     end
 
     # Public: Is the strategy being executed in reverse mode? "forwards" is
@@ -78,6 +78,6 @@ module Refinery::Strategies
       def name
         ancestors[ancestors.index(Reversible) - 1].inspect
       end
-    end # ClassMethods
-  end # Reversible
-end # Refinery::Strategies
+    end
+  end
+end

@@ -61,8 +61,8 @@ module Refinery
       # +filename+ (within +@directory+, omit the extension). Additional
       # +*args+ will be given to the diagram when initialzied.
       def draw(klass, filename, *args)
-        klass.new(@graph, *args).draw_to(@directory.join("#{ filename }.png"))
+        klass.new(@graph, *args).draw_to(@directory.join("#{filename}.png"))
       end
-    end # VisualCalculator
-  end # Catalyst
-end # Refinery
+    end
+  end
+end

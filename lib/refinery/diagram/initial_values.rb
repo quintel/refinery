@@ -28,6 +28,6 @@ module Refinery
       def no_initial_share?(edge)
         edge.get(:parent_share).nil? && edge.get(:child_share).nil?
       end
-    end # InitialValues
-  end # Diagram
-end # Refinery
+    end
+  end
+end

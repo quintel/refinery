@@ -22,6 +22,6 @@ module Refinery
       def node_label(node)
         recolor_label(super, node.demand)
       end
-    end # Incalculable
-  end # Diagram
-end # Refinery
+    end
+  end
+end

@@ -1,4 +1,6 @@
-require 'bundler' ; Bundler.setup
+require 'bundler'
+Bundler.setup
+
 require 'terminal-table'
 require 'graphviz'
 require 'turbine'

@@ -29,6 +29,6 @@ module Refinery
       def calculated?
         super || @model.get(:demand)
       end
-    end # NodeDemand
-  end # Calculators
-end # Refinery
+    end
+  end
+end

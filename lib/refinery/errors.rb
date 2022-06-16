@@ -67,4 +67,4 @@ module Refinery
     'Post-calculation validations failed with the following ' \
     "errors:\n\n#{ failures }"
   end
-end # Refinery
+end

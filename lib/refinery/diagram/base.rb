@@ -182,6 +182,6 @@ module Refinery
       def format_demand(value)
         value ? format_number(@demand_label.call(value)) : '-'
       end
-    end # Base
-  end # Diagram
-end # Refinery
+    end
+  end
+end

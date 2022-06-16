@@ -142,5 +142,5 @@ module Refinery
 
       super
     end
-  end # Node
-end # Refinery
+  end
+end

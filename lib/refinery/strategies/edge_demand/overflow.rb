@@ -62,7 +62,7 @@ module Refinery::Strategies
       #
       # Returns a string.
       def inspect
-        "#<#{ self }>"
+        "#<#{self}>"
       end
 
       # Public: The strategy as a string.
@@ -118,5 +118,5 @@ module Refinery::Strategies
         edge.to.out_edges.to_a.detect { |o| o.to == edge.from }
       end
     end
-  end # EdgeDemand
-end # Refinery::Strategies
+  end
+end

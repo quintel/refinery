@@ -22,7 +22,7 @@ module Refinery
     end
 
     def inspect
-      super.sub(/>$/, " (type=#{ get :type })>")
+      super.sub(/>$/, " (type=#{get(:type)})>")
     end
 
     # Public: The proportion of "carrier" energy supplied to the child node.
@@ -106,5 +106,5 @@ module Refinery
         end
       end
     end
-  end # Edge
-end # Refinery
+  end
+end

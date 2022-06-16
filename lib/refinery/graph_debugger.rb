@@ -66,5 +66,5 @@ module Refinery
     def element_value(element)
       element.demand ? format('%.10g', element.demand) : 'FAIL'
     end
-  end # GraphDebugger
-end # Refinery
+  end
+end

@@ -28,6 +28,6 @@ module Refinery::Strategies
       def parent_slot_share(*)
         1.0
       end
-    end # FillRemainingAcrossSlots
-  end # EdgeDemand
-end # Refinery::Strategies
+    end
+  end
+end

@@ -17,8 +17,8 @@ module Refinery::Strategies
       #
       # Returns a string.
       def to_s
-        "#{ self.class.name } (#{ reversed? ? :child_share : :parent_share })"
+        "#{self.class.name} (#{reversed? ? :child_share : :parent_share})"
       end
     end
-  end # EdgeDemand
-end # Refinery::Strategies
+  end
+end

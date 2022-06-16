@@ -44,6 +44,6 @@ module Refinery::Strategies
             slot.edges.count { |edge| child_share(edge) } > 0
         end
       end
-    end # FromPartialSlot
-  end # NodeDemand
-end # Refinery::Strategies
+    end
+  end
+end

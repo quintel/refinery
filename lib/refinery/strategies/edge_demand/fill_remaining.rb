@@ -68,6 +68,6 @@ module Refinery::Strategies
       def siblings(edge)
         out_edges(from(edge), edge.label)
       end
-    end # FillRemaining
-  end # EdgeDemand
-end # Refinery::Strategies
+    end
+  end
+end

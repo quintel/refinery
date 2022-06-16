@@ -66,8 +66,8 @@ module Refinery
                 true
               rescue StandardError => ex
                 ex.message.gsub!(/$/,
-                  " (calculating #{ calculator.model.inspect }" \
-                  " using #{ calculator.strategy_used.inspect })")
+                  " (calculating #{calculator.model.inspect}" \
+                  " using #{calculator.strategy_used.inspect})")
 
                 raise ex
               end
@@ -97,6 +97,6 @@ module Refinery
           [ node.calculator, *node.out_edges.map(&:calculator).to_a ]
         end.flatten.reject(&:calculated?).reverse
       end
-    end # Calculators
-  end # Catalyst
-end # Refinery
+    end
+  end
+end

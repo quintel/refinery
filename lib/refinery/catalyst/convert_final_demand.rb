@@ -14,6 +14,6 @@ module Refinery
       end
 
       graph
-    end # ConvertFinalDemand
-  end # Catalyst
-end # Refinery
+    end
+  end
+end

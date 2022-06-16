@@ -26,6 +26,6 @@ module Refinery::Strategies
           out_edges(from(edge), edge.label).one?
         end
       end
-    end # Solo
-  end # EdgeDemand
-end # Refinery::Strategies
+    end
+  end
+end

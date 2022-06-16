@@ -27,6 +27,6 @@ module Refinery::Strategies
             slot.edges.any? && slot.edges.all?(&:demand)
         end
       end
-    end # FromCompleteSlot
-  end # NodeDemand
-end # Refinery::Strategies
+    end
+  end
+end

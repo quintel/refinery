@@ -64,6 +64,6 @@ module Refinery::Strategies
           sibling.priority < edge.priority
         )
       end
-    end # Flexible
-  end # EdgeDemand
-end # Refinery::Strategies
+    end
+  end
+end

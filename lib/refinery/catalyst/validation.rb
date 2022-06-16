@@ -213,6 +213,6 @@ module Refinery
 
         parts[1][0] == ' ' ? parts.join : parts.join('.')
       end
-    end # Validation
-  end # Catalyst
-end # Refinery
+    end
+  end
+end

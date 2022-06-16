@@ -65,6 +65,6 @@ module Refinery
         else                super
         end
       end
-    end # EdgeDemand
-  end # Calculators
-end # Refinery
+    end
+  end
+end

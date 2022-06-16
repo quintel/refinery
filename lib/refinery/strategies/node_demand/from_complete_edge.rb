@@ -35,6 +35,6 @@ module Refinery::Strategies
 
         nil
       end
-    end # FromCompleteEdge
-  end # NodeDemand
-end # Refinery::Strategies
+    end
+  end
+end

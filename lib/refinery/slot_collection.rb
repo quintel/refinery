@@ -94,5 +94,5 @@ module Refinery
     end
 
     alias_method :to_s, :inspect
-  end # SlotCollection
-end # Refinery
+  end
+end

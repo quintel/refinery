@@ -77,6 +77,6 @@ module Refinery
       def precise_properties
         @precise_properties ||= []
       end
-    end # ClassMethods
-  end # PreciseProperties
-end # Refinery
+    end
+  end
+end
