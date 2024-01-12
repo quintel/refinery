@@ -36,6 +36,18 @@ module Refinery
       get(:demand)
     end
 
+    def wait?
+      @paused || false
+    end
+
+    def wait!
+      @paused = true
+    end
+
+    def continue!
+      @paused = false
+    end
+
     # Public: The demand of the node for a given +carrier+.
     #
     # If the node demands a total of 200 energy, and its incoming gas slot has

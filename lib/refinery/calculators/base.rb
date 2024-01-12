@@ -15,6 +15,7 @@ module Refinery
       # Public: The object which the calculator calculates.
       attr_reader :model
 
+
       # Public: Creates a new calculator responsible for figuring out the
       # unknown attributes for the given +model+. Calculator is a base class
       # and should be extended with the logic needed to compute the values.
@@ -56,6 +57,12 @@ module Refinery
       # Returns true or false.
       def calculated?
         @calculated
+      end
+
+      # Public: Returns true if the calculation of this part of the graph is
+      # paused
+      def paused?
+        @model.wait?
       end
 
       # Public: A human-readable version of the calculator for debugging.

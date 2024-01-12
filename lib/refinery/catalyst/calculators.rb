@@ -95,7 +95,7 @@ module Refinery
       def uncalculated
         @graph.tsort { |e| e.get(:type) != :overflow }.map do |node|
           [ node.calculator, *node.out_edges.map(&:calculator).to_a ]
-        end.flatten.reject(&:calculated?).reverse
+        end.flatten.reject(&:calculated?).reject(&:paused?).reverse
       end
     end
   end

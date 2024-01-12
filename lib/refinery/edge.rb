@@ -21,6 +21,18 @@ module Refinery
       get(:demand)
     end
 
+    def wait?
+      @paused || false
+    end
+
+    def wait!
+      @paused = true
+    end
+
+    def continue!
+      @paused = false
+    end
+
     def inspect
       super.sub(/>$/, " (type=#{get(:type)})>")
     end
