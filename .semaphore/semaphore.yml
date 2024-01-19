@@ -7,13 +7,15 @@ agent:
 blocks:
   - name: RSpec
     task:
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+          - bundle install
+          - cache store
       jobs:
         - name: Test
           commands:
-            - checkout
-            - cache restore
-            - bundle install
-            - cache store
             - bundle exec rspec
           matrix:
             - env_var: RUBY_VERSION
