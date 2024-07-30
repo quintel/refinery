@@ -93,7 +93,7 @@ module Refinery
       #
       # Returns an array of calculators.
       def uncalculated
-        @graph.tsort { |e| e.get(:type) != :overflow && !e.get(:excluded) }.map do |node|
+        @graph.tsort { |e| e.get(:type) != :overflow && !e.get(:circular) }.map do |node|
           [ node.calculator, *node.out_edges.map(&:calculator).to_a ]
         end.flatten.reject(&:calculated?).reject(&:paused?).reverse
       end
