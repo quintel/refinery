@@ -127,7 +127,7 @@ module Refinery
     end
 
     def inspect
-      "#<#{self.class.name} (#{@direction}, #{@carrier}) " \
+      "#<#{self.class.name} (#{@direction}, #{@carrier}) #{get(:type)}" \
         "node=#{@node.key.inspect}>"
     end
   end
