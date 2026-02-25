@@ -7,20 +7,18 @@ agent:
 blocks:
   - name: RSpec
     task:
-      prologue:
-        commands:
-          - checkout
-          - cache restore
-          - bundle install
-          - cache store
       jobs:
         - name: Test
           commands:
+            - checkout
+            - sem-version ruby $RUBY_VERSION
+            - gem install bundler -v ">= 2.0"
+            - bundle install
             - bundle exec rspec
           matrix:
             - env_var: RUBY_VERSION
               values:
-                - 2.7.5
-                - 3.1.1
+                - '3.3'
+                - '4.0'
       secrets:
         - name: Refinery
