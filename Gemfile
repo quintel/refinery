@@ -5,7 +5,6 @@ group :test do
   gem 'rspec', '~> 3.11'
   gem 'rspec-collection_matchers'
   gem 'simplecov',               require: false
-  gem 'codecov',                 require: false
 end
 
 group :extras do
